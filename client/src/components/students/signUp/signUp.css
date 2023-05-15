@@ -1,0 +1,11 @@
+
+.signupBox{
+    position: absolute;
+    width: 406px;
+    height: 563px;
+    left: 518px;
+    top: 165px;
+    background: #FF663B;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 55px;
+}

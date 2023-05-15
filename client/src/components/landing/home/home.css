@@ -1,0 +1,11 @@
+dody{
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+home{
+    position: relative;
+    background: white;
+    width: 90rem;
+    height: 272.75rem;
+}
