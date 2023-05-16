@@ -1,8 +1,44 @@
-import React from 'react'
-
+import React,{useEffect,useState} from 'react'
+import {useNavigate} from "react-router-dom"
+import { useFormik } from "formik";
+import { studentSchema } from '../../../validations/students/signupValidation';
+import { studentsRegister } from '../../../axios/services/studentServices/studentServices.js';
 
 
 const SignUp = () => {
+  const [loading,setLoading] = useState(false)
+
+  // const navigate = useNavigate()
+
+  async function onSubmit(){
+    setLoading(true)
+    console.log(values)
+    const response = await studentsRegister(values)
+    if(response.status == "New account created "){
+      console.log("function enterd in the if condition")
+    }else{
+      console.log("entere in the else codition ")
+    }
+  }
+
+  const {values,errors,touched,handleSubmit,handleChange,handleBlur} = 
+  useFormik({
+    initialValues:{
+      name:"",
+      phone:"",
+      email:"",
+      password:"",
+      class:"",
+      division:"",
+    },
+    validationSchema:studentSchema,
+    onSubmit,
+  });
+
+  const loginPage = async ()=>{
+    alert("login page coming")
+  }
+
   return (
     <div>
       <div style={{ backgroundImage: "url('/img/banner_bg.png')" }} className='bg-cover bg-center bg-no-repeat h-screen '>
@@ -21,12 +57,23 @@ const SignUp = () => {
                 </div>
 
                 <div class="mt-10 sm:mx-auto sm:w-full ">
-                  <form class="space-y-6" action="#" method="POST">
+                  <form class="space-y-6" action="#" method="POST" onSubmit={handleSubmit}>
                     <div className='flex '>
                       <div className='flex-1'>
                         <label for="email" class="block text-sm font-medium leading-6 text-white">Name</label>
                         <div class="mt-2">
-                          <input id="name" name="name" type="name" autocomplete="name" required class="block w-full rounded-[0.8rem] border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 "/>
+                          <input
+                            id="name" 
+                            name="name" 
+                            type="text"
+                            autocomplete="name"
+                            value={values.name}
+                            onChange={handleChange}
+                            required 
+                          class="block w-full rounded-[0.8rem] border-0 py-2.5 text-gray-900 pl-3
+                           shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2
+                            focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 "
+                           />
                         </div>
                       </div>
 
@@ -35,7 +82,21 @@ const SignUp = () => {
                           <label for="password" class="block text-sm font-medium leading-6 text-white">Phone</label>
                         </div>
                         <div class="mt-2 ml-2">
-                          <input id="phone" name="phone" type="phone" autocomplete="phone" required class="block w-full rounded-[0.8rem] border-0 py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 " />
+                          <input
+                              id="phone"
+                              name="phone"
+                              type="phone"
+                              autocomplete="phone"
+                              value={values.phone} 
+                              onBlur={handleBlur}
+                              onChange={handleChange}
+                             required class="block w-full rounded-[0.8rem] border-0 py-2.5 pl-3
+                           text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 
+                           focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 "
+                            />
+                            {errors.phone && touched.phone && (
+                              <p class="text-red-600">{errors.phone}</p>
+                            )}
                         </div>
                       </div>
                     </div>
@@ -44,7 +105,18 @@ const SignUp = () => {
                       <div className='flex-1'>
                         <label for="email" class="block text-sm font-medium leading-6 text-white">Email</label>
                         <div class="mt-2">
-                          <input id="email" name="email" type="email" autocomplete="email" required class="block w-full rounded-[0.8rem] border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 "/>
+                          <input 
+                            id="email"
+                            name="email"
+                            type="email"
+                            value={values.email}
+                            onChange={handleChange}
+                            autocomplete="email"
+                            required 
+                           class="block w-full rounded-[0.8rem] border-0 py-2.5 pl-3
+                          text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset
+                           focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                          />
                         </div>
                       </div>
 
@@ -56,7 +128,17 @@ const SignUp = () => {
                           </div> */}
                         </div>
                         <div class="mt-2 ml-2">
-                          <input id="password" name="password" type="password" autocomplete="current-password" required class="block w-full rounded-[0.8rem] border-0 py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 " />
+                          <input 
+                            id="password"
+                            name="password"
+                            type="password" 
+                            vlaue={values.password}
+                            onChange={handleChange}
+                            autocomplete="current-password" 
+                            required 
+                          class="block w-full rounded-[0.8rem] border-0 py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 pl-3
+                           placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 " 
+                          />
                         </div>
                       </div>
                     </div>
@@ -65,7 +147,18 @@ const SignUp = () => {
                       <div className='flex-1'>
                         <label for="email" class="block text-sm font-medium leading-6 text-white">Class</label>
                         <div class="mt-2">
-                          <input id="class" name="class" type="text" autocomplete="class" required class="block w-full rounded-[0.8rem] border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 "/>
+                          <input 
+                            id="class" 
+                            name="class" 
+                            type="text" 
+                            value={values.class}
+                            onChange={handleChange}
+                            autocomplete="class"
+                            required 
+                           class="block w-full rounded-[0.8rem] border-0 py-2.5 text-gray-900 shadow-sm pl-3
+                            ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
+                            focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 "
+                            />
                         </div>
                       </div>
 
@@ -74,25 +167,44 @@ const SignUp = () => {
                           <label for="password" class="block text-sm font-medium leading-6 text-white">Divisioin</label>
                         </div>
                         <div class="mt-2 ml-2">
-                          <input id="division" name="division" type="text" autocomplete="division" required class="block w-full rounded-[0.8rem] border-0 py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 " />
+                          <input 
+                            id="division" 
+                            name="division" 
+                            type="text" 
+                            value={values.division}
+                            onChange={handleChange}
+                            autocomplete="division" 
+                            required 
+                          class="block w-full rounded-[0.8rem] pl-3
+                           border-0 py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300
+                            placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 " 
+                           />
                         </div>
                       </div>
                     </div>
 
                     <div class="flex justify-center">
-                      <button type="submit" class="flex w-3/5 justify-center rounded-[6rem] bg-white px-3 py-1.5 text-sm font-semibold leading-6 text-[#ef4444] shadow-lg hover:bg-indigo-500 focus-visible:outline  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Sign in</button>
+                      <button type="submit" class="flex w-3/5 justify-center rounded-[6rem] bg-white px-3 py-1.5 text-sm font-semibold leading-6
+                       text-[#ef4444] shadow-lg hover:bg-indigo-500 focus-visible:outline 
+                        focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600
+                        " 
+                        >
+                        Sign in
+                        </button>
                     </div>
                   </form>
-                {/* 
-                  <p class="mt-10 text-center text-sm text-gray-500">
-                    Create Account?
-                    <a href="#" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"> Click here</a>
-                  </p> */}
+                
+                  <p class=" text-center text-sm text-gray-500">
+                    Have an Account?
+                    <a href="#" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500" 
+                    onClick={loginPage}> 
+                    Click here</a>
+                  </p>
                 </div>
                 <div>
                   <h4 class="text-white underline underline-offset-8 pt-[1rem]">SignUp With</h4>
                   <div class="flex justify-center">
-                    <div class="bg-whit mt-10 w-3/5  h-[5rem] flex flex-row justify-start gap-6 ">
+                    <div class="bg-whit mt-5 w-3/5  h-[5rem] flex flex-row justify-start gap-6 ">
                       <div className='rounded-full  w-[3rem] h-[6rem] '>
                         <a href="#">
                           <img src="/img/google.png" alt="google"  className="cursor-pointer hover:opacity-75  " />
