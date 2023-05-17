@@ -4,7 +4,12 @@ import './home.css'
 const Home = () => {
   return (
     <div className='home'>
-        name is 
+      <div>
+        
+      </div>
+       <div>
+         <a href="/signup"> click me</a>
+       </div>
     </div>
   )
 }

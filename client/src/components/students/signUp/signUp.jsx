@@ -8,16 +8,18 @@ import { studentsRegister } from '../../../axios/services/studentServices/studen
 const SignUp = () => {
   const [loading,setLoading] = useState(false)
 
-  // const navigate = useNavigate()
+  const navigate = useNavigate()
 
   async function onSubmit(){
+    console.log('at the onSubmit functiion in the signup page')
     setLoading(true)
-    console.log(values)
     const response = await studentsRegister(values)
-    if(response.status == "New account created "){
-      console.log("function enterd in the if condition")
+    console.log(values)
+    console.log(response.msg)
+    if(response.msg === "Account created"){
+      navigate("/")
     }else{
-      console.log("entere in the else codition ")
+      console.log("entered in the else codition ")
     }
   }
 
@@ -28,7 +30,7 @@ const SignUp = () => {
       phone:"",
       email:"",
       password:"",
-      class:"",
+      studentClass:"",
       division:"",
     },
     validationSchema:studentSchema,
@@ -36,7 +38,7 @@ const SignUp = () => {
   });
 
   const loginPage = async ()=>{
-    alert("login page coming")
+    navigate("/login")
   }
 
   return (
@@ -57,23 +59,26 @@ const SignUp = () => {
                 </div>
 
                 <div class="mt-10 sm:mx-auto sm:w-full ">
-                  <form class="space-y-6" action="#" method="POST" onSubmit={handleSubmit}>
+                  <form class="space-y-6"  method="POST" onSubmit={handleSubmit}>
                     <div className='flex '>
                       <div className='flex-1'>
                         <label for="email" class="block text-sm font-medium leading-6 text-white">Name</label>
                         <div class="mt-2">
                           <input
-                            id="name" 
                             name="name" 
                             type="text"
-                            autocomplete="name"
+                            autoComplete="name"
                             value={values.name}
                             onChange={handleChange}
-                            required 
+                            onBlur={handleBlur}
+                             
                           class="block w-full rounded-[0.8rem] border-0 py-2.5 text-gray-900 pl-3
                            shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2
                             focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 "
                            />
+                            {errors.name && touched.name && (
+                              <p className="text-red-600">{errors.name}</p>
+                            )}
                         </div>
                       </div>
 
@@ -85,17 +90,17 @@ const SignUp = () => {
                           <input
                               id="phone"
                               name="phone"
-                              type="phone"
-                              autocomplete="phone"
+                              type="number"
+                              autoComplete="phone"
                               value={values.phone} 
                               onBlur={handleBlur}
                               onChange={handleChange}
-                             required class="block w-full rounded-[0.8rem] border-0 py-2.5 pl-3
+                              class="block w-full rounded-[0.8rem] border-0 py-2.5 pl-3
                            text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 
                            focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 "
                             />
                             {errors.phone && touched.phone && (
-                              <p class="text-red-600">{errors.phone}</p>
+                              <p className="text-red-600">{errors.phone}</p>
                             )}
                         </div>
                       </div>
@@ -111,12 +116,16 @@ const SignUp = () => {
                             type="email"
                             value={values.email}
                             onChange={handleChange}
-                            autocomplete="email"
-                            required 
+                            onBlur={handleBlur}
+                            autoComplete="email"
+                             
                            class="block w-full rounded-[0.8rem] border-0 py-2.5 pl-3
                           text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset
                            focus:ring-indigo-600 sm:text-sm sm:leading-6"
                           />
+                          {errors.email && touched.email && (
+                            <p className='text-red-600'>{errors.email}</p>
+                          )}
                         </div>
                       </div>
 
@@ -132,13 +141,17 @@ const SignUp = () => {
                             id="password"
                             name="password"
                             type="password" 
-                            vlaue={values.password}
+                            value={values.password}
                             onChange={handleChange}
-                            autocomplete="current-password" 
-                            required 
+                            onBlur={handleBlur}
+                            autoComplete="current-password" 
+                             
                           class="block w-full rounded-[0.8rem] border-0 py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 pl-3
                            placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 " 
                           />
+                          {errors.password && touched.password && (
+                                <p className="text-red-600">{errors.password}</p>
+                            )}
                         </div>
                       </div>
                     </div>
@@ -148,22 +161,26 @@ const SignUp = () => {
                         <label for="email" class="block text-sm font-medium leading-6 text-white">Class</label>
                         <div class="mt-2">
                           <input 
-                            id="class" 
-                            name="class" 
-                            type="text" 
-                            value={values.class}
+                            id="studentClass" 
+                            name="studentClass" 
+                            type="number" 
+                            value={values.studentClass}
                             onChange={handleChange}
-                            autocomplete="class"
-                            required 
+                            onBlur={handleBlur}
+                            autoComplete="studentClass"
+                             
                            class="block w-full rounded-[0.8rem] border-0 py-2.5 text-gray-900 shadow-sm pl-3
                             ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
                             focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 "
                             />
+                             {errors.studentClass && touched.studentClass && (
+                              <p className="text-red-600">{errors.studentClass}</p>
+                            )}
                         </div>
                       </div>
 
                       <div className='flex-1 '>
-                        <div class="flex items-center justify-between ml-2">
+                        <div className="flex items-center justify-between ml-2">
                           <label for="password" class="block text-sm font-medium leading-6 text-white">Divisioin</label>
                         </div>
                         <div class="mt-2 ml-2">
@@ -173,12 +190,16 @@ const SignUp = () => {
                             type="text" 
                             value={values.division}
                             onChange={handleChange}
-                            autocomplete="division" 
-                            required 
+                            onBlur={handleBlur}
+                            autoComplete="division" 
+                             
                           class="block w-full rounded-[0.8rem] pl-3
                            border-0 py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300
                             placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 " 
                            />
+                            {errors.division && touched.division && (
+                              <p className="text-red-600">{errors.division}</p>
+                            )}
                         </div>
                       </div>
                     </div>
@@ -186,48 +207,22 @@ const SignUp = () => {
                     <div class="flex justify-center">
                       <button type="submit" class="flex w-3/5 justify-center rounded-[6rem] bg-white px-3 py-1.5 text-sm font-semibold leading-6
                        text-[#ef4444] shadow-lg hover:bg-indigo-500 focus-visible:outline 
-                        focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600
+                        focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 mt-3
                         " 
                         >
-                        Sign in
+                        Sign Up
                         </button>
                     </div>
                   </form>
                 
-                  <p class=" text-center text-sm text-gray-500">
+                  <p class=" text-center mt-7 text-sm text-gray-500">
                     Have an Account?
                     <a href="#" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500" 
                     onClick={loginPage}> 
                     Click here</a>
                   </p>
                 </div>
-                <div>
-                  <h4 class="text-white underline underline-offset-8 pt-[1rem]">SignUp With</h4>
-                  <div class="flex justify-center">
-                    <div class="bg-whit mt-5 w-3/5  h-[5rem] flex flex-row justify-start gap-6 ">
-                      <div className='rounded-full  w-[3rem] h-[6rem] '>
-                        <a href="#">
-                          <img src="/img/google.png" alt="google"  className="cursor-pointer hover:opacity-75  " />
-                        </a>
-                      </div>
-                      <div className='rounded-full  w-[3rem] h-[6rem]'>
-                        <a href="#">
-                          <img src="/img/twitter.png" alt="google"  className="cursor-pointer hover:opacity-75 " />
-                        </a>
-                      </div>
-                      <div className='rounded-full  w-[3rem] h-[6rem]'>
-                        <a href="#">
-                          <img src="/img/instagram.png" alt="google"  className="cursor-pointer hover:opacity-75 " />
-                        </a>
-                      </div>
-                      <div className='rounded-full  w-[3rem] h-[6rem]'>
-                        <a href="#">
-                          <img src="/img/facebook.png" alt="google"  className="cursor-pointer hover:opacity-75 " />
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                
               </div>
             </div>
         </div>

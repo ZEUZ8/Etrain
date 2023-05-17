@@ -1,12 +1,20 @@
 import React from 'react'
-import Home from "./components/landing/home/home"
-import SignUp from "./components/students/signUp/signUp"
+import { BrowserRouter,Route,Routes } from 'react-router-dom'
+
+import StudentRoutes from './routes/studentRoute'
+
 import "./App.css"
+
+
 const App = () => {
   return (
-    <div>
-      <SignUp /> 
-    </div>
+    <BrowserRouter>
+      <main>
+        <Routes>
+          <Route path='/*' element={< StudentRoutes />}></Route>
+        </Routes>
+      </main>
+    </BrowserRouter>
   )
 }
 

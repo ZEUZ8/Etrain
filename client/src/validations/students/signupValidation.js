@@ -5,7 +5,7 @@ export const studentSchema = yup.object().shape({
         .string()
         .min(2,'Name must be atleast 2 charecters')
         .max(20)
-        .matches(/^[a-zA-Z]+$/, 'Only alphabets are allowed')
+        .matches(/^[a-zA-Z\s]+$/, 'Only alphabets are allowed')
         .required('Required'),
     phone:yup
         .number('Phone number must be a 10 digit number')
@@ -23,8 +23,14 @@ export const studentSchema = yup.object().shape({
         .string()
         .email('Please enter a valid email')
         .required('Required'),
-    class:yup
-        .string()
-        .matches(/^[0-9]+$/, 'Only numbers are allowed')
+    studentClass:yup
+        .number()
+        .positive()
+        .integer()
+        // .test('len', 'Phone number should be a 10 digit number', val => /^\d{10}$/.test(val))
         .required("Required"),
+    division:yup
+        .string()
+        .matches(/^[a-zA-Z]+$/, 'Only alphabets are allowed')   
+        .required("Required") 
 })
