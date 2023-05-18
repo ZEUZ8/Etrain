@@ -3,6 +3,7 @@ import {useNavigate} from "react-router-dom"
 import { useFormik } from "formik";
 import { studentSchema } from '../../../validations/students/signupValidation';
 import { studentsRegister } from '../../../axios/services/studentServices/studentServices.js';
+import {Loader} from "../../../components/loader/Loader"
 
 
 const SignUp = () => {
@@ -14,9 +15,7 @@ const SignUp = () => {
     console.log('at the onSubmit functiion in the signup page')
     setLoading(true)
     const response = await studentsRegister(values)
-    console.log(values)
-    console.log(response.msg)
-    if(response.msg === "Account created"){
+    if(response.msg === "Account Created"){
       navigate("/")
     }else{
       console.log("entered in the else codition ")
@@ -46,7 +45,9 @@ const SignUp = () => {
       <div style={{ backgroundImage: "url('/img/banner_bg.png')" }} className='bg-cover bg-center bg-no-repeat h-screen '>
         <div class="pt-10  pl-10">
           <div class="flex justify-left items ">
-            <img src="/img/logo.png" alt="logo" />
+            <a href="/">
+              <img src="/img/logo.png" alt="logo" />
+            </a>
           </div>
         </div>
         <div class="flex justify-center mt-5">

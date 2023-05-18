@@ -13,10 +13,15 @@ const Login = () => {
     console.log("onSubmit in the Studen Login")
     setLoading(true)
     const response = await studentLogin(values)
-    console.log(response.msg)
+    if(response.msg === "login succesfull"){
+      navigate("/")
+    }
+    else{
+      console.log(response.msg)
+    }
   }
 
-  const {values,errors,touched,handelSubmit,handleBlur,handleChange} = 
+  const {values,errors,touched,handleSubmit,handleBlur,handleChange} = 
   useFormik({
     initialValues:{
       email:"",
@@ -35,7 +40,9 @@ const Login = () => {
     <div style={{ backgroundImage: "url('/img/banner_bg.png')" }} className='bg-cover bg-center bg-no-repeat h-screen '>
       <div class="pt-10  pl-10">
         <div class="flex justify-left items ">
-          <img src="/img/logo.png" alt="logo" />
+          <a href="/">
+            <img src="/img/logo.png" alt="logo" />
+          </a>
         </div>
       </div>
       <div class="flex justify-center mt-5">
@@ -45,11 +52,11 @@ const Login = () => {
               <div class="sm:mx-auto sm:w-full sm:max-w-sm">
                 <h2 class="mt-10 text-start underline underline-offset-8 text-2xl font-bold leading-9 tracking-tight text-white  " >Login</h2>
                 <img class="mx-auto h-[4rem] w-[4rem] rounded-full bg-white " src="/img/girl.jpg" alt="Your Image"/>
-                <h4 class="text-white flex justify-center  underline underline-offset-4 ">your Name</h4>
+                <h4 class="text-white flex justify-center  underline underline-offset-4  mt-1"> Name</h4>
               </div>
 
               <div class="mt-5 sm:mx-auto sm:w-full ">
-                <form class="space-y-6"  method="POST" onSubmit={handelSubmit}>
+                <form class="space-y-6"  method="POST" onSubmit={handleSubmit}>
                     <div>
                       <label for="email" class="block text-sm font-medium leading-6 text-white">Email</label>
                       <div class="mt-2">

@@ -32,6 +32,10 @@ const StudentSchema = mongoose.Schema({
     address:{
         type:String
     },
+    verification:{
+        type:String,
+        default:"verified"
+    },
     gardian:{
         type:Object,
         gardianName:{

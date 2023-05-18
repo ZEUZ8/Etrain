@@ -2,7 +2,7 @@ import React from "react"
 import {Routes,Route} from "react-router-dom"
 
 import Home from "../components/landing/home/Home"
-import SignUp  from "../components/students/signUp/SignUp"
+import SignUp from "../components/students/signUp/SignUp"
 import Login from "../components/students/login/login"
 
 function StudentRoutes(){
