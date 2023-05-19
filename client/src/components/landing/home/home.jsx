@@ -1,7 +1,20 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
+import {studentReducer} from "../../../redux/store"
+import { useNavigate } from 'react-router-dom'
 import './home.css'
 
 const Home = () => {
+  const data = useSelector(state => state.studentReducer)
+  const navigate = useNavigate()
+  const profileClick = ()=>{
+    if(data.student.token){
+      navigate("/profile")
+    }else{
+      navigate("/signup")
+    }
+  }
+
   return (
     <div>
       <div style={{ backgroundImage: "url('/img/banner_bg.png')" }} className='bg-cover bg-center bg-no-repeat h-screen '>
@@ -39,10 +52,10 @@ const Home = () => {
                     dark:hover:text-white md:dark:hover:bg-transparent">Contact</a>
                 </li>
                 <li>
-                  <div className='profile bg-[#FF663B] w-[8rem] rounded-full h-[3rem] flex items-center justify-center '>
-                      <a href="/" class=" py-2 pl-3 pr-4 text-white-900  text-white 
+                  <div  className='profile bg-[#FF663B] w-[8rem] rounded-full h-[3rem] flex items-center justify-center '>
+                      <a  class=" py-2 pl-3 pr-4 text-white-900  text-white 
                       md:border-0  md:p-0 
-                      flex justify-center">Profile</a>
+                      flex justify-center" onClick={profileClick}>Profile</a>
                   </div>
                 </li>
               </ul>
@@ -58,18 +71,16 @@ const Home = () => {
                 his void unto last session for bite. Set have great you'll male grass  yielding yielding man</p>
                 <div className='flex m-5'>
                   <div className='profile bg-[#FF663B] w-[8rem] rounded-full h-[3rem] flex items-center justify-center '>
-                        <a href="/signup" class=" py-2 pl-3 pr-4 text-white-900  text-white 
+                        <a href={data.student.token?`/`:`/signup`} class=" py-2 pl-3 pr-4 text-white-900  text-white 
                         md:border-0  md:p-0 
                         flex justify-center">Create</a>
                   </div>
-                  
                   <div className='profile border-2 border-[black] w-[8rem] rounded-full h-[3rem] flex items-center justify-center ml-4'>
-                      <a href="/login" class=" py-2 pl-3 pr-4 text-white-900  text-[black]
+                      <a href={data.student.token?`/`:`/login`} class=" py-2 pl-3 pr-4 text-white-900  text-[black]
                       md:border-0  md:p-0 
                       flex justify-center">Get Started</a>
                   </div>
                 </div>
-                
             </div>
           </div>
           <div class="w-1/2 h-full p-[4rem]">

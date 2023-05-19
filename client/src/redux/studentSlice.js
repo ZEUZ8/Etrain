@@ -6,18 +6,16 @@ const studentSlice = createSlice({
         token:"",
         user:null,
         id:null,
-        email:null
     },
     reducers:{
         userLogin:(state,action)=>{
-            state.token = action.payload
+            state.student = action.payload
         },
         userLogOut:(state,action)=>{
             state.student = {
                 token:"",
                 user:null,
                 id:null,
-                email:null
             }
         }
     }

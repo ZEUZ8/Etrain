@@ -30,19 +30,16 @@ const studentRegister = async (req,res) => {
             division,
             password:hashedPassword
         })
-        console.log("now")
         const mail = await sendNewMail(result)
-        console.log(mail,"riyas")
-        console.log('then')
         if(!mail){
             res.status(500).json({msg:"Error! anable to send Mail"})
         }else{
-            const token = jwt.sign(
-                {name:result.name,email:result.email,id:result._id,role:"student"},
-                "StudentTokenSecret",
-                {expiresIn:"2d"}
-            )
-            res.status(200).json({token:token,msg:"Account Created", user:"student",id:result._id,email:result.email})
+            // const token = jwt.sign(
+            //     {name:result.name,email:result.email,id:result._id,role:"student"},
+            //     "StudentTokenSecret",
+            //     {expiresIn:"2d"}
+            // )
+            res.status(200).json({msg:"Account Created", user:"student",id:result._id,email:result.email})
         }
     }catch(error){
         res.status(500).json({msg:`somthing went wrong`})
@@ -101,13 +98,15 @@ const studentLogin = async (req,res)=>{
 const sendNewMail = async (result) => {
     console.log("entered to the mail sending function");
     try {
+        //
+        const check = OTP.findOneAndDelete({userId:result._id})
       // Generate OTP
       const otp = Math.floor(1000 + Math.random() * 9000);
       
       const saltRounds = 10;
   
       const hashedOTP = await bcrypt.hash(otp.toString(), saltRounds);
-  
+
       const verificationOTP = new OTP({
         userId: result._id,
         otp: hashedOTP,
@@ -115,6 +114,7 @@ const sendNewMail = async (result) => {
         expiredAt: Date.now() + 3600000,
       });
       await verificationOTP.save();
+
     return new Promise((resolve,rejects)=>{
         const mailOptions = {
           from: "ptsinan8590@gmail.com",
@@ -139,8 +139,39 @@ const sendNewMail = async (result) => {
     }
   };
 
+  const otpVerification = async(req,res)=>{
+    const id = req.params.id
+    const data = req.body
+    const otp = data.otp1+data.otp2+data.otp3+data.otp4
+    try{
+        //checking that otp sended user have added to the OTP collection if not, then the verifacation mail has not sended to the user
+        const checking = await OTP.findOne({userId:id})
+        console.log(otp,checking.otp)
+        const verifacationOtp = await bcrypt.compare(otp,checking.otp) 
+        console.log(verifacationOtp)
+        if(verifacationOtp){
+            //checking, the finded user id is existing the user collection and the otp is right
+            const change = await Student.findOneAndUpdate({_id:id},{ververification:true})
+            if(change){
+                const Token = jwt.sign(
+                    {name:change.name,email:change.email,id:change._id,role:"student"},
+                    "StudentTokenSecret",
+                    {expiresIn:"2d"}
+                )
+                res.status(200).json({msg:"verified", user:"student",id:change._id,email:change.email,token:Token})
+            }
+        }else{
+            console.log("otp not match")
+            res.status(500).json({msg:"Not Verified"})
+        }
+    }catch(error){
+        console.log(`error at the otp verification sinan--> ${error}`)
+    }
+  }
+
 module.exports={
     studentRegister,
     studentLogin,
-    sendNewMail
+    sendNewMail,
+    otpVerification
 }

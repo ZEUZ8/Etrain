@@ -1,17 +1,38 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
+import React, { useState } from 'react'
 import {otpSchema} from "../../../validations/students/otpValidation"
 import { useFormik } from 'formik'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
+import {otpVerification} from "../../../axios/services/studentServices/studentServices"
+import { useDispatch } from 'react-redux'
+import {userLogin} from "../../../redux/studentSlice"
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Loader from '../loader/Loader'
 
 const Otp = () => {
-
-    const data = useSelector(state => state.studentReducer)
+    const [loading,setLoading] = useState(false)
     const navigate = useNavigate();
+    const dispatch = useDispatch()
+    const location = useLocation()
 
     async function onSubmit(){
-        console.log(values)
-        console.log("sinsn")
+        setLoading(true)
+        const respons = await otpVerification(values,location.state.id)
+        if(respons.msg === "verified"){
+            toast.success(respons.msg)
+            dispatch(
+                userLogin({
+                    user:respons.user,
+                    token:respons.token,
+                    id:respons.id
+                })
+            )
+            setLoading(false)
+            navigate("/")
+        }else {
+            toast.error("OTP Not Match")
+            setLoading(false)
+        }
     }
 
     const {values,errors,touched,handleSubmit,handleChange,handleBlur} =
@@ -28,6 +49,7 @@ const Otp = () => {
     })
   return (
     <div >
+        <ToastContainer/>
       <div style={{ backgroundImage: "url('/img/banner_bg.png')" }} className='bg-cover bg-center bg-no-repeat h-screen bg-red-500'>
         {/* <div class="pt-10  pl-10">
             <div class="flex justify-left items ">
@@ -44,11 +66,12 @@ const Otp = () => {
                     <p>Email Verification</p>
                     </div>
                     <div className="flex flex-row text-sm font-medium text-gray-400">
-                    <p>We have sent a code to your email {data.token.email}</p>
+                    <p>We have sent a code to your email {location.state.email}</p>
                     </div>
                 </div>
 
                 <div>
+                    {loading? <Loader/>:
                     <form  method="post" onSubmit={handleSubmit}>
                     <div className="flex flex-col space-y-16">
                         <div className="flex flex-row items-center justify-between mx-auto w-full max-w-xs">
@@ -116,7 +139,7 @@ const Otp = () => {
                         </div>
                         </div>
                     </div>
-                    </form>
+                    </form>}
                 </div>
                 </div>
             </div>

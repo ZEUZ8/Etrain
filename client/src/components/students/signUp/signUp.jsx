@@ -7,29 +7,26 @@ import { studentSchema } from "../../../validations/students/signupValidation";
 import { studentsRegister } from "../../../axios/services/studentServices/studentServices.js";
 import Loader from "../../landing/loader/Loader";
 import { useDispatch } from "react-redux";
-import { userLogin } from "../../../redux/studentSlice";
 
 const SignUp = () => {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   async function onSubmit() {
     console.log("at the onSubmit functiion in the signup page");
     setLoading(true);
     const response = await studentsRegister(values);
     if (response.msg === "Account Created") {
-      dispatch(
-        userLogin({
-          token: response.token,
-          user: response.user,
-          id: response.id,
-          email:response.email
-        })
-      );
+      // dispatch(
+      //   userLogin({
+      //     user: response.user,
+      //     id: response.id,
+      //     email:response.email
+      //   })
+      // );
       setLoading(false);
-      navigate("/otp");
+      navigate("/otp",{state:{email:response.email,user:response.user,id:response.id}});
     } else {
       console.log("entered in the else codition ");
     }

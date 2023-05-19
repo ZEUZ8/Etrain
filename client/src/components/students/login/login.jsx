@@ -24,11 +24,13 @@ const Login = () => {
       dispatch(
         userLogin({token:response.token,user:response.user,id:response.id})
       )
+      setLoading(false)
       navigate("/")
     }
     else{
       toast.error(response.msg)
       console.log(response.msg)
+      navigate('/signup')
     }
   }
 

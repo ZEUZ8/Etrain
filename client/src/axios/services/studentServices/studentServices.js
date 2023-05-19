@@ -33,17 +33,19 @@ export const studentLogin = async (value)=>{
     }
 }
 
-export const otpVerification = async (value)=>{
-    console.log(value)
+export const otpVerification = async (value,id)=>{
+    console.log(value,"consoling the serivces")
     const config = {
         headers:{
             "Content-Type":"application/json"
         },
     };
     try{
-        const response = await axiosStudentInstance.post("/verify",value,config)
+        const response = await axiosStudentInstance.post(`/verify/${id}`,value,config)
         return response.data
     }catch(error){
         console.log(`Erro at the student Otp verify services --> ${error}`)
+        return(error.message)
     }
 }
+
