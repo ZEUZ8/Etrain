@@ -4,20 +4,24 @@ const studentSlice = createSlice({
     name:"student",
     initialState:{
         token:"",
-        user:null
+        user:null,
+        id:null,
+        email:null
     },
     reducers:{
         userLogin:(state,action)=>{
-            state.user = action.payload
+            state.token = action.payload
         },
         userLogOut:(state,action)=>{
-            state.user = {
+            state.student = {
                 token:"",
-                user:null
+                user:null,
+                id:null,
+                email:null
             }
         }
     }
 })
 
-export const {userLogOut,userLogin} = userSlice.action;
-export default userSlice.reducer;
+export const {userLogOut,userLogin} = studentSlice.actions;
+export default studentSlice.reducer;

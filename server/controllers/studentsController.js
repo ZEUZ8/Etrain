@@ -2,7 +2,20 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken")
 const nodeMailer = require("nodemailer")
 
-const Student = require("../models/students")
+const OTP = require("../models/Otp")
+const Student = require("../models/students");
+const { resolve } = require("path");
+const { rejects } = require("assert");
+
+
+  let config = {
+    service:"gmail",
+    auth:{
+        user:"ptsinan8590@gmail.com",
+        pass:"ccykjhaaejmqvsbl"
+    }
+  }
+
 
 const studentRegister = async (req,res) => {
     console.log("Controllers,Backend,studentLogin")
@@ -17,18 +30,20 @@ const studentRegister = async (req,res) => {
             division,
             password:hashedPassword
         })
+        console.log("now")
         const mail = await sendNewMail(result)
-        if(mail){
+        console.log(mail,"riyas")
+        console.log('then')
+        if(!mail){
+            res.status(500).json({msg:"Error! anable to send Mail"})
+        }else{
             const token = jwt.sign(
                 {name:result.name,email:result.email,id:result._id,role:"student"},
                 "StudentTokenSecret",
                 {expiresIn:"2d"}
             )
-            res.status(200).json({token:token,msg:"Account Created", user:"student"})
-        }else{
-            res.json({msg:"Verification Mail Sended"})
+            res.status(200).json({token:token,msg:"Account Created", user:"student",id:result._id,email:result.email})
         }
-        
     }catch(error){
         res.status(500).json({msg:`somthing went wrong`})
         console.log(`error at the student signUp, backen controllers --> ${error.message}`)
@@ -58,23 +73,23 @@ const studentLogin = async (req,res)=>{
 
         if(!existStudent){
             res.json({msg:"student don't exists"})
-        }
-
-        if(existStudent.verification === "not verified"){
-            console.log("verifaction mail should send to the user")
         }else{
-            const checkedPassword = await bcrypt.compare(password,existStudent.password)
+            if(existStudent.verification === false){
+                sendNewMail(existStudent,res)
+            }else{
+                const checkedPassword = await bcrypt.compare(password,existStudent.password)
 
-            if(!checkedPassword){
-                res.json({msg : "Invalid Credentials"})
+                if(!checkedPassword){
+                    res.json({msg : "Invalid Credentials"})
+                }else{
+                    const token = jwt.sign(
+                        {name:existStudent.name,email:existStudent.email,id:existStudent._id,role:"student"},
+                        "StudentTokenSecret",
+                        {expiresIn:"2d"}
+                    )
+                    res.status(200).json({token:token,msg:"login succesfull", user:"student",id:existStudent._id,email:existStudent.email})
+                }
             }
-
-            const token = jwt.sign(
-                {name:existStudent.name,email:existStudent.email,id:existStudent._id,role:"student"},
-                "StudentTokenSecret",
-                {expiresIn:"2d"}
-            )
-            res.status(200).json({token:token,msg:"login succesfull", user:"student"})
         }
     }catch(error){
         res.status(500).json({msg:`error at student login`})
@@ -82,40 +97,47 @@ const studentLogin = async (req,res)=>{
     }
 }
 
-const sendNewMail = (student)=>{
-    console.log("entered to the mail sending functioin")
 
-    const transporter = nodeMailer.createTransport({
-        service:"Gmail",
-        auth:{
-            user:"ptsinan8590@gmail.com",
-            pass:"Sinan@123"
-        }
+const sendNewMail = async (result) => {
+    console.log("entered to the mail sending function");
+    try {
+      // Generate OTP
+      const otp = Math.floor(1000 + Math.random() * 9000);
+      
+      const saltRounds = 10;
+  
+      const hashedOTP = await bcrypt.hash(otp.toString(), saltRounds);
+  
+      const verificationOTP = new OTP({
+        userId: result._id,
+        otp: hashedOTP,
+        createdAt: Date.now(),
+        expiredAt: Date.now() + 3600000,
+      });
+      await verificationOTP.save();
+    return new Promise((resolve,rejects)=>{
+        const mailOptions = {
+          from: "ptsinan8590@gmail.com",
+          to: "ptsinan8590@gmail.com",
+          subject: "Etrain Email Verification",
+          text: `Your OTP: ${otp}`,
+        };
+        const transporter = nodeMailer.createTransport(config)
+  
+         transporter.sendMail(mailOptions,(error, info)=> {
+          if (error) {
+            console.log("Error Occurred:", error);
+            rejects(error.message)
+          }else{
+              resolve(info)
+          }
+        });
     })
-
-    const mailOptions ={
-        from:"ptsinan8590@gmail.com",
-        to:"ptsinan8590@gmail.com",
-        subject:"Account Verifaction",
-        html:`
-            <h1>Verify Your Email</h1>
-            <p>Please click the following link to verify your account:</p>
-            <a href="http://your-app.com/verify/${student.phone}">Verify Email</a>
-      `,
-    };
-
-    transporter.sendMail(mailOptions,function(error,info){
-        if(error){
-            console.log("Error Occured :",error)
-        }else{
-            console.log("Email sent : ",info.response)
-            return info.response
-        }
-    })
-
-
-    
-}
+    } catch (error) {
+      console.log("Error Occurred:", error);
+      return error.message
+    }
+  };
 
 module.exports={
     studentRegister,

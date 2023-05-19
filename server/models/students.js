@@ -33,8 +33,8 @@ const StudentSchema = mongoose.Schema({
         type:String
     },
     verification:{
-        type:String,
-        default:"verified"
+        type:Boolean,
+        default:false
     },
     gardian:{
         type:Object,

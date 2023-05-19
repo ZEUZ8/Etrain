@@ -1,6 +1,11 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useFormik } from 'formik'
+import {toast,ToastContainer} from "react-toastify"
+import 'react-toastify/dist/ReactToastify.css';
+import {useDispatch} from "react-redux";
+import {userLogin} from "../../../redux/studentSlice"
+
 import {studentLogin} from '../../../axios/services/studentServices/studentServices'
 import { loginSchema } from '../../../validations/students/loginValidation'
 
@@ -8,15 +13,21 @@ const Login = () => {
 
   const [loading,setLoading] = useState(false)
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   async function onSubmit(){
     console.log("onSubmit in the Studen Login")
     setLoading(true)
     const response = await studentLogin(values)
     if(response.msg === "login succesfull"){
+      toast.success(response.msg)
+      dispatch(
+        userLogin({token:response.token,user:response.user,id:response.id})
+      )
       navigate("/")
     }
     else{
+      toast.error(response.msg)
       console.log(response.msg)
     }
   }
@@ -37,6 +48,7 @@ const Login = () => {
 
   return (
     <div>
+      <ToastContainer/>
     <div style={{ backgroundImage: "url('/img/banner_bg.png')" }} className='bg-cover bg-center bg-no-repeat h-screen '>
       <div class="pt-10  pl-10">
         <div class="flex justify-left items ">
