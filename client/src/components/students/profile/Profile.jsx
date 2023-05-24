@@ -1,7 +1,4 @@
 import React from "react";
-import Navbar from "../../landing/navbar/Navbar";
-import SideBar from "../../landing/sideBar/SideBar";
-import ProfileComponent from "../../landing/profileComponent/ProfileComponent";
 
 const Profile = () => {
   return (
@@ -10,9 +7,7 @@ const Profile = () => {
         style={{ backgroundImage: "url('/img/banner_bg.png')" }}
         className="bg-cover bg-center bg-no-repeat h-screen "
       >
-        <SideBar />
-        <Navbar />
-        < ProfileComponent/>
+
         <div class="p-4 sm:ml-64">
           <div class="p-4  border-gray-200 rounded-lg dark:border-gray-700">
             {/* <div class="grid grid-cols-3 gap-4 mb-4">

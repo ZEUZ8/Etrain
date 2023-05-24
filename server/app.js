@@ -10,10 +10,12 @@ const dotenv = require("dotenv")
 // const { Server } = require('socket.io')
 
 const studentRoutes = require("./routes/studentRoutes")
+const principalRoutes = require("./routes/principalRoutes")
 
 dotenv.config();
 
-const mongoDB = require("./database/connection")
+const mongoDB = require("./database/connection");
+
 
 const app = express()
 
@@ -35,6 +37,7 @@ mongoDB()
 
 app.use(cors(corsOptions))
 app.use("/",studentRoutes)
+app.use("/principal",principalRoutes)
 
 app.use(function(req, res, next) {
     next(createError(404));
