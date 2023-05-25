@@ -11,6 +11,7 @@ const dotenv = require("dotenv")
 
 const studentRoutes = require("./routes/studentRoutes")
 const principalRoutes = require("./routes/principalRoutes")
+const teacherRoutes = require("./routes/teacherRoutes")
 
 dotenv.config();
 
@@ -38,6 +39,7 @@ mongoDB()
 app.use(cors(corsOptions))
 app.use("/",studentRoutes)
 app.use("/principal",principalRoutes)
+app.use("/teacher",teacherRoutes)
 
 app.use(function(req, res, next) {
     next(createError(404));

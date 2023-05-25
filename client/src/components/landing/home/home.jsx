@@ -9,7 +9,11 @@ const Home = () => {
   const navigate = useNavigate()
   const profileClick = ()=>{
     if(data.student.token){
-      navigate("/profile")
+      if(data.student.user === "student"){
+        navigate("/profile")
+      }else {
+        navigate("/teacher/profile")
+      }
     }else{
       navigate("/signup")
     }

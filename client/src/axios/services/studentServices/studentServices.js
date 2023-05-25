@@ -33,7 +33,7 @@ export const studentLogin = async (value)=>{
     }
 }
 
-export const otpVerification = async (value,id)=>{
+export const otpVerification = async (value,user,id)=>{
     console.log(value,"consoling the serivces")
     const config = {
         headers:{

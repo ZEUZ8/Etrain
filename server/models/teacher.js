@@ -29,7 +29,10 @@ const TeacherSchema = mongoose.Schema({
     },
     address:{
         type:String,
-        required:true
+        // required:true
+    },
+    resume:{
+        type:String
     },
     qualification:{
         type:Object,
@@ -53,3 +56,6 @@ const TeacherSchema = mongoose.Schema({
 
 })
 
+const Teacher = mongoose.model("teacher",TeacherSchema)
+
+module.exports = Teacher

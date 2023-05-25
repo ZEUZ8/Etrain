@@ -2,31 +2,44 @@ import React, { useState } from 'react'
 import {otpSchema} from "../../../validations/students/otpValidation"
 import { useFormik } from 'formik'
 import { useLocation, useNavigate } from 'react-router-dom'
-import {otpVerification} from "../../../axios/services/studentServices/studentServices"
+import {otpVerification, studentLogin} from "../../../axios/services/studentServices/studentServices"
+import {teacherOtpVerification} from "../../../axios/services/TeacherSrevices/teacherServices"
+// import { principalOtpVerification } from '../../../axios/services/principalServices/principlaServices'
 import { useDispatch } from 'react-redux'
 import {userLogin} from "../../../redux/studentSlice"
+import {teacherLogin} from "../../../redux/teacher"
+import {principalLogin} from "../../../redux/principal"
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from '../loader/Loader'
 
-const Otp = () => {
+const Otp = ({user,id}) => {
     const [loading,setLoading] = useState(false)
+    console.log(`${user}Login`)
     const navigate = useNavigate();
     const dispatch = useDispatch()
     const location = useLocation()
-
     async function onSubmit(){
         setLoading(true)
-        const respons = await otpVerification(values,location.state.id)
+        if(user === "student"){
+            var respons = await otpVerification(values,user,id)
+        }else {
+            var respons = await teacherOtpVerification(values,user,id)
+        }
         if(respons.msg === "verified"){
             toast.success(respons.msg)
-            dispatch(
-                userLogin({
-                    user:respons.user,
-                    token:respons.token,
-                    id:respons.id
-                })
-            )
+            const actions = {
+                user:respons.user,
+                token:respons.token,
+                id:respons.token
+            }
+            if(user === "student"){
+                dispatch(userLogin(actions))
+            }else if(user === "teacher"){
+                dispatch(teacherLogin(actions))
+            }else{
+                dispatch(principalLogin(actions))
+            }
             setLoading(false)
             navigate("/")
         }else {

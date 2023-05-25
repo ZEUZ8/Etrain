@@ -30,7 +30,7 @@ const studentRegister = async (req, res) => {
     });
     const mail = await sendNewMail(result);
     if (!mail) {
-      res.status(500).json({ msg: "Error! anable to send Mail" });
+      res.status(500).json({ msg: "Error! unable to send Mail" });
     } else {
       // const token = jwt.sign(
       //     {name:result.name,email:result.email,id:result._id,role:"student"},

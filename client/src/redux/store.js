@@ -4,7 +4,7 @@ import {persistReducer} from "redux-persist";
 import { combineReducers } from "@reduxjs/toolkit";
 
 import studentReducer from "./studentSlice"
-import principalReducer from "./principla"
+import principalReducer from "./principal"
 import teacherReducer from "./teacher"
 
 

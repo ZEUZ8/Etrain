@@ -32,8 +32,8 @@ const PrincipalClass = () => {
         console.log(error)
       }
     }
-    setLoading(false)
     fetchData()
+    setLoading(false)
   },[])
 
   async function onSubmit() {

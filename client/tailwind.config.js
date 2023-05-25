@@ -9,7 +9,7 @@ module.exports = {
         sans:['Poppins']
       },
       colors:{
-        'left-gradient':'#FF663B'
+        'left-gradient':'#FF663B',
       }
     },
   },
