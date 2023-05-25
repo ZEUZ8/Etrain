@@ -26,6 +26,23 @@ const classCreation = async (req, res)=>{
     }
 }
 
+const getClasses = async(req,res)=>{
+    console.log("entered at the class getting funcion AT backen,principla controllers ")
+    try{
+        const existingClass = await Class.find({})
+        if(existingClass){
+            console.log(existingClass)
+            res.status(200).json({msg:"success",classes:existingClass})
+        }else{
+            console.log("entered at the class finding else cas ing he backend controlers")
+            res.status(500).json({msg:"Class not found"})
+        }
+    }catch(error){
+        console.log(error)
+    }
+}
+
 module.exports = {
-    classCreation
+    classCreation,
+    getClasses
 }

@@ -6,24 +6,34 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import Loader from "../../../components/landing/loader/Loader"
-import { classCreation } from '../../../axios/services/principalServices/principlaServices';
 import { classCreationSchema } from "../../../validations/principal/classCreationSchema";
+import { classCreation,classes } from '../../../axios/services/principalServices/principlaServices';
+
 
 const PrincipalClass = () => {
 
   const [loading,setLoading] = useState(false)
-  const [classes,setClasses] = useState('')
+  const [data,setData] = useState([])
   const navigate = useNavigate()
 
   useEffect(()=>{
-    const result =  async ()=>{
+    let isCancelled = false;
+    setLoading(true)
+    const fetchData =  async ()=>{
       try{
-        const respons = await 
+        const respons = await classes()
+        if(respons){
+          console.log(respons.classes)
+          setData(respons.classes)
+        }else{
+          console.log("entered in the else condition inthe fron End clsses findg function")
+        }
       }catch(error){
         console.log(error)
       }
     }
-    console.log("sinsn")
+    setLoading(false)
+    fetchData()
   },[])
 
   async function onSubmit() {
@@ -52,14 +62,18 @@ const PrincipalClass = () => {
 
   return (
     <>
+   
       <div className="p-4 sm:ml-64 h-full align-middle">
+        <p className="underline underline-offset-4 mb-5">Classes</p>
         <section className="bg-fuchsia-100 rounded-3xl bottom-10">
+  
           <div class="max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
+         {loading&& <Loader/>}
             <div class="grid  gap-4 sm:grid-cols-3">
-
-              <a
+             {data.map((item)=>( 
+             <div
+                key={item._id}
                 class="block rounded-xl border border-gray-500 p-4 shadow-sm hover:border-gray-200 hover:ring-1 hover:ring-gray-200 focus:outline-none focus:ring"
-                href="/accountant"
               >
                 <span class="inline-block rounded-lg bg-gray-50 p-3">
                   <svg
@@ -80,12 +94,13 @@ const PrincipalClass = () => {
                   </svg>
                 </span>
 
-                <h2 class="mt-2 font-bold">Accountant</h2>
+                <h2 class="mt-2 font-bold">Class: {item.className+" "+item.division}</h2>
 
                 <p class="hidden sm:mt-1 sm:block sm:text-sm sm:text-gray-600">
-                  Lorem ipsum dolor sit amet consectetur.
+                  Class Teacher :  {item.classTeacher?item.classTeacher:"Not Assigned"}
                 </p>
-              </a>
+              </div>
+              ))}
              
             </div>
           </div>
@@ -95,110 +110,124 @@ const PrincipalClass = () => {
         <div className="flex  h-full mt-10">
           <div className="w-full h-full ">
             <p className="underline underline-offset-4">Create Class</p>
-            <div className="flex justify-center items-center align-middle  bg-fuchsia-100 0 mt-5 rounded-2xl">
-              <form class="w-full max-w-sm m-5" onSubmit={handleSubmit}>
-                <div class="md:flex md:items-center mb-6">
-                  <div class="md:w-1/3">
-                    <label
-                      class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
-                      for="inline-full-name"
-                    >
-                      Class Name
-                    </label>
-                  </div>
-                  <div class="md:w-2/3">
-                    <input
-                      class="bg-white rounded-lg appearance-none border-2 border-gray-200  w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500 mt-4"
-                      id="inline-full-name"
-                      type="text"
-                      name="className"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      value={values.className}
-                    />
-                  </div>
-                </div>
-                <div class="md:flex md:items-center mb-6">
-                  <div class="md:w-1/3">
-                    <label
-                      class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
-                      // for="inline-full-name"
-                    >
-                      Class Division
-                    </label>
-                  </div>
-                  <div class="md:w-2/3">
-                    <input
-                      class="bg-white appearance-none border-2 border-gray-200 rounded-lg w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                      // id="inline-full-name"
-                      type="text"
-                      name="division"
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      value={values.division}
-                    />
-                  </div>
-                </div>
-
-                <div class="md:flex md:items-center mb-6">
-                  <div class="md:w-1/3">
-                    <label
-                      class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
-                      for="inline-full-name"
-                    >
-                      Max Students
-                    </label>
-                  </div>
-                  <div class="md:w-2/3">
-                    <input
-                      class="bg-white appearance-none border-2 border-gray-200 rounded-lg w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                      id="inline-full-name"
-                      type="number"
-                      name="maxStudents"
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      value={values.maxStudents}
-                    />
-                  </div>
-                </div>
-
-                <div class="md:flex md:items-center mb-6">
-                  <div class="md:w-1/3">
-                    <label
-                      class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
-                      for="inline-full-name"
-                    >
-                      Teacher
-                    </label>
-                  </div>
-                  <div class="md:w-2/3">
-                    <input
-                      class="bg-white appearance-none border-2 border-gray-200 rounded-lg w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                      id="inline-full-name"
-                      type="text"
-                      name="classTeacher"
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      value={values.classTeacher}
-                    />
-                  </div>
-                </div>
-
-                <div class="md:flex md:items-center mt-10">
-                  <div class="md:w-1/3"></div>
-                  <div class="md:w-2/3">
-                  {loading?<Loader/>:
-                      <button
-                        class="shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
-                        type="submit"
+            <div className="flex justify-center ">
+              <div className="flex justify-center items-center align-middle w-[50rem] bg-fuchsia-100 0 mt-5 rounded-2xl">
+                <form class="w-full max-w-sm m-5" onSubmit={handleSubmit}>
+                  <div class="md:flex md:items-center mb-6">
+                    <div class="md:w-1/3">
+                      <label
+                        class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
+                        for="inline-full-name"
                       >
-                      
-                        Create
-                      </button>
-                    }
+                        Class Name
+                      </label>
+                    </div>
+                    <div class="md:w-2/3">
+                      <input
+                        class="bg-white rounded-lg appearance-none border-2 border-gray-200  w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500 mt-4"
+                        id="inline-full-name"
+                        type="text"
+                        name="className"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.className}
+                      />
+                         {errors.className && touched.className && (
+                          <p className='text-red-600'>{errors.className}</p>
+                        )}
+                    </div>
                   </div>
-                </div>
-              </form>
+                  <div class="md:flex md:items-center mb-6">
+                    <div class="md:w-1/3">
+                      <label
+                        class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
+                        // for="inline-full-name"
+                      >
+                        Class Division
+                      </label>
+                    </div>
+                    <div class="md:w-2/3">
+                      <input
+                        class="bg-white appearance-none border-2 border-gray-200 rounded-lg w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                        // id="inline-full-name"
+                        type="text"
+                        name="division"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.division}
+                      />
+                         {errors.division && touched.division && (
+                          <p className='text-red-600'>{errors.division}</p>
+                        )}
+                    </div>
+                  </div>
+
+                  <div class="md:flex md:items-center mb-6">
+                    <div class="md:w-1/3">
+                      <label
+                        class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
+                        for="inline-full-name"
+                      >
+                        Max Students
+                      </label>
+                    </div>
+                    <div class="md:w-2/3">
+                      <input
+                        class="bg-white appearance-none border-2 border-gray-200 rounded-lg w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                        id="inline-full-name"
+                        type="number"
+                        name="maxStudents"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.maxStudents}
+                      />
+                       {errors.maxStudents && touched.maxStudents && (
+                          <p className='text-red-600'>{errors.maxStudents}</p>
+                        )}
+                    </div>
+                  </div>
+
+                  <div class="md:flex md:items-center mb-6">
+                    <div class="md:w-1/3">
+                      <label
+                        class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
+                        for="inline-full-name"
+                      >
+                        Teacher
+                      </label>
+                    </div>
+                    <div class="md:w-2/3">
+                      <input
+                        class="bg-white appearance-none border-2 border-gray-200 rounded-lg w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                        id="inline-full-name"
+                        type="text"
+                        name="classTeacher"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.classTeacher}
+                      />
+                       {errors.classTeacher && touched.classTeacher && (
+                          <p className='text-red-600'>{errors.classTeacher}</p>
+                        )}
+                    </div>
+                  </div>
+
+                  <div class="md:flex md:items-center mt-10">
+                    <div class="md:w-1/3"></div>
+                    <div class="md:w-2/3">
+                    {loading?<Loader/>:
+                        <button
+                          class="shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
+                          type="submit"
+                        >
+                        
+                          Create
+                        </button>
+                      }
+                    </div>
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
         </div>

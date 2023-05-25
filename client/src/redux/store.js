@@ -4,12 +4,16 @@ import {persistReducer} from "redux-persist";
 import { combineReducers } from "@reduxjs/toolkit";
 
 import studentReducer from "./studentSlice"
+import principalReducer from "./principla"
+import teacherReducer from "./teacher"
 
 
 const persistConfig = {key:'root',storage,version:1}
 
 const reducer =  combineReducers({
-        studentReducer
+        studentReducer,
+        principalReducer,
+        teacherReducer
     })
 
 

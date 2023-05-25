@@ -9,13 +9,15 @@ export const classCreationSchema = yup.object().shape({
         .required('Required'),    
     division:yup
         .string()
-        // .max(1,"Not Valid")
-        .required("Required"),
+        .max(1,"Not Valid")
+        .required("Required")
+        .test("is-string", "Input must be a string", (value) => {
+            return typeof value === "string";
+          }),
     classTeacher:yup
         .string()
         .min(5,"should contain 5-16 charecters")
-        .max(16,"should contain 5-16 charecters")
-        .required("Required"),
+        .max(16,"should contain 5-16 charecters"),
     maxStudents: yup
         .number('Must be a Number')
         .positive()

@@ -15,7 +15,6 @@ const ClassSchema = mongoose.Schema({
     },
     classTeacher:{
         type:String,
-        required:true
     },
     exams:{
         type:Array,

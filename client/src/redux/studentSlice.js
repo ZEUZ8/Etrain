@@ -11,7 +11,7 @@ const studentSlice = createSlice({
         userLogin:(state,action)=>{
             state.student = action.payload
         },
-        userLogOut:(state,action)=>{
+        userLogOut:(state)=>{
             state.student = {
                 token:"",
                 user:null,
