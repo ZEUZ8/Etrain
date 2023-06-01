@@ -5,8 +5,6 @@ const TimeTable = () => {
   return (
     <div>
       <div
-        style={{ backgroundImage: "url('/img/banner_bg.png')" }}
-        className="bg-cover bg-center bg-no-repeat h-screen "
       >
         <div className="p-4 sm:ml-64">
             <div className="text-3xl underline underline-offset-8 ">Time Table</div>

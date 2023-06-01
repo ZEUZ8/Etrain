@@ -31,6 +31,10 @@ const TeacherSchema = mongoose.Schema({
         type:String,
         // required:true
     },
+    password:{
+        type:String,
+        required:true
+    },
     resume:{
         type:String
     },

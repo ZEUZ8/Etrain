@@ -2,10 +2,30 @@ import { axiosPrincipalInstance } from "../../axios";
 
 
 
-export const classCreation = async (value) =>{
-    console.log(value,"enterd the class createiion services ")
+//principal service function for login 
+export const principalLoginService = async(value)=>{
+    // console.log("principal login service at / fronEdn / serveces")
     const config = {
         headers:{
+            "Content-Type":"application/json"
+        }
+    }
+    try{
+        const respons = await axiosPrincipalInstance.post("/login",value,config)
+        return respons.data
+    }catch(error){
+        console.log(error,"  error at the principal login services frond End")
+        return error
+    }
+}
+
+//principal services function for creating a new calss
+export const classCreation = async (token,value) =>{
+    // console.log(value,"enterd the class createiion services ")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization: `Bearer ${token}`,
             "Content-Type":"application/json"
         },
     };
@@ -19,37 +39,64 @@ export const classCreation = async (value) =>{
     }
 }
 
-export const classes = async ()=>{
-    console.log("entered in the class finding function")
+//principal services function for finding all the classes
+export const classes = async (token)=>{
+    // console.log("entered in the class finding function")
     const config = {
         headers:{
+            Accept:"application/json",
+            Authorization: `Bearer ${token}`,
             "Content-Type":"application/json"
         },
     };
     try{
-        const respons = await axiosPrincipalInstance.get("/classes")
+        const respons = await axiosPrincipalInstance.get("/classes",config)
         return respons.data
     }catch(error){
-        console.log(error)
+        console.log(error.response.data)
         console.log("error occured at the principal class getting services")
-        return error
+        return error.response.data
     }
 }
 
-export const teachers  = async ()=>{
-    console.log("entered in the teachers finding service function")
+//principla service function for finding all the teachers
+export const teachers  = async (token)=>{
+    console.log(token,"condoling for kiran")
+    // console.log("entered in the teachers finding service function")
     const config = {
         headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
             "Content-Type":"application/json"
         },
     };
     try{
-        const respons = await axiosPrincipalInstance.get("/teachers")
+        const respons = await axiosPrincipalInstance.get("/teachers",config)
         return(respons.data)
     }catch(error){
         console.log("error occured in the principal teachers finding services")
         console.log(error)
-        return(error)
+        return(error.response.data)
+    }
+}
+
+//principal teachers editig functions services goes  here
+export const updateTeacher  = async (token,formData)=>{
+    console.log("entered in the teachers updating service function")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const respons = await axiosPrincipalInstance.put("/teachers",formData,config)
+        return(respons.data)
+    }catch(error){
+        console.log("error occured in the principal teachers updating services")
+        console.log(error)
+        return(error.response.data)
     }
 }
 

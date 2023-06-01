@@ -4,8 +4,6 @@ const Profile = () => {
   return (
     <div>
       <div
-        style={{ backgroundImage: "url('/img/banner_bg.png')" }}
-        className="bg-cover bg-center bg-no-repeat h-screen "
       >
 
         <div class="p-4 sm:ml-64">

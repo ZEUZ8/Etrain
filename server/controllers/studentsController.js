@@ -78,7 +78,8 @@ const studentLogin = async (req, res) => {
       res.json({ msg: "student don't exists" });
     } else {
       if (existStudent.verification === false) {
-        sendNewMail(existStudent, res);
+        sendNewMail(existStudent);
+        res.status(200).json({msg:"mail not verified"})
       } else {
         const checkedPassword = await bcrypt.compare(
           password,

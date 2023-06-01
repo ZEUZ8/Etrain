@@ -1,22 +1,25 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import {studentReducer} from "../../../redux/store"
 import { useNavigate } from 'react-router-dom'
 import './home.css'
 
-const Home = () => {
+const Home = ({userType}) => {
+  console.log(userType)
   const data = useSelector(state => state.studentReducer)
+  console.log(data)
   const navigate = useNavigate()
   const profileClick = ()=>{
+
     if(data.student.token){
       if(data.student.user === "student"){
         navigate("/profile")
-      }else {
-        navigate("/teacher/profile")
+      }else{
+        navigate("/login")
       }
     }else{
       navigate("/signup")
     }
+
   }
 
   return (

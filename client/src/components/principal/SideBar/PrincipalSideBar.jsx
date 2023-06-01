@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { userLogOut } from "../../../redux/studentSlice";
+import { principalLogout } from "../../../redux/principal";
 import { Link, useNavigate } from "react-router-dom";
 
 const SideBar = () => {
@@ -8,7 +8,7 @@ const SideBar = () => {
   const navigate = useNavigate()
   
   const handleLogOut = ()=>{
-    dispatch(userLogOut())
+    dispatch(principalLogout())
     navigate("/")
   }
 

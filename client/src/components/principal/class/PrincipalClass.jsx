@@ -2,6 +2,7 @@ import React,{useState,useEffect} from "react";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -12,6 +13,9 @@ import { classCreation,classes } from '../../../axios/services/principalServices
 
 const PrincipalClass = () => {
 
+  const principalData = useSelector(state => state.principalReducer.principal)
+  const token = principalData?.token
+
   const [loading,setLoading] = useState(false)
   const [data,setData] = useState([])
   const navigate = useNavigate()
@@ -21,29 +25,32 @@ const PrincipalClass = () => {
     setLoading(true)
     const fetchData =  async ()=>{
       try{
-        const respons = await classes()
-        if(respons){
+        const respons = await classes(token)
+        if(respons == "Access Denied" || respons.message === "jwt malformed"){
+          navigate("/principal/login")
+        }else {
           console.log(respons.classes)
           setData(respons.classes)
-        }else{
-          console.log("entered in the else condition inthe fron End clsses findg function")
         }
       }catch(error){
         console.log(error)
       }
+      setLoading(false)
     }
     fetchData()
-    setLoading(false)
   },[])
 
   async function onSubmit() {
     setLoading(true)
-    const response = await classCreation(values)
+    const response = await classCreation(token,values)
     console.log(response)
     if(response.msg === "created"){
       toast.success("New Class Created")
+      setData([...data,response.respons])
     }else if("class Already Added"){
       toast.error(response.msg)
+    }else{
+      console.log(response,"kiarn")
     }
     setLoading(false)
   }

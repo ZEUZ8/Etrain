@@ -25,10 +25,10 @@ export const studentLogin = async (value)=>{
     };
     try{
         const response = await axiosStudentInstance.post("/login",value,config)
-        return response.data
+        return(response.data)
 
     }catch(error){
-        console.log(error)
+        console.log(error,"er")
         console.log("error at the student login services")
     }
 }

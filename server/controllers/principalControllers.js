@@ -3,7 +3,42 @@ const jwt = require("jsonwebtoken");
 const nodeMailer = require("nodemailer");
 const Class = require("../models/Class");
 const Teacher = require("../models/teacher")
+const Admin = require("../models/admin")
 
+//controller for the handling he principal login function
+const principalLogin = async(req,res)=>{
+  console.log("entered at the principal login controllers in the backend /controllers")
+  try{
+    const {email,password} = req.body;
+    const chumma = Admin.find({})
+    const principal = await Admin.findOne({email:email})
+    if(!principal){
+      res.json({msg:"Invalid Credentials"})
+    }else{
+        const checkedPassword = await bcrypt.compare(password,principal.password);
+        if(!checkedPassword){
+        }else{
+          const token = jwt.sign(
+            {
+            name:principal.name,
+            email:principal.email,
+            id:principal.id,
+            role:"principal"
+            },
+            "PrincipalTokenSecret",
+            {expiresIn:"2d"}
+          )
+          res.status(200).json({msg:"login succesfull",token:token,user:"principal",id:principal._id,email:principal.email})
+        }
+    }
+
+  }catch(error){
+    console.log(error,"  error at the teacher controllers login")
+    res.status(500).json({msg:"error at teacher login"})
+  }
+}
+
+// cotroller for handling the class creation by the principal
 const classCreation = async (req, res) => {
   const { className, division, classTeacher, maxStudents } = req.body;
   try {
@@ -11,17 +46,21 @@ const classCreation = async (req, res) => {
       className: className,
       division: division,
     });
-    if (existingClass) {
+    // const existingTeahcer = await Teacher.findOne({name:classTeacher})
+    // if(!existingTeahcer){
+    //   res.status(500).json({msg:"teacher don't exist"})
+    // }
+     if (existingClass) {
       res.json({ msg: "class Already Added" });
     } else {
       const respons = await Class.create({
         className,
         division,
-        classTeacher,
+        // classTeacher,
         maxStudents,
       });
       if (respons) {
-        res.status(200).json({ msg: "created" });
+        res.status(200).json({ msg: "created",respons });
       } else {
         console.log("entered in the else case of the class creatioin respons");
       }
@@ -39,7 +78,6 @@ const getClasses = async (req, res) => {
   try {
     const existingClass = await Class.find({});
     if (existingClass) {
-      console.log(existingClass);
       res.status(200).json({ msg: "success", classes: existingClass });
     } else {
       res.status(500).json({ msg: "Class not found" });
@@ -50,6 +88,7 @@ const getClasses = async (req, res) => {
   }
 };
 
+//controller function for getting all the existing teacher 
 const getTeachers = async (req, res) => {
   console.log(
     "entered at the teachers finding function at backend principal controllers"
@@ -57,7 +96,6 @@ const getTeachers = async (req, res) => {
   try{
     const existingTeachers = await Teacher.find({})
     if(existingTeachers){
-        console.log(existingTeachers)
         res.status(200).json({teachers:existingTeachers})
     }else{
         console.log("Teachers dont existing")
@@ -68,6 +106,28 @@ const getTeachers = async (req, res) => {
     res.status(500).json({msg:"Error at finding Teachers"})
   }
 };
+
+//controller function for updating the teacher 
+const updateTeachers = async (req,res)=>{
+  console.log("enterd")
+  try{
+    const {className,division,isChecked,teacherId} = req.body
+    const existingClass = await Class.findOne({className:className,division:division})
+    if(existingClass){
+      const teacher = await Teacher.findOneAndUpdate({_id:teacherId},{class:existingClass.className,division:existingClass.division,approved:isChecked})
+      if(teacher){
+        res.status(200).json({msg:"updation successfull",teacher:teacher})
+      }else{
+        res.status(500).json({msg:"tea"})
+        console.log("updation failed")
+      }
+    }else{
+      res.status(500).json({msg:"class not found"})
+    }
+  }catch(error){
+    res.status(500).json({msg:"Erro! Teacher Updation"})
+  }
+}
 
 // const otpVerification = async (req, res) => {
 //     const id = req.params.id;
@@ -116,7 +176,9 @@ const getTeachers = async (req, res) => {
 // };
 
 module.exports = {
+  principalLogin,
   classCreation,
   getClasses,
   getTeachers,
+  updateTeachers
 };

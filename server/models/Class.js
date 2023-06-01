@@ -3,22 +3,21 @@ const mongoose = require("mongoose")
 const ClassSchema = mongoose.Schema({
     className:{
         type:Number,
-        required:true
+
     },
     division:{
         type:String,
-        required:true
     },
     maxStudents:{
         type:Number,
-        required:true
+
     },
     classTeacher:{
-        type:String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'teacher',
     },
-    exams:{
-        type:Array,
-        exam:{
+    exams:[
+        {
             examName:{
                 type:String,
             },
@@ -38,7 +37,31 @@ const ClassSchema = mongoose.Schema({
                 }
             }
         }
-    }
+    ],
+    weeklyTasks:[
+        {
+            taskName:{
+                type:String,
+                required:true
+            },
+            startDate:{
+                type:Date,
+                required:true,
+            },
+            endDate:{
+                type:Date,
+                required:true
+            },
+            taskDiscription:{
+                type:String,
+                required:true
+            },
+            createdAt:{
+                type:Date,
+                default:Date.now()
+            }
+        }
+    ]
 })
 
 const Class = mongoose.model("classes",ClassSchema)

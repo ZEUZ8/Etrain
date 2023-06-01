@@ -1,15 +1,14 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useFormik } from 'formik'
 import {toast,ToastContainer} from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css';
 import {useDispatch} from "react-redux";
-import {userLogin} from "../../../redux/studentSlice"
 
-import {studentLogin} from '../../../axios/services/studentServices/studentServices'
+
 import { loginSchema } from '../../../validations/students/loginValidation'
 
-const Login = () => {
+const Login = ({handlingSubmit,userType}) => {
 
   const [loading,setLoading] = useState(false)
   const navigate = useNavigate()
@@ -18,20 +17,17 @@ const Login = () => {
   async function onSubmit(){
     console.log("onSubmit in the Studen Login")
     setLoading(true)
-    const response = await studentLogin(values)
-    if(response.msg === "login succesfull"){
-      toast.success(response.msg)
-      dispatch(
-        userLogin({token:response.token,user:response.user,id:response.id})
-      )
-      setLoading(false)
-      navigate("/")
-    }
-    else{
-      toast.error(response.msg)
-      console.log(response.msg)
+    const result = await handlingSubmit(values)
+
+    if(result === "Login Successfull"){
+      toast.success("Login Succesull")
+      navigate(`/`)
+    }else{
+      toast.error(result)
       navigate('/signup')
     }
+    
+    setLoading(false)
   }
 
   const {values,errors,touched,handleSubmit,handleBlur,handleChange} = 
@@ -45,7 +41,11 @@ const Login = () => {
   })
 
   const signupPage = ()=>{
-    navigate("/signup")
+    if(userType === "teacher"){
+      navigate("/teacher/register")
+    }else{
+      navigate("/signup")
+    }
   }
 
   return (
@@ -60,7 +60,7 @@ const Login = () => {
         </div>
       </div>
       <div class="flex justify-center mt-5">
-          <div class="bg-left-gradient w-[32rem]  h-[42rem] align-middle rounded-[5rem]"  >
+          <div class={`${userType==="teacher"? `bg-sky-200` :`bg-left-gradient`} w-[32rem]   h-[42rem] align-middle rounded-[5rem]`}  >
             {/* <div class="flex min-h-full flex-col justify-center  px-6 py-12 lg:px-8"> */} {/* just removed the justify-center */} 
             <div class="flex min-h-full flex-col   px-6 py-12 lg:px-8">
               <div class="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -130,12 +130,12 @@ const Login = () => {
                   </div>
                 </form>
               
-                <p class=" text-center mt-2 text-sm text-gray-500">
+                {userType !== "principal" && ( <p class=" text-center mt-2 text-sm text-gray-500">
                   Create Account?
                   <a href="#" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500" 
                   onClick={signupPage}> 
                   Click here</a>
-                </p>
+                </p>)}
               </div>
               <div>
                   <h4 class="text-white underline underline-offset-8 pt-[1rem]">Login With</h4>

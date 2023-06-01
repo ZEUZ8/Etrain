@@ -7,7 +7,7 @@ import Attendence from "../components/students/attendence/Attendence"
 
 import OTPverification from "../pages/common/otpVerification/OTPverification";
 import StudentProfile from "../pages/students/profile/StudentProfile";
-import StudentLogin from "../pages/students/login/studentLoginPage"
+import Login from "../pages/students/login/studentLoginPage"
 import StudentTimeTable from "../pages/students/timeTable/StudentTimeTable";
 
 function StudentRoutes(){
@@ -16,7 +16,7 @@ function StudentRoutes(){
             <Routes>
                 <Route path="/" element={< Home />}></Route>
                 <Route path="/signup" element={< SignUp />}></Route>
-                <Route path="/login" element={< StudentLogin />}></Route>
+                <Route path="/login" element={< Login userType="student" />}></Route>
                 <Route path="/otp" element={< OTPverification />}></Route>
                 <Route path="/profile" element={< StudentProfile />}></Route>
                 <Route path="/attendence" element={< Attendence />}></Route>
