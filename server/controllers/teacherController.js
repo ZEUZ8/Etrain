@@ -7,6 +7,8 @@ const OTP = require("../models/Otp");
 const Class = require("../models/Class");
 const Student = require("../models/students");
 const Attandence = require("../models/attandence");
+const moment = require('moment');
+// const { options } = require("../routes/teacherRoutes");
 
 //controller for handling the teacher signUp funcion
 const teacherRegister = async (req, res) => {
@@ -138,25 +140,27 @@ const createWeeklyTask = async (req, res) => {
 
     const { division } = classTeacher;
 
-    const existingTask = await Class.exists({className:classTeacher.class,division:division,weeklyTasks:{$elemMatch:{taskName:taskName}}})
+    const existingTask = await Class.exists({
+      className: classTeacher.class,
+      division: division,
+      weeklyTasks: { $elemMatch: { taskName: taskName } },
+    });
 
     if (existingTask) {
-      console.log("task existing tit datratbase")
+      console.log("task existing tit datratbase");
       res.json({ msg: "Task already added" });
     } else {
       const response = await Class.findOneAndUpdate(
         { className: classTeacher.class, division: division },
         {
-          $push:{
-            weeklyTasks:
-              {
-                taskName: taskName,
-                startDate: startDate,
-                endDate: endDate,
-                taskDiscription: taskDiscription,
-              },
-            
-          }
+          $push: {
+            weeklyTasks: {
+              taskName: taskName,
+              startDate: startDate,
+              endDate: endDate,
+              taskDiscription: taskDiscription,
+            },
+          },
         }
       );
       if (response) {
@@ -169,61 +173,106 @@ const createWeeklyTask = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.status(500).json({msg:"weekly task not created"})
+    res.status(500).json({ msg: "weekly task not created" });
   }
 };
 
-
-//controller function for the teacher innoder to get all the scheduled tasks 
-const getWeeklyTask = async(req,res)=>{
-  const teacherId = req.user.id
-  try{
-    const teacher = await Teacher.findOne({_id:teacherId})
-    const existingClass = await Class.findOne({className:teacher.class,division:teacher.division})
-    if(existingClass){
-      res.status(200).json({msg:"succesfull",tasks:existingClass.weeklyTasks})
-    }else{
-      res.status(500).json({msg:"Task not found"})
+//controller function for the teacher innoder to get all the scheduled tasks
+const getWeeklyTask = async (req, res) => {
+  const teacherId = req.user.id;
+  try {
+    const teacher = await Teacher.findOne({ _id: teacherId });
+    const existingClass = await Class.findOne({
+      className: teacher.class,
+      division: teacher.division,
+    });
+    if (existingClass) {
+      res
+        .status(200)
+        .json({ msg: "succesfull", tasks: existingClass.weeklyTasks });
+    } else {
+      res.status(500).json({ msg: "Task not found" });
     }
-  }catch(error){
-    console.log(error)
-    res.status(500).json({msg:"Task not found"})
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: "Task not found" });
   }
+};
 
-}
-
-
-//controller function for finding all students in the class 
-const getStudents = async(req,res)=>{
-  const teacherId = req.user.id
-  console.log(teacherId)
-  try{
-    const teacher = await Teacher.findOne({_id:teacherId})
+//controller function for finding all students in the class
+const getStudents = async (req, res) => {
+  const teacherId = req.user.id;
+  console.log(teacherId);
+  try {
+    const teacher = await Teacher.findOne({ _id: teacherId });
     // const students = await Student.find({studentClass:teacher.class,division:teacher.division})
-    const students = await Student.find({ studentClass: teacher.class, division: teacher.division });
-    if(students){
-      res.status(200).json({msg:"succesfull",students:students})
-    }else{
-      res.status(500).json({msg:"students not found"})
+    const students = await Student.find({
+      studentClass: teacher.class,
+      division: teacher.division,
+    });
+    if (students) {
+      res.status(200).json({ msg: "succesfull", students: students });
+    } else {
+      res.status(500).json({ msg: "students not found" });
     }
-  }catch(error){
-    console.log(error)
-    res.status(500).json({msg:"Students not found"})
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: "Students not found" });
   }
-}
+};
 
-//controller function for updatiing the student attandence 
-const markStudentAttadence = async(req,res)=>{
-  console.log(req.body)
-  const {status,student} = req.body
-  try{
-    const response = await Attandence.findOneAndUpdate({})
-    console.log("this inside the try catch")
-  }catch(error){
-    console.log(error)
-    res.status(500).json({msg:error.message})
+//controller function for updatiing the student attandence
+const markStudentAttadence = async (req, res) => {
+  console.log(req.body);
+  try {
+    // const currentDate = 
+    // const dateString = currentDate;
+    //     const dateObject = moment.utc(dateString).add(1, "days");
+    //     const formattedISOString = dateObject.toISOString();
+
+   
+    for(i=0;i<req.body.length;i++){
+      const { status, student } = req.body[i];
+      const { studentClass, division, _id } = student;
+      const options = {
+        upsert: true, // Create a new document if it doesn't exist
+        new: true, // Return the updated document
+      }
+      const existingClass = await Class.findOne({
+        className: studentClass,
+        division: division,
+      });
+      const classId = existingClass._id;
+      const date = new Date(Date.now())      
+      const formattedDate = date.toISOString().substring(0, 10);
+      console.log(formattedDate)
+      var response = await Attandence.findOneAndUpdate({
+        classId: classId,
+        studentId: _id,
+      },
+      {
+        $push:{
+          attandence:{
+            status:status,
+            day:date
+          }
+        }
+      },options);
+    }
+
+    console.log(response)
+    if(response){
+      res.status(200).json({msg:"Marked succesfully"})
+    }else{
+      res.status(500).json({msg:"Not marked"})
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: error.message });
   }
-}
+
+};
+
 
 
 module.exports = {
@@ -234,4 +283,5 @@ module.exports = {
   getWeeklyTask,
   getStudents,
   markStudentAttadence,
+  
 };

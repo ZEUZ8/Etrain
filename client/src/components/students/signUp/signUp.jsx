@@ -16,6 +16,7 @@ const SignUp = () => {
   async function onSubmit() {
     console.log("at the onSubmit functiion in the signup page");
     setLoading(true);
+    
     const response = await studentsRegister(values);
     if (response.msg === "Account Created") {
       // dispatch(

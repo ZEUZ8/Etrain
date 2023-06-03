@@ -5,7 +5,9 @@ const nodeMailer = require("nodemailer");
 const OTP = require("../models/Otp");
 const Student = require("../models/students");
 const { resolve } = require("path");
-const { rejects } = require("assert");
+const { rejects, match } = require("assert");
+const Attandence = require("../models/attandence");
+const { default: mongoose } = require("mongoose");
 
 let config = {
   service: "gmail",
@@ -170,9 +172,9 @@ const otpVerification = async (req, res) => {
   try {
     //checking that otp sended user have added to the OTP collection if not, then the verifacation mail has not sended to the user
     const checking = await OTP.findOne({ userId: id });
-    console.log(otp, checking.otp);
+
     const verifacationOtp = await bcrypt.compare(otp, checking.otp);
-    console.log(verifacationOtp);
+
     if (verifacationOtp) {
       //checking, the finded user id is existing the user collection and the otp is right
       const change = await Student.findOneAndUpdate(
@@ -202,16 +204,59 @@ const otpVerification = async (req, res) => {
       }
     } else {
       console.log("otp not match");
-      res.status(500).json({ msg: "Not Verified" });
     }
   } catch (error) {
     console.log(`error at the otp verification sinan--> ${error}`);
   }
 };
 
+//
+const getStudentsAttandence = async(req,res)=>{
+  const userId = req.user.id
+
+  try{
+    const date = new Date(Date.now())      
+    const formattedDate = date.toISOString().substring(0, 10);
+    const checkDate = new Date(formattedDate)
+    const CheckMonth = checkDate.getMonth()+1
+    
+    const response = await Attandence.aggregate([
+      {
+        $match: {
+          studentId: new mongoose.Types.ObjectId(userId),
+        },
+      }, 
+      {
+        $unwind: '$attandence', // Unwind the attendance array
+      },
+      {
+        $group: {
+          _id: { $month:  '$attandence.day' } ,
+          attendance: { $push: '$attandence' }, // Collect the attendance objects in an array
+        },
+      },
+      {
+        $match: {
+          _id: CheckMonth,
+        },
+      },
+    ]);
+    if(response){
+      res.status(200).json({msg:"succesfull",presents:response[0]})
+    }else{
+      res.status(500).json({msg:"Couldn't find Marked Attandence"})
+    }
+  }catch(error){
+    res.status(500).json({msg:error.message})
+    console.log(error)
+  }
+}
+
 module.exports = {
   studentRegister,
   studentLogin,
   sendNewMail,
   otpVerification,
+  getStudentsAttandence,
+  getStudentsAttandence,
 };

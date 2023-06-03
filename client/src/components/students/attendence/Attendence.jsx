@@ -7,7 +7,6 @@ const Attendence = () => {
     <div>
       <SideBar/>
       <Navbar/>
-      sinan
     </div>
   )
 }

@@ -3,7 +3,8 @@ const jwt = require("jsonwebtoken");
 const nodeMailer = require("nodemailer");
 const Class = require("../models/Class");
 const Teacher = require("../models/teacher")
-const Admin = require("../models/admin")
+const Admin = require("../models/admin");
+const Exam = require("../models/exam");
 
 //controller for the handling he principal login function
 const principalLogin = async(req,res)=>{
@@ -109,7 +110,6 @@ const getTeachers = async (req, res) => {
 
 //controller function for updating the teacher 
 const updateTeachers = async (req,res)=>{
-  console.log("enterd")
   try{
     const {className,division,isChecked,teacherId} = req.body
     const existingClass = await Class.findOne({className:className,division:division})
@@ -118,8 +118,7 @@ const updateTeachers = async (req,res)=>{
       if(teacher){
         res.status(200).json({msg:"updation successfull",teacher:teacher})
       }else{
-        res.status(500).json({msg:"tea"})
-        console.log("updation failed")
+        res.status(500).json({msg:"updation failed"})
       }
     }else{
       res.status(500).json({msg:"class not found"})
@@ -128,6 +127,49 @@ const updateTeachers = async (req,res)=>{
     res.status(500).json({msg:"Erro! Teacher Updation"})
   }
 }
+
+//controller function for creating new Exam 
+const createExam = async(req,res)=>{
+  console.log("entered in the exam creating function")
+  try{
+    const {examName,startDate,endDate,examDiscription,timeTable} = req.body
+    const existingExam = await Exam.findOne({examName:examName})
+    if(!existingExam){
+      const response = await Exam.create({examName:examName,startDate:startDate,endDate:endDate,examDiscription:examDiscription,timeTable})
+      if(response){
+        res.status(200).json({msg:"Exam created",exam:response})
+      }else{
+        res.status(500).json({msg:"Exam not created"})
+      }
+    }else{
+      res.status(500).json({msg:"exam alredy added"})
+    }
+  }catch(error){
+    console.log(error)
+    res.status(500).json({msg:error.message})
+  }
+}
+
+/*controller fucntion for the principal to find all the existing exam and return them 
+in this controller the req is already verified so the after that finding all the exam in the exam collection and returning 
+all of them
+*/
+const GetExam = async(req,res)=>{
+  console.log("enterd in the exam getting function ")
+  try{
+    const response = await Exam.find({})
+    if(response){
+      console.log(response)
+      res.status(200).json({msg:"success",exams:response})
+    }else{
+      console.log(response)
+      res.status(500).json({msg:"Couldn't find Exams"})
+    }
+  }catch(error){
+    res.status(500).json({msg:error.message})
+  }
+}
+
 
 // const otpVerification = async (req, res) => {
 //     const id = req.params.id;
@@ -180,5 +222,7 @@ module.exports = {
   classCreation,
   getClasses,
   getTeachers,
-  updateTeachers
+  updateTeachers,
+  createExam,
+  GetExam
 };

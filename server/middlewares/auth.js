@@ -51,6 +51,36 @@ const verifyTokenTeacher = async (req, res, next) => {
     }
 };
 
+
+
+const verifyStudent = async (req, res, next) => {
+  console.log(req.headers,"consling the data ")
+  console.log("student middleWare")
+    try {
+      let token = req.headers["authorization"];
+      if (!token) {
+        return res.status(403).send("Access Denied");
+      }
+  
+      if (token.startsWith("Bearer ")) {
+        token = token.slice(7, token.length).trimLeft();
+      }
+      const verified = jwt.verify(token, "StudentTokenSecret");
+      req.user = verified;
+      if (verified.role === "student") {
+        console.log("student with token");
+        next();
+      } else {
+        return res.status(403).send("Access Denied");
+      }
+    } catch (err) {
+      console.log("errot ocured in here")
+      res.status(500).json({ msg:err.message });
+    }
+};
+
+
+
 const checkingTeacher = async(req,res,next)=>{
   console.log("checking the teacher")
   try{
@@ -76,4 +106,5 @@ module.exports = {
   verifyTokenAdmin,
   verifyTokenTeacher,
   checkingTeacher,
+  verifyStudent
 }

@@ -9,7 +9,7 @@ const {
     createWeeklyTask ,
     getWeeklyTask,
     getStudents,
-    markStudentAttadence
+    markStudentAttadence,
 } = require("../controllers/teacherController")
 
 

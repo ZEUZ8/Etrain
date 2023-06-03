@@ -1,30 +1,28 @@
 const mongoose = require("mongoose")
 
-const attendenceSchema = mongoose.Schema([
-    student={
+const attendenceSchema = mongoose.Schema({
         studentId:{
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'student',
+            ref: 'students',
         },
         classId:{
             type:mongoose.Schema.Types.ObjectId,
             ref:"class"
-        }
-    },
-    [
-        {
-            day:{
-                type:Date,
-            },
-            status:{
-                type:String
-            },
-            reason:{
-                type:String
+        },
+        attandence:[
+            {
+                day:{
+                    type:Date,
+                },
+                status:{
+                    type:String
+                },
+                reason:{
+                    type:String
+                }
             }
-        }
-    ]
-])
+        ]
+})
 
 
 const Attandence = mongoose.model('attandence',attendenceSchema)

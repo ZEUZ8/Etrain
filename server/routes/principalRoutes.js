@@ -8,6 +8,8 @@ const {
     getClasses,
     getTeachers,
     updateTeachers,
+    createExam,
+    GetExam,
     // otpVerification
 }= require("../controllers/principalControllers")
 
@@ -19,6 +21,8 @@ router.post("/createClass",verifyTokenAdmin,classCreation)
 router.get("/classes",verifyTokenAdmin,getClasses)
 router.get("/teachers",verifyTokenAdmin,getTeachers)
 router.put("/teachers",verifyTokenAdmin,updateTeachers)
+router.post('/exam',verifyTokenAdmin,createExam)
+router.get('/exam',verifyTokenAdmin,GetExam)
 // router.post("/verify/:id",otpVerification)
 
 module.exports= router

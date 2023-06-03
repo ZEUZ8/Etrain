@@ -33,7 +33,7 @@ export const classCreation = async (token,value) =>{
         const response = await axiosPrincipalInstance.post("/createClass", value, config);
         return response.data
     }catch(error){
-        console.log(error)
+        console.log(error.response.data)
         console.log("erro at the principal new class creation")
         return error
     }
@@ -100,6 +100,42 @@ export const updateTeacher  = async (token,formData)=>{
     }
 }
 
+
+//principal exam creation function services goes here
+export const CreateExam = async(token,value)=>{
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosPrincipalInstance.post('/exam',value,config)
+        return(response.data)
+    }catch(error){
+        console.log("error occured in the principal exam creating services",error)
+        return(error.response.data)
+    }
+}
+
+//principal services function for finding all the exams goes here
+export const GetExam = async(token)=>{
+    console.log("entered in the exam getting principal services")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosPrincipalInstance.get('/exam',config)
+        return(response.data)
+    }catch(error){
+        console.log("eroro occured at the principal exam finding services",error)
+    }
+}
 
 // export const principalOtpVerification = async (value,user,id)=>{
 //     console.log(value,"consoling the serivces")

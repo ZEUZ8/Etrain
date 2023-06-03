@@ -49,3 +49,22 @@ export const otpVerification = async (value,user,id)=>{
     }
 }
 
+export const GetAttandence = async (token)=>{
+
+    console.log("this is the attandefcn finding function")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosStudentInstance.get("/attandence",config)
+        return response.data
+    }catch(error){
+        console.log(error)
+        return({msg:error.response.data})
+    }
+}
+

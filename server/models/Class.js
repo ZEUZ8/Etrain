@@ -18,24 +18,8 @@ const ClassSchema = mongoose.Schema({
     },
     exams:[
         {
-            examName:{
-                type:String,
-            },
-            totalMark:{
-                type:Number
-            },
-            subjects:{
-                type:Array,
-                subjects:{
-                    Object,
-                    subjectName:{
-                        type:String,
-                    },
-                    subjectMark:{
-                        type:Number
-                    }
-                }
-            }
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"exams"
         }
     ],
     weeklyTasks:[

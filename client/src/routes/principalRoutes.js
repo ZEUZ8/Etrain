@@ -5,6 +5,7 @@ import PrincipalDashBoard from "../pages/principal/principalDashBoard/PrincipalD
 import PrincipalClass from '../pages/principal/Class/principalClasses';
 import PrincipalTeachersPage from "../pages/principal/teachers/PrincipalTeachersPage";
 import Login from "../pages/students/login/studentLoginPage"
+import PrincipalExamPage from "../pages/principal/exam/PrincipalExamPage";
 
 
 const PrincipalRoutes = () => {
@@ -15,6 +16,7 @@ const PrincipalRoutes = () => {
             <Route path="/" element={<PrincipalDashBoard/>}></Route>
             <Route path="/class" element={< PrincipalClass/>}></Route>
             <Route path="/teachers" element={< PrincipalTeachersPage />}></Route>
+            <Route path="/exams" element={< PrincipalExamPage />}></Route>
         </Routes>
     </div>
   )

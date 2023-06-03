@@ -108,7 +108,7 @@ export const GetStudents = async(token)=>{
     }
 }
 
-export const MarkAttandence = async(token,formData)=>{
+export const MarkAttandence = async(token,marking)=>{
     console.log("entered in the attandence marking function ")
     const config = {
         headers:{
@@ -118,11 +118,11 @@ export const MarkAttandence = async(token,formData)=>{
         },
     };
     try{
-        const response = await axiosTeacherInstance.post("/attandence",formData,config)
+        const response = await axiosTeacherInstance.post("/attandence",marking,config)
         return response.data
     }catch(error){
         console.log(error)
         return({msg:error.response.data})
     }
-
 }
+
