@@ -10,6 +10,13 @@ const {
     getWeeklyTask,
     getStudents,
     markStudentAttadence,
+    makeComplaint,
+    GetComplaints,
+    UpdateComplaints,
+
+    makeReview,
+    GetReviews,
+    UpdateReviews
 } = require("../controllers/teacherController")
 
 
@@ -20,10 +27,29 @@ const {
 } = require("../middlewares/auth")
 
 router.post("/register",teacherRegister)
+
 router.post("/login",teacherLogin)
+
 router.post("/verify/:id",otpVerification)
+
 router.put("/weeklyTask",verifyTokenTeacher,checkingTeacher,createWeeklyTask)
+
 router.get("/weeklyTask",verifyTokenTeacher,checkingTeacher,getWeeklyTask)
+
 router.get("/students",verifyTokenTeacher,checkingTeacher,getStudents)
+
 router.post("/attandence",verifyTokenTeacher,markStudentAttadence)
+
+router.post("/complaint",verifyTokenTeacher,makeComplaint)
+
+router.get("/complaint",verifyTokenTeacher,GetComplaints)
+
+router.put("/complaint",verifyTokenTeacher,UpdateComplaints)
+
+router.post("/review",verifyTokenTeacher,checkingTeacher,makeReview)
+
+router.get("/review",verifyTokenTeacher,GetReviews)
+
+router.put("/review",verifyTokenTeacher,UpdateReviews)
+
 module.exports = router

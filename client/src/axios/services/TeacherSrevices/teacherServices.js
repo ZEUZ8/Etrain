@@ -109,7 +109,6 @@ export const GetStudents = async(token)=>{
 }
 
 export const MarkAttandence = async(token,marking)=>{
-    console.log("entered in the attandence marking function ")
     const config = {
         headers:{
             Accept:"application/json",
@@ -125,4 +124,132 @@ export const MarkAttandence = async(token,marking)=>{
         return({msg:error.response.data})
     }
 }
+
+
+
+// all the complaint section code goes here
+
+        //creating a new complaint on the student 
+        export const makeComplaint = async(value,token)=>{
+            console.log(token,value , "  consooing fo rhe alsdfkl")
+            console.log("entered in the complaint making services ")
+            const config = {
+                headers:{
+                    Accept:"application/json",
+                    Authorization:`Bearer ${token}`,
+                    "Content-Type":"application/json"
+                },
+            };
+            try{
+                const response = await axiosTeacherInstance.post("/complaint",value,config)
+                return response.data
+            }catch(error){
+                console.log(error)
+                return(error.response.data)
+            }
+        }
+
+        //getting all the complaints that have created for the useEffect function to show in page mounting
+        export const GetComplaints = async(token)=>{
+            console.log("enterd inthe sutdent comaplaint getting services")
+            const config = {
+                headers:{
+                    Accept:"application/json",
+                    Authorization:`Bearer ${token}`,
+                    "Content-Type":"application/json"
+                },
+            };
+            try{
+                const response = await axiosTeacherInstance.get("/complaint",config)
+                return response.data
+            }catch(error){
+                console.log(error)
+                return(error.response.data)
+            }
+        }
+
+        //teacher services for editing and updating the existing complaint 
+        export const EditComplaint = async(value,token)=>{
+            console.log("entered in the complaint edit function")
+            const config = {
+                headers:{
+                    Accept:"application/json",
+                    Authorization:`Bearer ${token}`,
+                    "Content-Type":"application/json"
+                },
+            };
+            try{
+                const response = await axiosTeacherInstance.put("/complaint",value,config)
+                return(response.data)
+            }catch(error){
+                console.log(error)
+                return(error.response.data)
+            }
+        }
+
+        
+
+
+
+//all the review section services goes here 
+
+        //creating a new Review on the student 
+        export const makeReview = async(value,token)=>{
+            console.log(token,value , "  sinana's ideaf ont fialed")
+            console.log("entered in the review making services ")
+            const config = {
+                headers:{
+                    Accept:"application/json",
+                    Authorization:`Bearer ${token}`,
+                    "Content-Type":"application/json"
+                },
+            };
+            try{
+                const response = await axiosTeacherInstance.post("/review",value,config)
+                return response.data
+            }catch(error){
+                console.log(error)
+                return(error.response.data)
+            }
+        }
+
+        //getting all the Reviews that have created for the useEffect function to show in page mounting
+        export const GetReviews = async(token)=>{
+            console.log("enterd inthe sutdent comaplaint getting services")
+            const config = {
+                headers:{
+                    Accept:"application/json",
+                    Authorization:`Bearer ${token}`,
+                    "Content-Type":"application/json"
+                },
+            };
+            try{
+                const response = await axiosTeacherInstance.get("/review",config)
+                return response.data
+            }catch(error){
+                console.log(error)
+                return(error.response.data)
+            }
+
+        }
+
+        //teacher services for editing and updating the existing Review 
+        export const EditReviews = async(value,token)=>{
+            console.log("entered in the complaint edit function")
+            const config = {
+                headers:{
+                    Accept:"application/json",
+                    Authorization:`Bearer ${token}`,
+                    "Content-Type":"application/json"
+                },
+            };
+            try{
+                const response = await axiosTeacherInstance.put("/review",value,config)
+                return(response.data)
+            }catch(error){
+                console.log(error)
+                return(error.response.data)
+            }
+        }
+
 

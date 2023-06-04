@@ -85,16 +85,16 @@ const TeacherAttandence = () => {
     <>
     < ToastContainer />
       <div className="flex m-3">
-        <div className=" w-full bg-teal-100 m-2 rounded-2xl">
+        <div className=" w-full bg-violet-200 m-2 rounded-2xl">
           <div className="m-5 flex justify-between">
             <p className="text-center underline underline-offset-8">
                 Mark Attandence
               </p>
             <div className="flex ">
               <Link >
-                <div  className="bg-violet-400 w-full flex justify-center shadow-2xl h-max rounded-2xl p-2  text-white">Previouse</div>
+                <div  className="bg-emerald-400 w-full flex justify-center shadow-2xl h-max rounded-2xl p-2  text-white">Previouse</div>
               </Link>
-              <div onClick={handleSubmit} className="bg-violet-400 w-full flex justify-center shadow-2xl h-max ml-3 rounded-2xl p-2 text-white">Submit</div>
+              <div onClick={handleSubmit} className="bg-emerald-400 w-full flex justify-center shadow-2xl h-max ml-3 rounded-2xl p-2 text-white">Submit</div>
             </div>
           </div>
           <div>
@@ -179,6 +179,36 @@ const TeacherAttandence = () => {
           </div>
         </div> */}
       </div>
+
+
+
+
+      {/* <div className="w-max h-max flex justify-center align-middle">
+        <a href="" class="group relative block sm:h-80">
+          <span class="absolute inset-0 border-2 border-dashed border-black"></span>
+
+          <div class="relative flex h-full transform items-end border-2 border-black bg-white transition-transform group-hover:-translate-x-2 group-hover:-translate-y-2">
+            <div class="p-2 sm:p-4 transition-opacity group-hover:absolute group-hover:opacity-0 sm:p-6 lg:p-8">
+              <h2 class="mt-4 text-lg font-medium sm:text-xl">Go around the world</h2>
+            </div>
+
+            <div class="absolute p-2 opacity-0 transition-opacity group-hover:relative group-hover:opacity-100">
+              <h3 class="mt-2 text-base font-medium sm:text-lg">Go around the world</h3>
+
+              <p class="mt-2 text-sm sm:text-base">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate, praesentium voluptatem omnis atque culpa repellendus.
+              </p>
+
+              <p class="mt-4 text-sm font-bold">Read more</p>
+            </div>
+          </div>
+        </a>
+      </div> */}
+
+
+
+
+
     </>
   );
 };

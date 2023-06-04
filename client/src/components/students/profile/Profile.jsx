@@ -77,7 +77,7 @@ const Profile = () => {
             {/* <div class="flex items-center justify-center h-48 mb-4 rounded bg-gray-50 dark:bg-gray-800">
               <p class="text-2xl text-gray-400 dark:text-gray-500">+</p>
             </div> */}
-            <div class="grid grid-cols-2 gap-4 mb-4">
+            <div class="grid md:grid-cols-2 gap-4 mb-4">
               <div class="flex items-center justify-center rounded-[1rem]  bg-gray-50 h-[30rem] dark:bg-sky-100">
                 <p class="text-2xl text-gray-400 dark:text-gray-500">GRAPH</p>
               </div>
@@ -109,8 +109,9 @@ const Profile = () => {
                   </div>
                 </div>
                 {/* <p class="text-2xl text-gray-400 dark:text-gray-500">+</p> */}
-                  <ReactPaginate 
-                    containerClassName="flex justify-center items-center mt-5"
+                <div className="flex justify-center items-end mt-5 flex-column" style={{ height: '200px' }}>
+                <ReactPaginate 
+                    containerClassName="flex justify-center  items-center mt-5"
                     pageLinkClassName="bg-left-gradient  hover:bg-orange-500 text-white font-bold py-2 px-4 rounded-full mx-1"
                     previousLinkClassName="  text-white font-bold py-3 px-1 "
                     nextLinkClassName="  text-white font-bold py-3 px-1 "
@@ -125,6 +126,8 @@ const Profile = () => {
                     subContainerClassName={'pages pagination'}
                     activeClassName={'active'}
                 />
+                </div>
+                
               </div>
               {/* <div class="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
                 <p class="text-2xl text-gray-400 dark:text-gray-500">+</p>

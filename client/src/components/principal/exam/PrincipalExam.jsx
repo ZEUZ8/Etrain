@@ -2,6 +2,10 @@ import React, { useEffect,useState } from "react";
 import { useFormik } from "formik";
 import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
+import { GrFormPrevious, GrFormNext } from "react-icons/gr";
+import ReactPaginate from 'react-paginate';
+import { GiPaperTray } from 'react-icons/gi';
+
 import "react-toastify/dist/ReactToastify.css";
 import { ExamValidation } from "../../../validations/principal/examValidation";
 import {CreateExam} from "../../../axios/services/principalServices/principlaServices"
@@ -12,11 +16,16 @@ const PrincipalExam = () => {
   const pricnipalData = useSelector(state => state.principalReducer.principal)
   const token = pricnipalData?.token
 
+  const [exams,setExams] = useState([])
+  const [currentPage,setCurrentPage] = useState(0)
+  const examPerPage = 4
+
   useEffect(()=>{
     const fetchData = async()=>{
       console.log("entered in the fetch dat")
       try{
         const response = await GetExam(token)
+        setExams(response.exams)
         console.log(response)
       }catch(error){
         console.log(error)
@@ -24,6 +33,12 @@ const PrincipalExam = () => {
     }
     fetchData()
   },[])
+
+  const taskToDisplay = exams.slice(
+    currentPage * examPerPage,
+    (currentPage + 1 ) * examPerPage
+  )
+
 
   const onSubmit = async()=>{
     try{
@@ -52,13 +67,15 @@ const PrincipalExam = () => {
     validationSchema:ExamValidation,
     onSubmit
   })
-  
+  const handlePageChange = (selectedPage) => {
+    setCurrentPage(selectedPage.selected);
+  };
   return (
     <div>
       < ToastContainer />
       <div className="md:ml-64 p-4">
         <div className="flex justify-center flex-col md:flex-row">
-          <div className="flex w-1/2 bg-teal-100 m-2 items-center justify-center  rounded-3xl shadow-xl">
+          <div className="flex w-1/2 bg-fuchsia-100 m-2 items-center justify-center  rounded-3xl shadow-xl">
             <div className="h-full w-">
               <p className="text-center text-xl  m-5 dark:text underline underline-offset-4">
                 Schedule an Exam
@@ -196,22 +213,22 @@ const PrincipalExam = () => {
             </div>
           </div>
 
-          <div className="w-1/2 bg-teal-100 m-2 rounded-2xl shadow-2xl">
-            <div>
+          <div className="w-1/2 bg-fuchsia-100 m-2 rounded-2xl shadow-2xl">
               <p className="text-center text-xl  m-5 dark:text underline underline-offset-4">
                 Scheduled Exams
               </p>
+            <div className="grid grid-cols-2">
 
-              {/* {taskToDisplay.map((task, index) => {
+               {taskToDisplay.map((exam, index) => {
                 return (
                   <a
                     key={index}
                     class="relative flex items-start justify-between dark:bg-white m-5 mt-4 rounded-xl border border-gray-100 p-4 shadow-xl sm:p-6 lg:p-8"
                   >
                     <div class=" text-gray-500">
-                      <SiBookstack className="w-10 h-10" /> */}
+                      <GiPaperTray className="w-10 h-10" />
 
-                      {/* <svg
+                       {/* <svg
                         class="h-8 w-8 sm:h-10 sm:w-10"
                         fill="none"
                         stroke="currentColor"
@@ -224,27 +241,27 @@ const PrincipalExam = () => {
                           stroke-width="2"
                           d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
                         ></path>
-                      </svg> */}
-{/* 
-                      <h3 class="mt-4 text-lg font-bold text-gray-900 sm:text-xl">
-                        {task.taskName}
+                      </svg>  */}
+
+                      <h3 class="mt-4 text-lg font-bold text-gray-900  sm:text-xl w-full" >
+                        {exam.examName}
                       </h3>
 
-                      <p class="mt-2 hidden text-sm sm:block">
-                        {task.taskDiscription}
-                      </p>
-                    </div> */}
-                    {/* 
-                    <span
+                      {/* <p class="mt-2 hidden text-sm sm:block">
+                        {exam.examDiscription}
+                      </p> */}
+                    </div> 
+                    
+                    {/* <span
                       class="rounded-full bg-green-100 px-3 py-1.5 text-xs font-medium text-green-600"
                     >
                       4.3
-                    </span> */}
-                  {/* </a>
+                    </span>  */}
+                   </a>
                 );
-              })} */}
+              })} 
             </div>
-            {/* <ReactPaginate
+            <ReactPaginate
               containerClassName="flex justify-center items-center mt-5"
               pageLinkClassName="bg-left-gradient  hover:bg-orange-500 text-white font-bold py-2 px-4 rounded-full mx-1"
               previousLinkClassName="  text-white font-bold py-3 px-1 "
@@ -252,14 +269,14 @@ const PrincipalExam = () => {
               previousLabel={<GrFormPrevious name="arrow-left" />}
               nextLabel={<GrFormNext name="arrow-right" />}
               breakLabel={"..."}
-              pageCount={Math.ceil(scheduledTasks.length / taskPerPage)}
+              pageCount={Math.ceil(exams.length / examPerPage)}
               marginPagesDisplayed={2}
               pageRangeDisplayed={5}
               onPageChange={handlePageChange}
               // containerClassName={'pagination'}
               subContainerClassName={"pages pagination"}
               activeClassName={"active"}
-            /> */}
+            />
           </div>
         </div>
       </div>
