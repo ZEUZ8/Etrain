@@ -10,6 +10,7 @@ const {
     updateTeachers,
     createExam,
     GetExam,
+    addNewTeacher
     // otpVerification
 }= require("../controllers/principalControllers")
 
@@ -17,12 +18,21 @@ const {
 const {verifyTokenAdmin} = require("../middlewares/auth")
 
 router.post("/login",principalLogin)
+
 router.post("/createClass",verifyTokenAdmin,classCreation)
+
 router.get("/classes",verifyTokenAdmin,getClasses)
-router.get("/teachers",verifyTokenAdmin,getTeachers)
+
+router.post("/teachers",verifyTokenAdmin,addNewTeacher)
+
 router.put("/teachers",verifyTokenAdmin,updateTeachers)
+
+router.get("/teachers",verifyTokenAdmin,getTeachers)
+
 router.post('/exam',verifyTokenAdmin,createExam)
+
 router.get('/exam',verifyTokenAdmin,GetExam)
+
 // router.post("/verify/:id",otpVerification)
 
 module.exports= router

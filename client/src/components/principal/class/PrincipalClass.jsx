@@ -77,7 +77,7 @@ const PrincipalClass = () => {
           <div class="max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
          {loading&& <Loader/>}
             <div class="grid  gap-4 sm:grid-cols-3">
-             {data.map((item)=>( 
+             {data?.map((item)=>( 
              <div
                 key={item._id}
                 class="block rounded-xl border border-gray-500 p-4 shadow-sm hover:border-gray-200 hover:ring-1 hover:ring-gray-200 focus:outline-none focus:ring"

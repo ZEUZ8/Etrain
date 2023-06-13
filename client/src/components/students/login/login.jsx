@@ -15,18 +15,24 @@ const Login = ({handlingSubmit,userType}) => {
   const dispatch = useDispatch()
 
   async function onSubmit(){
-    console.log("onSubmit in the Studen Login")
     setLoading(true)
     const result = await handlingSubmit(values)
-
-    if(result === "Login Successfull"){
+    if(result.msg === "Login Successfull"){
       toast.success("Login Succesull")
-      navigate(`/`)
+      if(result.user === "principal" || result.user === "teacher"){
+        navigate(`/${result.user}`)
+      }else{
+        navigate("/")
+      }
     }else{
       toast.error(result)
-      navigate('/signup')
+      if(result.user === "teacher" || result.user === "principal"){
+        navigate(`/${result.user}/login`)
+      }else {
+        navigate("/")
+      }
+      // navigate('/signup')
     }
-    
     setLoading(false)
   }
 

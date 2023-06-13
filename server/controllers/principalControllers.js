@@ -6,6 +6,15 @@ const Teacher = require("../models/teacher")
 const Admin = require("../models/admin");
 const Exam = require("../models/exam");
 
+//the config contian the password and the user for sending the mail
+let config = {
+  service: "gmail",
+  auth: {
+    user: "ptsinan8590@gmail.com",
+    pass: "ccykjhaaejmqvsbl",
+  },
+};
+
 //controller for the handling he principal login function
 const principalLogin = async(req,res)=>{
   console.log("entered at the principal login controllers in the backend /controllers")
@@ -81,7 +90,7 @@ const getClasses = async (req, res) => {
     if (existingClass) {
       res.status(200).json({ msg: "success", classes: existingClass });
     } else {
-      res.status(500).json({ msg: "Class not found" });
+      res.json({ msg: "Class not found" });
     }
   } catch (error) {
     console.log(error)
@@ -96,7 +105,7 @@ const getTeachers = async (req, res) => {
   );
   try{
     const existingTeachers = await Teacher.find({})
-    if(existingTeachers){
+    if(existingTeachers && existingTeachers.length > 0){
         res.status(200).json({teachers:existingTeachers})
     }else{
         console.log("Teachers dont existing")
@@ -111,10 +120,10 @@ const getTeachers = async (req, res) => {
 //controller function for updating the teacher 
 const updateTeachers = async (req,res)=>{
   try{
-    const {className,division,isChecked,teacherId} = req.body
+    const {className,division,teacherId} = req.body
     const existingClass = await Class.findOne({className:className,division:division})
     if(existingClass){
-      const teacher = await Teacher.findOneAndUpdate({_id:teacherId},{class:existingClass.className,division:existingClass.division,approved:isChecked})
+      const teacher = await Teacher.findOneAndUpdate({_id:teacherId},{class:existingClass.className,division:existingClass.division})
       if(teacher){
         res.status(200).json({msg:"updation successfull",teacher:teacher})
       }else{
@@ -170,52 +179,72 @@ const GetExam = async(req,res)=>{
   }
 }
 
+{/*                                   Add a New Teacher 
+Controller function for addin a new teacher in the teacher collection with 
+specified email and the OTP created by the sendMail fucntion and it will be the teacher pass word and 
+teacher can updat it late as she/he likes */}
+const addNewTeacher = async (req,res)=>{
+  console.log(req.body)
+  console.log("entered in the controller function for adding new taacher")
+  try{
+    const {teacherName,teacherSubject,teacherEmail} = req.body
+    const existingTeacher = await Teacher.findOne({name:teacherName,email:teacherEmail})
+    if(existingTeacher){
+      res.json({msg:"Teacher already Added"})
+    }else{
+      const sendedMail  = await sendNewMail()
+      const saltRounds = 10;
+      const hashedOTP = await bcrypt.hash(sendedMail.otp.toString(), saltRounds);
+      const result = await Teacher.create({password:hashedOTP,name:teacherName,email:teacherEmail,subject:teacherSubject})
+      console.log("all the function where completed",result)
+      if(result){
+        res.status(200).json({msg:"succesfull",teacher:result})
+      }else{
+        res.status(500).json({msg:"Teacher Not Created"})
+      }
+    }
+  }catch(error){
+    console.log(error)
+    res.status(500).json({msg:error.message})
+  }
+}
 
-// const otpVerification = async (req, res) => {
-//     const id = req.params.id;
-//     const data = req.body;
-//     const otp = data.otp1 + data.otp2 + data.otp3 + data.otp4;
-//     try {
-//       //checking that otp sended user have added to the OTP collection if not, then the verifacation mail has not sended to the user
-//       const checking = await OTP.findOne({ userId: id });
-//       console.log(otp, checking.otp);
-//       const verifacationOtp = await bcrypt.compare(otp, checking.otp);
-//       console.log(verifacationOtp);
-//       if (verifacationOtp) {
-//         //checking, the finded user id is existing the user collection and the otp is right
-//         const change = await Teacher.findOneAndUpdate(
-//           { _id: id },
-//           { ververification: true }
-//         );
-//         if (change) {
-//           const Token = jwt.sign(
-//             {
-//               name: change.name,
-//               email: change.email,
-//               id: change._id,
-//               role: "teacher",
-//             },
-//             "TeacherTokenSecret",
-//             { expiresIn: "2d" }
-//           );
-//           res
-//             .status(200)
-//             .json({
-//               msg: "verified",
-//               user: "teacher",
-//               id: change._id,
-//               email: change.email,
-//               token: Token,
-//             });
-//         }
-//       } else {
-//         console.log("otp not match");
-//         res.status(500).json({ msg: "Not Verified" });
-//       }
-//     } catch (error) {
-//       console.log(`error at the otp verification teacher--> ${error}`);
-//     }
-// };
+
+{/*                                   Send Mail 
+controller function for creating a new otp and sending that to the specified mail 
+through this we can ensure that the provided mail is valid and the teacher can sign up wiht the otp that 
+we send and lter on the teacher can eidt the passsword asswell as the teacher data
+*/}
+const sendNewMail = async (result) => {
+  console.log("entered to the mail sending function");
+  try {
+    // Generate OTP
+    const otp = Math.floor(1000 + Math.random() * 9000);
+
+    return new Promise((resolve, rejects) => {
+      const mailOptions = {
+        from: "ptsinan8590@gmail.com",
+        to: "ptsinan8590@gmail.com",
+        subject: "Etrain Email Verification",
+        text: `Your Password: ${otp}`,
+      };
+      const transporter = nodeMailer.createTransport(config);
+
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log("Error Occurred:", error);
+          rejects(error.message);
+        } else {
+          resolve({info,otp});
+        }
+      });
+    });
+  } catch (error) {
+    console.log("Error Occurred:", error);
+    return error.message;
+  }
+};
+
 
 module.exports = {
   principalLogin,
@@ -224,5 +253,6 @@ module.exports = {
   getTeachers,
   updateTeachers,
   createExam,
-  GetExam
+  GetExam,
+  addNewTeacher
 };

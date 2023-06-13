@@ -50,8 +50,6 @@ export const otpVerification = async (value,user,id)=>{
 }
 
 export const GetAttandence = async (token)=>{
-
-    console.log("this is the attandefcn finding function")
     const config = {
         headers:{
             Accept:"application/json",
@@ -68,3 +66,62 @@ export const GetAttandence = async (token)=>{
     }
 }
 
+//stuent service function for getting all the existing Reviews
+export const GetReviews = async(token)=>{
+    console.log("this is the reviews finding function")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const respone = await axiosStudentInstance.get("/reviews",config)
+        return respone.data
+    }catch(error){
+        console.log(error)
+        return({msg:error.message})
+    }
+}
+
+
+
+//stuent service function for getting all the existing Exams
+export const GetComplaints = async(token)=>{
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const respone = await axiosStudentInstance.get("/complaints",config)
+        return respone.data
+    }catch(error){
+        console.log(error)
+        return({msg:error.message})
+    }
+}
+
+
+
+//stuent service function for getting all the existing Exams
+export const GetExams = async(token)=>{
+    console.log("this is the exam finding function")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const respone = await axiosStudentInstance.get("/exams",config)
+        return respone.data
+    }catch(error){
+        console.log(error)
+        return({msg:error.message})
+    }
+}

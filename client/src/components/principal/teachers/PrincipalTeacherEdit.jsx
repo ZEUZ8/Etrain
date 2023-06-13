@@ -7,12 +7,10 @@ const PrincipalTeacherEdit = ({ setIson, data, oldData, handleUpdation}) => {
 
   const [selectedClass, setSelectedClass] = useState("");
   const [selectedDivision, setSelectedDivision] = useState("");  
-  const [isChecked, setIsChecked] = useState(false);
 
   const formData = new FormData();
   formData.append("class", selectedClass);
   formData.append("division", selectedDivision);
-  formData.append("isChecked", isChecked);
 
   const handleSubmit = async(e) => {
     e.preventDefault()
@@ -20,7 +18,6 @@ const PrincipalTeacherEdit = ({ setIson, data, oldData, handleUpdation}) => {
     const formData = {
       className:selectedClass,
       division:selectedDivision,
-      isChecked:isChecked,
       teacherId:null
     }
     handleUpdation(formData)
@@ -142,11 +139,8 @@ const PrincipalTeacherEdit = ({ setIson, data, oldData, handleUpdation}) => {
                     /> */}
                   </div>
                 </div>
-                <div className="w-full bg-red-200 h-full rounded-2xl pl-20">
-                  resume comes here
-                </div>
                 <div class="flex justify-between">
-                  <div class="flex items-start">
+                  {/* <div class="flex items-start">
                     <div class="flex items-center h-5">
                       <input
                         id="remember"
@@ -163,7 +157,7 @@ const PrincipalTeacherEdit = ({ setIson, data, oldData, handleUpdation}) => {
                     >
                       Approve
                     </label>
-                  </div>
+                  </div> */}
                   {/* <a
                     href="#"
                     class="text-sm text-blue-700 hover:underline dark:text-blue-500"

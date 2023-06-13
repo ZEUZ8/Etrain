@@ -8,6 +8,9 @@ const { resolve } = require("path");
 const { rejects, match } = require("assert");
 const Attandence = require("../models/attandence");
 const { default: mongoose } = require("mongoose");
+const Complaint = require("../models/complaint");
+const Review = require("../models/Review");
+const Exam = require("../models/exam");
 
 let config = {
   service: "gmail",
@@ -39,14 +42,12 @@ const studentRegister = async (req, res) => {
       //     "StudentTokenSecret",
       //     {expiresIn:"2d"}
       // )
-      res
-        .status(200)
-        .json({
-          msg: "Account Created",
-          user: "student",
-          id: result._id,
-          email: result.email,
-        });
+      res.status(200).json({
+        msg: "Account Created",
+        user: "student",
+        id: result._id,
+        email: result.email,
+      });
     }
   } catch (error) {
     res.status(500).json({ msg: `somthing went wrong` });
@@ -81,7 +82,7 @@ const studentLogin = async (req, res) => {
     } else {
       if (existStudent.verification === false) {
         sendNewMail(existStudent);
-        res.status(200).json({msg:"mail not verified"})
+        res.status(200).json({ msg: "mail not verified" });
       } else {
         const checkedPassword = await bcrypt.compare(
           password,
@@ -101,15 +102,13 @@ const studentLogin = async (req, res) => {
             "StudentTokenSecret",
             { expiresIn: "2d" }
           );
-          res
-            .status(200)
-            .json({
-              token: token,
-              msg: "login succesfull",
-              user: "student",
-              id: existStudent._id,
-              email: existStudent.email,
-            });
+          res.status(200).json({
+            token: token,
+            msg: "login succesfull",
+            user: "student",
+            id: existStudent._id,
+            email: existStudent.email,
+          });
         }
       }
     }
@@ -192,15 +191,13 @@ const otpVerification = async (req, res) => {
           "StudentTokenSecret",
           { expiresIn: "2d" }
         );
-        res
-          .status(200)
-          .json({
-            msg: "verified",
-            user: "student",
-            id: change._id,
-            email: change.email,
-            token: Token,
-          });
+        res.status(200).json({
+          msg: "verified",
+          user: "student",
+          id: change._id,
+          email: change.email,
+          token: Token,
+        });
       }
     } else {
       console.log("otp not match");
@@ -211,28 +208,28 @@ const otpVerification = async (req, res) => {
 };
 
 //
-const getStudentsAttandence = async(req,res)=>{
-  const userId = req.user.id
+const getStudentsAttandence = async (req, res) => {
+  const userId = req.user.id;
 
-  try{
-    const date = new Date(Date.now())      
+  try {
+    const date = new Date(Date.now());
     const formattedDate = date.toISOString().substring(0, 10);
-    const checkDate = new Date(formattedDate)
-    const CheckMonth = checkDate.getMonth()+1
-    
+    const checkDate = new Date(formattedDate);
+    const CheckMonth = checkDate.getMonth() + 1;
+
     const response = await Attandence.aggregate([
       {
         $match: {
           studentId: new mongoose.Types.ObjectId(userId),
         },
-      }, 
+      },
       {
-        $unwind: '$attandence', // Unwind the attendance array
+        $unwind: "$attandence", // Unwind the attendance array
       },
       {
         $group: {
-          _id: { $month:  '$attandence.day' } ,
-          attendance: { $push: '$attandence' }, // Collect the attendance objects in an array
+          _id: { $month: "$attandence.day" },
+          attendance: { $push: "$attandence" }, // Collect the attendance objects in an array
         },
       },
       {
@@ -241,16 +238,68 @@ const getStudentsAttandence = async(req,res)=>{
         },
       },
     ]);
-    if(response){
-      res.status(200).json({msg:"succesfull",presents:response[0]})
-    }else{
-      res.status(500).json({msg:"Couldn't find Marked Attandence"})
+    if (response) {
+      res.status(200).json({ msg: "succesfull", presents: response[0] });
+    } else {
+      res.status(500).json({ msg: "Couldn't find Marked Attandence" });
     }
-  }catch(error){
-    res.status(500).json({msg:error.message})
-    console.log(error)
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+    console.log(error);
   }
-}
+};
+
+//student controller for finding all the existing reviews
+const GetReviews = async (req, res) => {
+  const { id } = req.user;
+  try {
+    const response = await Review.find({ studentId: id })
+      .populate(`studentId`, `name studentClass division`)
+      .populate(`teacherId`, `name subject division class`);
+    if (response) {
+      res.status(200).json({ msg: "succesfull", reviews: response });
+    } else {
+      res.status(500).json({ msg: "Review Not Found" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: error.message });
+  }
+};
+
+//student controller for finding all the existing reviews
+const GetComplaints = async (req, res) => {
+  const { id } = req.user;
+  try {
+    const response = await Complaint.find({ studentId: id })
+      .populate(`studentId`, `name studentClass division`)
+      .populate(`teacherId`, `name subject division class`);
+    // console.log(response)
+    if (response) {
+      res.status(200).json({ msg: "succesfull", complaints: response });
+    } else {
+      res.status(500).json({ msg: "Complaints Not Found" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: error.message });
+  }
+};
+
+//student controller for finding all the existing reviews
+const GetExams = async (req, res) => {
+  try {
+    const response = await Exam.find({});
+    if (response) {
+      res.status(200).json({ msg: "succesfull", exams: response });
+    } else {
+      res.status(500).json({ msg: "Exam Not Found" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: error.message });
+  }
+};
 
 module.exports = {
   studentRegister,
@@ -259,4 +308,7 @@ module.exports = {
   otpVerification,
   getStudentsAttandence,
   getStudentsAttandence,
+  GetReviews,
+  GetComplaints,
+  GetExams,
 };

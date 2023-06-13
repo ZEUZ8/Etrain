@@ -1,4 +1,5 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom';
 import {useDispatch} from "react-redux";
 import Login from "../../../components/students/login/login"
 import {studentLogin} from '../../../axios/services/studentServices/studentServices';
@@ -11,10 +12,9 @@ import { principalLogin } from '../../../redux/principal';
 const StudentLogin = ({userType}) => {
 
   const dispatch = useDispatch()
-  console.log(userType)
+  const navigate = useNavigate()
 
   const handleSubmit = async(value)=>{
-    console.log(value)
     if(userType === "teacher"){
       var response = await teacherLoginService(value)
     }else if(userType === "principal"){
@@ -39,7 +39,7 @@ const StudentLogin = ({userType}) => {
         dispatch(userLogin(action))
         // return("studentLogin succesfull")
       }
-      return("Login Successfull")
+      return({msg:"Login Successfull",user:userType})
     }
     else{
       console.log(response.msg)

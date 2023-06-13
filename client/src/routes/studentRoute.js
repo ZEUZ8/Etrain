@@ -9,6 +9,7 @@ import OTPverification from "../pages/common/otpVerification/OTPverification";
 import StudentProfile from "../pages/students/profile/StudentProfile";
 import Login from "../pages/students/login/studentLoginPage"
 import StudentTimeTable from "../pages/students/timeTable/StudentTimeTable";
+import DataShowcasePage from "../pages/students/DataShowcase/DataShowcasePage";
 
 function StudentRoutes(){
     return (
@@ -21,6 +22,9 @@ function StudentRoutes(){
                 <Route path="/profile" element={< StudentProfile />}></Route>
                 <Route path="/attendence" element={< Attendence />}></Route>
                 <Route path="/timetable" element={< StudentTimeTable />}></Route>
+                <Route path="/exams" element={< DataShowcasePage page="exams"/>}></Route>
+                <Route path="/complaints" element={< DataShowcasePage page="complaints"/>}></Route>
+                <Route path="/reviews" element={< DataShowcasePage page="reviews"/>}></Route>
             </Routes>
         </div>
     )

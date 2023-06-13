@@ -26,6 +26,7 @@ const TeacherComplaints = ({ page, makeSubmit }) => {
   const [ison, setIson] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [currentData, setCurrentData] = useState("");
+
   const [data, setData] = useState([]);
   const datPerPage = 4;
 
@@ -38,10 +39,6 @@ const TeacherComplaints = ({ page, makeSubmit }) => {
         } else {
           var response = await GetReviews(token);
         }
-        console.log(
-          response,
-          "   this is consoling for check the response whether complaints or complaint"
-        );
         setData(response.complaints);
         console.log(response);
       } catch (error) {
@@ -88,6 +85,8 @@ const TeacherComplaints = ({ page, makeSubmit }) => {
         response.msg === "Review Created"
       ) {
         toast.success(response.msg);
+        console.log(data,'   consoling the data for checking the items arranged properly')
+        console.log(response.complaint,"   the result in the reques")
         setData([...data,response.complaint])
       } else {
         toast.error(response.msg);
@@ -270,7 +269,7 @@ const TeacherComplaints = ({ page, makeSubmit }) => {
                       for="message"
                       class="block mb-2 text-sm font-medium text-gray-900 dark:text"
                     >
-                      Complaint
+                      {requiredPage}
                     </label>
                     <textarea
                       id="complaint"

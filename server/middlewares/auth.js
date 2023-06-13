@@ -54,7 +54,6 @@ const verifyTokenTeacher = async (req, res, next) => {
 
 
 const verifyStudent = async (req, res, next) => {
-  console.log(req.headers,"consling the data ")
   console.log("student middleWare")
     try {
       let token = req.headers["authorization"];
@@ -74,7 +73,7 @@ const verifyStudent = async (req, res, next) => {
         return res.status(403).send("Access Denied");
       }
     } catch (err) {
-      console.log("errot ocured in here")
+      console.log("error occured in student middleware")
       res.status(500).json({ msg:err.message });
     }
 };

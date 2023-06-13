@@ -59,9 +59,32 @@ export const classes = async (token)=>{
     }
 }
 
+
+{/*principal service function for adding a new teacher with specied emial and the 
+otp that created in the controller function 
+*/}
+export const addNewTeacher  = async (token,value)=>{
+    console.log('entered in the addNewTacher at the principal services')
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const respons = await axiosPrincipalInstance.post("/teachers",value,config)
+        return(respons.data)
+    }catch(error){
+        console.log("error occured in the principal teachers finding services")
+        console.log(error)
+        return(error.response.data)
+    }
+}
+
+
 //principla service function for finding all the teachers
 export const teachers  = async (token)=>{
-    console.log(token,"condoling for kiran")
     // console.log("entered in the teachers finding service function")
     const config = {
         headers:{

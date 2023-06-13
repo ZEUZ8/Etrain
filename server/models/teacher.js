@@ -7,7 +7,6 @@ const TeacherSchema = mongoose.Schema({
     },
     phone:{
         type:Number,
-        required:true
     },
     email:{
         type:String,
@@ -35,28 +34,6 @@ const TeacherSchema = mongoose.Schema({
         type:String,
         required:true
     },
-    resume:{
-        type:String
-    },
-    qualification:{
-        type:Object,
-        passedOutYear:{
-            type:String,
-            required:true
-        },
-        collegeName:{
-            type:String,
-            requierd:true
-        },
-        certificate:{
-            type:String,
-            required:true
-        },
-        experience:{
-            type:String,
-            required:true
-        }
-    }
 
 })
 

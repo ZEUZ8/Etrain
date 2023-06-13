@@ -5,6 +5,7 @@ import { useFormik } from "formik";
 import { complaintValidation } from "../../../validations/teachers/conplaintValidation";
 
 const TeacherComplaintEdit = ({ setIson, requiredPage ,currentData,handleEdit}) => {
+  console.log(requiredPage,"this ist he page right now")
   const handleClick = () => {
     setIson(false);
   };
@@ -197,7 +198,7 @@ const TeacherComplaintEdit = ({ setIson, requiredPage ,currentData,handleEdit}) 
                       for="message"
                       class="block mb-2 text-sm font-medium text-gray-900 dark:text"
                     >
-                      Complaint
+                      {requiredPage}
                     </label>
                     <textarea
                       id="complaint"

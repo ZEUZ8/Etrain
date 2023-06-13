@@ -14,7 +14,7 @@ const Review = require("../models/Review");
 
 //controller for handling the teacher signUp funcion
 const teacherRegister = async (req, res) => {
-  const { name, phone, email, password, subject, resume } = req.body;
+  const { name, phone, email, password, subject} = req.body;
   try {
     const hashedPassword = await bcrypt.hash(password, 12);
     const result = await Teacher.create({
@@ -398,7 +398,7 @@ const makeReview = async (req, res) => {
           teacherId:teacher._id,
           review:complaint
         });
-        res.status(200).json({msg:"Review Created",complaint:respone})
+        res.status(200).json({msg:"Review Created",complaint:{teacherId:{name:teacher.name},studentId:{name:existingStudent.name},review:respone.review}})
       }else{
         res.status(500).json({msg:"Teacher Not Found"})
       }
