@@ -16,9 +16,9 @@ function StudentRoutes(){
         <div>
             <Routes>
                 <Route path="/" element={< Home />}></Route>
-                <Route path="/signup" element={< SignUp />}></Route>
+                {/* <Route path="/signup" element={< SignUp />}></Route> */}
                 <Route path="/login" element={< Login userType="student" />}></Route>
-                <Route path="/otp" element={< OTPverification />}></Route>
+                {/* <Route path="/otp" element={< OTPverification />}></Route> */}
                 <Route path="/profile" element={< StudentProfile />}></Route>
                 <Route path="/attendence" element={< Attendence />}></Route>
                 <Route path="/timetable" element={< StudentTimeTable />}></Route>

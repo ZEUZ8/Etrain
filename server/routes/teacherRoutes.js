@@ -8,7 +8,10 @@ const {
     otpVerification,
     createWeeklyTask ,
     getWeeklyTask,
+    
+    addNewStudent,
     getStudents,
+    
     markStudentAttadence,
     makeComplaint,
     GetComplaints,
@@ -26,7 +29,7 @@ const {
     checkingTeacher
 } = require("../middlewares/auth")
 
-router.post("/register",teacherRegister)
+// router.post("/register",teacherRegister)
 
 router.post("/login",teacherLogin)
 
@@ -35,6 +38,8 @@ router.post("/verify/:id",otpVerification)
 router.put("/weeklyTask",verifyTokenTeacher,checkingTeacher,createWeeklyTask)
 
 router.get("/weeklyTask",verifyTokenTeacher,checkingTeacher,getWeeklyTask)
+
+router.put("/students",verifyTokenTeacher,checkingTeacher,addNewStudent)
 
 router.get("/students",verifyTokenTeacher,checkingTeacher,getStudents)
 

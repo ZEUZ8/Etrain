@@ -7,7 +7,6 @@ const StudentSchema = mongoose.Schema({
     },
     phone:{
         type:Number,
-        required:true,
         trim:true
     },
     email:{

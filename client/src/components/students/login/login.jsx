@@ -46,13 +46,13 @@ const Login = ({handlingSubmit,userType}) => {
     onSubmit
   })
 
-  const signupPage = ()=>{
-    if(userType === "teacher"){
-      navigate("/teacher/register")
-    }else{
-      navigate("/signup")
-    }
-  }
+  // const signupPage = ()=>{
+  //   if(userType === "teacher"){
+  //     navigate("/teacher/register")
+  //   }else{
+  //     navigate("/signup")
+  //   }
+  // }
 
   return (
     <div>
@@ -135,13 +135,13 @@ const Login = ({handlingSubmit,userType}) => {
                       </button>
                   </div>
                 </form>
-              
+{/*               
                 {userType !== "principal" && ( <p class=" text-center mt-2 text-sm text-gray-500">
                   Create Account?
                   <a href="#" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500" 
                   onClick={signupPage}> 
                   Click here</a>
-                </p>)}
+                </p>)} */}
               </div>
               <div>
                   <h4 class="text-white underline underline-offset-8 pt-[1rem]">Login With</h4>

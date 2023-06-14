@@ -30,13 +30,13 @@ const TeacherWeeklyTasks = () => {
         const response = await GetWeeklyTasks(token)
         if(response.msg === "succesfull"){
           setScheduledTask(response.tasks)
-        }else if(response.msg === "jwt malformed" || response.msg == "Access Denied" ){
+        }else if(response.msg === "jwt malformed" || response.msg == "Access Denied"|| response.msg === "jwt Expired" ){
           navigate("/teacher/login")
         }else{
           toast.error(response.msg)
         }
       }catch(error){
-        console.log(error)
+        console.log(error.msg)
       }
     }
     fetchData()
@@ -49,14 +49,16 @@ const TeacherWeeklyTasks = () => {
 
   const onSubmit = async(values) => {
     console.log("enterd in the onSubmit function");
-    const response = await weeklyTasks(token,values)
-
-    if(response.msg === "weekly task created"){
-      setScheduledTask([...scheduledTasks,response.tasks])
-      toast.success(response.msg)
-    }else{
-      console.log("sinsi")
-      toast.error(response.msg)
+    try{
+      const response = await weeklyTasks(token,values)
+      if(response.msg === "weekly task created"){
+        setScheduledTask([...scheduledTasks,response.tasks])
+        toast.success(response.msg)
+      }else{
+        toast.error(response.msg)
+      }
+    }catch(error){
+      console.log(error)
     }
   };
 

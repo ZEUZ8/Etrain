@@ -78,7 +78,7 @@ const TeacherSideBar = () => {
                 </li>
             </Link>
             
-            <Link to="">
+            <Link to="/teacher/students">
             <li>
               <a
                 href="timetable"

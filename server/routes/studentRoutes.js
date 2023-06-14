@@ -16,7 +16,7 @@ const {
     verifyStudent
 }= require("../middlewares/auth")
 
-router.post("/register", studentRegister)
+// router.post("/register", studentRegister)
 
 router.post("/login",studentLogin)
 

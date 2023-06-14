@@ -254,5 +254,6 @@ module.exports = {
   updateTeachers,
   createExam,
   GetExam,
-  addNewTeacher
+  addNewTeacher,
+  sendNewMail,
 };

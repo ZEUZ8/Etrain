@@ -12,50 +12,50 @@ const Complaint = require("../models/complaint");
 const Review = require("../models/Review");
 const Exam = require("../models/exam");
 
-let config = {
-  service: "gmail",
-  auth: {
-    user: "ptsinan8590@gmail.com",
-    pass: "ccykjhaaejmqvsbl",
-  },
-};
+// let config = {
+//   service: "gmail",
+//   auth: {
+//     user: "ptsinan8590@gmail.com",
+//     pass: "ccykjhaaejmqvsbl",
+//   },
+// };
 
-const studentRegister = async (req, res) => {
-  console.log("Controllers,Backend,studentLogin");
-  const { name, phone, email, password, studentClass, division } = req.body;
-  try {
-    const hashedPassword = await bcrypt.hash(password, 12);
-    const result = await Student.create({
-      name,
-      phone,
-      email,
-      studentClass,
-      division,
-      password: hashedPassword,
-    });
-    const mail = await sendNewMail(result);
-    if (!mail) {
-      res.status(500).json({ msg: "Error! unable to send Mail" });
-    } else {
-      // const token = jwt.sign(
-      //     {name:result.name,email:result.email,id:result._id,role:"student"},
-      //     "StudentTokenSecret",
-      //     {expiresIn:"2d"}
-      // )
-      res.status(200).json({
-        msg: "Account Created",
-        user: "student",
-        id: result._id,
-        email: result.email,
-      });
-    }
-  } catch (error) {
-    res.status(500).json({ msg: `somthing went wrong` });
-    console.log(
-      `error at the student signUp, backen controllers --> ${error.message}`
-    );
-  }
-};
+// const studentRegister = async (req, res) => {
+//   console.log("Controllers,Backend,studentLogin");
+//   const { name, phone, email, password, studentClass, division } = req.body;
+//   try {
+//     const hashedPassword = await bcrypt.hash(password, 12);
+//     const result = await Student.create({
+//       name,
+//       phone,
+//       email,
+//       studentClass,
+//       division,
+//       password: hashedPassword,
+//     });
+//     const mail = await sendNewMail(result);
+//     if (!mail) {
+//       res.status(500).json({ msg: "Error! unable to send Mail" });
+//     } else {
+//       // const token = jwt.sign(
+//       //     {name:result.name,email:result.email,id:result._id,role:"student"},
+//       //     "StudentTokenSecret",
+//       //     {expiresIn:"2d"}
+//       // )
+//       res.status(200).json({
+//         msg: "Account Created",
+//         user: "student",
+//         id: result._id,
+//         email: result.email,
+//       });
+//     }
+//   } catch (error) {
+//     res.status(500).json({ msg: `somthing went wrong` });
+//     console.log(
+//       `error at the student signUp, backen controllers --> ${error.message}`
+//     );
+//   }
+// };
 
 //Student Login
 /*The student login function serves as a mechanism to authenticate and provide access to a specific web or application portal for students. It involves a series of steps to verify the identity of the student and grant them appropriate access.
@@ -120,49 +120,49 @@ const studentLogin = async (req, res) => {
   }
 };
 
-const sendNewMail = async (result) => {
-  console.log("entered to the mail sending function");
-  try {
-    //
-    const check = OTP.findOneAndDelete({ userId: result._id });
-    // Generate OTP
-    const otp = Math.floor(1000 + Math.random() * 9000);
+// const sendNewMail = async (result) => {
+//   console.log("entered to the mail sending function");
+//   try {
+//     //
+//     const check = OTP.findOneAndDelete({ userId: result._id });
+//     // Generate OTP
+//     const otp = Math.floor(1000 + Math.random() * 9000);
 
-    const saltRounds = 10;
+//     const saltRounds = 10;
 
-    const hashedOTP = await bcrypt.hash(otp.toString(), saltRounds);
+//     const hashedOTP = await bcrypt.hash(otp.toString(), saltRounds);
 
-    const verificationOTP = new OTP({
-      userId: result._id,
-      otp: hashedOTP,
-      createdAt: Date.now(),
-      expiredAt: Date.now() + 3600000,
-    });
-    await verificationOTP.save();
+//     const verificationOTP = new OTP({
+//       userId: result._id,
+//       otp: hashedOTP,
+//       createdAt: Date.now(),
+//       expiredAt: Date.now() + 3600000,
+//     });
+//     await verificationOTP.save();
 
-    return new Promise((resolve, rejects) => {
-      const mailOptions = {
-        from: "ptsinan8590@gmail.com",
-        to: "ptsinan8590@gmail.com",
-        subject: "Etrain Email Verification",
-        text: `Your OTP: ${otp}`,
-      };
-      const transporter = nodeMailer.createTransport(config);
+//     return new Promise((resolve, rejects) => {
+//       const mailOptions = {
+//         from: "ptsinan8590@gmail.com",
+//         to: "ptsinan8590@gmail.com",
+//         subject: "Etrain Email Verification",
+//         text: `Your OTP: ${otp}`,
+//       };
+//       const transporter = nodeMailer.createTransport(config);
 
-      transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          console.log("Error Occurred:", error);
-          rejects(error.message);
-        } else {
-          resolve(info);
-        }
-      });
-    });
-  } catch (error) {
-    console.log("Error Occurred:", error);
-    return error.message;
-  }
-};
+//       transporter.sendMail(mailOptions, (error, info) => {
+//         if (error) {
+//           console.log("Error Occurred:", error);
+//           rejects(error.message);
+//         } else {
+//           resolve(info);
+//         }
+//       });
+//     });
+//   } catch (error) {
+//     console.log("Error Occurred:", error);
+//     return error.message;
+//   }
+// };
 
 const otpVerification = async (req, res) => {
   const id = req.params.id;
@@ -302,9 +302,9 @@ const GetExams = async (req, res) => {
 };
 
 module.exports = {
-  studentRegister,
+  // studentRegister,
   studentLogin,
-  sendNewMail,
+  // sendNewMail,
   otpVerification,
   getStudentsAttandence,
   getStudentsAttandence,

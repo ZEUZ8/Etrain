@@ -1,7 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const nodeMailer = require("nodemailer");
-const { sendNewMail } = require("./studentsController");
+const {sendNewMail} = require("./principalControllers")
 const Teacher = require("../models/teacher");
 const OTP = require("../models/Otp");
 const Class = require("../models/Class");
@@ -12,33 +12,33 @@ const Complaint = require("../models/complaint");
 const Review = require("../models/Review");
 // const { options } = require("../routes/teacherRoutes");
 
-//controller for handling the teacher signUp funcion
-const teacherRegister = async (req, res) => {
-  const { name, phone, email, password, subject} = req.body;
-  try {
-    const hashedPassword = await bcrypt.hash(password, 12);
-    const result = await Teacher.create({
-      name: name,
-      phone: phone,
-      email: email,
-      subject: subject,
-      password: hashedPassword,
-    });
-    const mail = await sendNewMail(result);
-    if (!mail) {
-      res.json(500).json({ msg: "Erro ! unable to send Mail" });
-    } else {
-      res.status(200).json({
-        msg: "Teacher Accound Created",
-        user: "teacher",
-        id: result._id,
-        email: result.email,
-      });
-    }
-  } catch (error) {
-    console.log(`error occured in the backend controllers ${error}`);
-  }
-};
+// //controller for handling the teacher signUp funcion
+// const teacherRegister = async (req, res) => {
+//   const { name, phone, email, password, subject } = req.body;
+//   try {
+//     const hashedPassword = await bcrypt.hash(password, 12);
+//     const result = await Teacher.create({
+//       name: name,
+//       phone: phone,
+//       email: email,
+//       subject: subject,
+//       password: hashedPassword,
+//     });
+//     const mail = await sendNewMail(result);
+//     if (!mail) {
+//       res.json(500).json({ msg: "Erro ! unable to send Mail" });
+//     } else {
+//       res.status(200).json({
+//         msg: "Teacher Accound Created",
+//         user: "teacher",
+//         id: result._id,
+//         email: result.email,
+//       });
+//     }
+//   } catch (error) {
+//     console.log(`error occured in the backend controllers ${error}`);
+//   }
+// };
 
 //controller for handling the teacher login function
 const teacherLogin = async (req, res) => {
@@ -51,9 +51,6 @@ const teacherLogin = async (req, res) => {
     if (!existingTeacher) {
       res.json({ msg: "teacher don't exist" });
     } else {
-      if (existingTeacher.verification === false) {
-        sendNewMail(existingTeacher, res);
-      } else {
         const checkedPassword = await bcrypt.compare(
           password,
           existingTeacher.password
@@ -78,7 +75,7 @@ const teacherLogin = async (req, res) => {
             id: existingTeacher._id,
             email: existingTeacher.email,
           });
-        }
+        
       }
     }
   } catch (error) {
@@ -169,7 +166,7 @@ const createWeeklyTask = async (req, res) => {
           .status(200)
           .json({ msg: "weekly task created", weeklyTask: response });
       } else {
-        res.status(500).json({ msg: "weekly task not created" });
+        res.status(500).json({ msg: "You are not Assigned" });
       }
     }
   } catch (error) {
@@ -192,7 +189,7 @@ const getWeeklyTask = async (req, res) => {
         .status(200)
         .json({ msg: "succesfull", tasks: existingClass.weeklyTasks });
     } else {
-      res.status(500).json({ msg: "Task not found" });
+      res.status(500).json({ msg: "Class Not Found" });
     }
   } catch (error) {
     console.log(error);
@@ -200,13 +197,84 @@ const getWeeklyTask = async (req, res) => {
   }
 };
 
+/*controller functio for creating a new student in the class  
+by this controller teacher can create student and also he/she can add the student in any existing class
+*/
+const addNewStudent = async (req, res) => {
+  const { studentClass, studentDivision, studentName, studentEmail } = req.body;
+  const teacherId = req.user.id;
+  const options = {
+    upsert: true, // Create a new document if it doesn't exist
+    new: true, // Return the updated document
+  };
+  try {
+    const teacher = await Teacher.findOne({ _id: teacherId });
+    const existingClass = await Class.findOne({
+      className: teacher.class,
+      division: teacher.division,
+    });
+    if (existingClass) {
+      console.log("entered in the if condition");
+    } else {
+      console.log("class where removed");
+    }
+    const existingStudent = await Student.findOne({ email: studentEmail });
+    if (existingStudent) {
+      const students = await Student.findOneAndUpdate(
+        { email: studentEmail },
+        {
+          name: studentEmail,
+          email: studentEmail,
+          studentClass: studentClass,
+          division: studentDivision,
+        }
+      );
+      if (students) {
+        res.status(200).json({ msg: "Student Updated", students: students });
+      } else {
+        res.status(500).json({ msg: "students not found" });
+      }
+    } else {
+      const sendedMail = await sendNewMail();
+      const saltRounds = 10;
+      const hashedOTP = await bcrypt.hash(
+        sendedMail.otp.toString(),
+        saltRounds
+      );
+      const result = await Student.create({
+        password: hashedOTP,
+        name: studentName,
+        email: studentEmail,
+        studentClass: studentClass,
+        division: studentDivision,
+      });
+      console.log("all the function where completed", result);
+      if (result) {
+        res.status(200).json({ msg: "Student Created", student: result });
+      } else {
+        res.status(500).json({ msg: "Student Not Created" });
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: "Students not found" });
+  }
+};
+
 //controller function for finding all students in the class
 const getStudents = async (req, res) => {
   const teacherId = req.user.id;
-  console.log(teacherId);
   try {
     const teacher = await Teacher.findOne({ _id: teacherId });
-    // const students = await Student.find({studentClass:teacher.class,division:teacher.division})
+    const existingClass = await Class.findOne({
+      className: teacher.class,
+      division: teacher.division,
+    });
+    if (existingClass) {
+      console.log("entered in the if condition");
+    } else {
+      console.log("class where removed");
+    }
     const students = await Student.find({
       studentClass: teacher.class,
       division: teacher.division,
@@ -292,15 +360,15 @@ const makeComplaint = async (req, res) => {
       subject: teacherSubject,
     });
     if (existingStudent) {
-      if(teacher){
+      if (teacher) {
         const respone = await Complaint.create({
           studentId: existingStudent._id,
-          teacherId:teacher._id,
-          complaint:complaint
+          teacherId: teacher._id,
+          complaint: complaint,
         });
-        res.status(200).json({msg:"Complaint Created",complaint:respone})
-      }else{
-        res.status(500).json({msg:"Teacher Not Found"})
+        res.status(200).json({ msg: "Complaint Created", complaint: respone });
+      } else {
+        res.status(500).json({ msg: "Teacher Not Found" });
       }
     } else {
       res.status(500).json({ msg: "Student Not Found" });
@@ -312,23 +380,25 @@ const makeComplaint = async (req, res) => {
 };
 
 //controller function for finding all the complaints so the teacher can update and edit the complaints
-const GetComplaints = async(req,res)=>{
-  try{
-    const respone = await Complaint.find({}).populate(`studentId`,`name studentClass division`).populate(`teacherId`,`name subject division class`)
-    if(respone){
-      res.status(200).json({msg:"succesfull",complaints:respone})
-    }else{
-      res.status(500).json({msg:"Complaints Not Found"})
+const GetComplaints = async (req, res) => {
+  try {
+    const respone = await Complaint.find({})
+      .populate(`studentId`, `name studentClass division`)
+      .populate(`teacherId`, `name subject division class`);
+    if (respone) {
+      res.status(200).json({ msg: "succesfull", complaints: respone });
+    } else {
+      res.status(500).json({ msg: "Complaints Not Found" });
     }
-  }catch(error){
-    console.log(error)
-    res.status(500).json({msg:error.message})
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: error.message });
   }
-}
+};
 
 //controller function for finding and updating the complaint that had created earlier and returning it
-const UpdateComplaints = async(req,res)=>{
-  try{
+const UpdateComplaints = async (req, res) => {
+  try {
     const {
       studentName,
       studentClass,
@@ -347,29 +417,31 @@ const UpdateComplaints = async(req,res)=>{
       subject: teacherSubject,
     });
     if (existingStudent) {
-      if(teacher){
-        const respone = await Complaint.findOneAndUpdate({
-          studentId:existingStudent._id,
-          teacherId:teacher._id
-        },{
-          studentId: existingStudent._id,
-          teacherId:teacher._id,
-          complaint:complaint
-        },{new:true});
-        res.status(200).json({msg:"Complaint Updated",complaint:respone})
-      }else{
-        res.status(500).json({msg:"Teacher Not Found"})
+      if (teacher) {
+        const respone = await Complaint.findOneAndUpdate(
+          {
+            studentId: existingStudent._id,
+            teacherId: teacher._id,
+          },
+          {
+            studentId: existingStudent._id,
+            teacherId: teacher._id,
+            complaint: complaint,
+          },
+          { new: true }
+        );
+        res.status(200).json({ msg: "Complaint Updated", complaint: respone });
+      } else {
+        res.status(500).json({ msg: "Teacher Not Found" });
       }
     } else {
       res.status(500).json({ msg: "Student Not Found" });
     }
-  }catch(error){
-    console.log(error)
-    res.status(500).json({msg:error.message,})
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: error.message });
   }
-}
-
-
+};
 
 //controler fucntion for the teacher to make a review about the student
 const makeReview = async (req, res) => {
@@ -392,15 +464,22 @@ const makeReview = async (req, res) => {
       subject: teacherSubject,
     });
     if (existingStudent) {
-      if(teacher){
+      if (teacher) {
         const respone = await Review.create({
           studentId: existingStudent._id,
-          teacherId:teacher._id,
-          review:complaint
+          teacherId: teacher._id,
+          review: complaint,
         });
-        res.status(200).json({msg:"Review Created",complaint:{teacherId:{name:teacher.name},studentId:{name:existingStudent.name},review:respone.review}})
-      }else{
-        res.status(500).json({msg:"Teacher Not Found"})
+        res.status(200).json({
+          msg: "Review Created",
+          complaint: {
+            teacherId: { name: teacher.name },
+            studentId: { name: existingStudent.name },
+            review: respone.review,
+          },
+        });
+      } else {
+        res.status(500).json({ msg: "Teacher Not Found" });
       }
     } else {
       res.status(500).json({ msg: "Student Not Found" });
@@ -411,30 +490,27 @@ const makeReview = async (req, res) => {
   }
 };
 
-
-
 //controller function for finding all the Reviews so the teacher can update and edit the Reviews
-const GetReviews = async(req,res)=>{
-  try{
-    const respone = await Review.find({}).populate(`studentId`,`name studentClass division`).populate(`teacherId`,`name subject division class`)
-    console.log(respone,"consoling the review")
-    if(respone){
-      res.status(200).json({msg:"succesfull",complaints:respone})
-    }else{
-      res.status(500).json({msg:"Reviews Not Found"})
+const GetReviews = async (req, res) => {
+  try {
+    const respone = await Review.find({})
+      .populate(`studentId`, `name studentClass division`)
+      .populate(`teacherId`, `name subject division class`);
+    console.log(respone, "consoling the review");
+    if (respone) {
+      res.status(200).json({ msg: "succesfull", complaints: respone });
+    } else {
+      res.status(500).json({ msg: "Reviews Not Found" });
     }
-  }catch(error){
-    console.log(error)
-    res.status(500).json({msg:error.message})
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: error.message });
   }
-}
-
-
-
+};
 
 //controller function for finding and updating the Reviews that had created earlier and returning it
-const UpdateReviews = async(req,res)=>{
-  try{
+const UpdateReviews = async (req, res) => {
+  try {
     const {
       studentName,
       studentClass,
@@ -453,34 +529,36 @@ const UpdateReviews = async(req,res)=>{
       subject: teacherSubject,
     });
     if (existingStudent) {
-      if(teacher){
-        const respone = await Review.findOneAndUpdate({
-          studentId:existingStudent._id,
-          teacherId:teacher._id
-        },{
-          studentId: existingStudent._id,
-          teacherId:teacher._id,
-          review:complaint
-        },{new:true});
+      if (teacher) {
+        const respone = await Review.findOneAndUpdate(
+          {
+            studentId: existingStudent._id,
+            teacherId: teacher._id,
+          },
+          {
+            studentId: existingStudent._id,
+            teacherId: teacher._id,
+            review: complaint,
+          },
+          { new: true }
+        );
         // console.log(respone)
-        res.status(200).json({msg:"Review Updated",complaint:respone})
-      }else{
-        console.log("teacher not fone")
-        res.status(500).json({msg:"Teacher Not Found"})
+        res.status(200).json({ msg: "Review Updated", complaint: respone });
+      } else {
+        console.log("teacher not fone");
+        res.status(500).json({ msg: "Teacher Not Found" });
       }
     } else {
       res.status(500).json({ msg: "Student Not Found" });
     }
-  }catch(error){
-    console.log(error)
-    res.status(500).json({msg:error.message,})
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: error.message });
   }
-}
-
-
+};
 
 module.exports = {
-  teacherRegister,
+  // teacherRegister,
   teacherLogin,
   otpVerification,
   createWeeklyTask,
@@ -492,5 +570,6 @@ module.exports = {
   UpdateComplaints,
   makeReview,
   GetReviews,
-  UpdateReviews
+  UpdateReviews,
+  addNewStudent,
 };

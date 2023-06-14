@@ -72,7 +72,7 @@ const PrincipalTeachers = () => {
 
   const uniqueClass = [...new Set(data?.map(item => item.className))]
 
-  //function for handling the Add Teacher submit and calling the teacher creating function and 
+  //function for handling the Add Teacher submit and calling the teacher creating function,and updating the existing teacher usState
   const handleAddTeacherSubmit = async(value)=>{
     try{
       setLoading(true)
@@ -80,6 +80,8 @@ const PrincipalTeachers = () => {
       if(response === "Access Denied" || response.message === "jwt malformed" || response.message === "jwt expired"){
         navigate("/principal/login")
       }else if(response.msg === "succesfull"){
+        console.log(response,existingTeachers)
+        setExistingTeachers([...existingTeachers,response.teacher])
         toast.success(response.msg)
         setAddTeacher(false)
       }else{

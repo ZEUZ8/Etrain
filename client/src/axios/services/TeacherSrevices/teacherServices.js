@@ -2,22 +2,22 @@ import { axiosTeacherInstance } from "../../axios";
 
 
 
-export const teacherRegister = async (value) =>{
-    console.log(value,"enterd the class createiion services ")
-    const config = {
-        headers:{
-            "Content-Type":"application/json"
-        },
-    };
-    try{
-        const response = await axiosTeacherInstance.post("/register", value, config);
-        return response.data
-    }catch(error){
-        console.log(error)
-        console.log("erro at the teacher signup, At teacher Services")
-        return(error)
-    }
-}
+// export const teacherRegister = async (value) =>{
+//     console.log(value,"enterd the class createiion services ")
+//     const config = {
+//         headers:{
+//             "Content-Type":"application/json"
+//         },
+//     };
+//     try{
+//         const response = await axiosTeacherInstance.post("/register", value, config);
+//         return response.data
+//     }catch(error){
+//         console.log(error)
+//         console.log("erro at the teacher signup, At teacher Services")
+//         return(error)
+//     }
+// }
 
 //teacher services for the login Routes 
 export const teacherLoginService = async(value)=>{
@@ -69,7 +69,7 @@ export const weeklyTasks = async (token,value)=>{
         return response.data
     }catch(error){
         console.log(`Erro at the teacher weeklyTask create services --> ${error}`)
-        return(error.message)
+        return(error.response.data)
     }
 }
 
@@ -90,6 +90,26 @@ export const GetWeeklyTasks = async(token)=>{
     }
 }
 
+//teacher service function fro creating new student in the class 
+export const addStudent = async(token,value)=>{
+    console.log("entred in the students adding  funcion")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosTeacherInstance.put("/students",value,config)
+        return response.data
+    }catch(error){
+        console.log(error)
+        return(error.response.data)
+    }
+}
+
+//teacher service function for getting all the students existing in the class
 export const GetStudents = async(token)=>{
     console.log("entred in the students finding funcion")
     const config = {
