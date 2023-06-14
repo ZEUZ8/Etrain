@@ -141,10 +141,10 @@ const updateTeachers = async (req,res)=>{
 const createExam = async(req,res)=>{
   console.log("entered in the exam creating function")
   try{
-    const {examName,startDate,endDate,examDiscription,timeTable} = req.body
+    const {examName,startDate,endDate,examDiscription,timeTable,examClass} = req.body
     const existingExam = await Exam.findOne({examName:examName})
     if(!existingExam){
-      const response = await Exam.create({examName:examName,startDate:startDate,endDate:endDate,examDiscription:examDiscription,timeTable})
+      const response = await Exam.create({examName:examName,startDate:startDate,endDate:endDate,examDiscription:examDiscription,timeTable,examClass})
       if(response){
         res.status(200).json({msg:"Exam created",exam:response})
       }else{

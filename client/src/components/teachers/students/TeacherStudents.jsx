@@ -21,6 +21,7 @@ const TeacherStudetns = () => {
   const [isOn, setIsOn] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [currentStudent,setCurrentStudent] = useState('')
+  const [currentTeacher,setCurrentTeacher] = useState('')
   const [students, setStudents] = useState([]);
   const [loading,setLoading] = useState(false)
   const taskPerPage = 10;
@@ -37,9 +38,8 @@ const TeacherStudetns = () => {
           navigate("/teacher/login");
         } else if (response.msg === "succesfull") {
           setStudents(response.students);
-        } else {
-          console.log(response);
-        }
+          setCurrentTeacher(response.teacher)
+        } 
       } catch (error) {
         console.log("error occured in the try catch block");
       }
@@ -52,11 +52,9 @@ const TeacherStudetns = () => {
     try{
       setLoading(true)
       const response = await addStudent(token,value)
-      console.log(response)
       if(response.msg === "jwt"){
         navigate("/teacher/login")
       }else if(response.msg === "Student Updated"){
-        console.log(response)
         toast.success(response.msg)
         setStudents(students.map((data)=>{
           if(data?._id === response?.students._id ){
@@ -66,7 +64,6 @@ const TeacherStudetns = () => {
           }
         }))
       }else if(response.msg === "Student Created"){
-        console.log(response.students)
         toast.success(response.msg)
         setStudents([...students,response.student])
       }else{
@@ -75,6 +72,7 @@ const TeacherStudetns = () => {
     }catch(error){
       console.log(error)
     }
+    setIsOn(false)
     setLoading(false)
   }
 
@@ -108,11 +106,12 @@ const TeacherStudetns = () => {
            setIsOn={setIsOn} 
            loading={loading} 
            handleAddStudent={handleAddStudent}
+           currentTeacher={currentTeacher}
          />
        </div>
       )}
         <div className="flex justify-between mx-5">
-          <p className="underline underline-offset-4 ">Teachers</p>
+          <p className="underline underline-offset-4 ">Students</p>
           <div className="bg-violet-400 rounded-2xl mb-5 hover:bg-violet-300">
             <p onClick={handleAddClick} className="items-center p-3 ">
               Add Student

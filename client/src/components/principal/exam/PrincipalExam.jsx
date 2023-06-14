@@ -1,79 +1,103 @@
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
-import ReactPaginate from 'react-paginate';
-import { GiPaperTray } from 'react-icons/gi';
+import ReactPaginate from "react-paginate";
+import { GiPaperTray } from "react-icons/gi";
 
 import "react-toastify/dist/ReactToastify.css";
 import { ExamValidation } from "../../../validations/principal/examValidation";
-import {CreateExam} from "../../../axios/services/principalServices/principlaServices"
-import { GetExam } from "../../../axios/services/principalServices/principlaServices";
+import { CreateExam,GetExam } from "../../../axios/services/principalServices/principlaServices";
+import PrinciplEditExam from "./PrinciplEditExam";
 
 const PrincipalExam = () => {
+  const pricnipalData = useSelector(
+    (state) => state.principalReducer.principal
+  );
+  const token = pricnipalData?.token;
 
-  const pricnipalData = useSelector(state => state.principalReducer.principal)
-  const token = pricnipalData?.token
+  const [loading,setLoading] = useState(false)
+  const [exams, setExams] = useState([]);
+  const [currentExam,setCurrentExam] = useState('')
+  const [currentPage, setCurrentPage] = useState(0);
+  const [isOn,setIsOn] = useState(false)
+  const examPerPage = 4;
 
-  const [exams,setExams] = useState([])
-  const [currentPage,setCurrentPage] = useState(0)
-  const examPerPage = 4
-
-  useEffect(()=>{
-    const fetchData = async()=>{
-      console.log("entered in the fetch dat")
-      try{
-        const response = await GetExam(token)
-        setExams(response.exams)
-        console.log(response)
-      }catch(error){
-        console.log(error)
+  useEffect(() => {
+    const fetchData = async () => {
+      console.log("entered in the fetch dat");
+      try {
+        const response = await GetExam(token);
+        setExams(response.exams);
+        console.log(response);
+      } catch (error) {
+        console.log(error);
       }
-    }
-    fetchData()
-  },[])
+    };
+    fetchData();
+  }, []);
 
   const taskToDisplay = exams.slice(
     currentPage * examPerPage,
-    (currentPage + 1 ) * examPerPage
-  )
+    (currentPage + 1) * examPerPage
+  );
 
-
-  const onSubmit = async()=>{
-    try{
-      const response = await CreateExam(token,values)
-      console.log(response.msg)
-      if(response.msg === "Exam created"){
-        toast.success(response.msg)
-      }else{
-        toast.error(response.msg)
+  const onSubmit = async () => {
+    try {
+      const response = await CreateExam(token, values);
+      console.log(response.msg);
+      if (response.msg === "Exam created") {
+        setExams([...exams,response.exam])
+        toast.success(response.msg);
+      } else {
+        toast.error(response.msg);
       }
-    }catch(error){
-      console.log(error)
-      toast.error(error.msg)
+    } catch (error) {
+      console.log(error);
+      toast.error(error.msg);
     }
+  };
+
+  const { values, errors, touched, handleChange, handleSubmit, handleBlur } =
+    useFormik({
+      initialValues: {
+        examName: "",
+        timeTable: "",
+        startDate: "",
+        endDate: "",
+        examDiscription: "",
+        examClass:""
+      },
+      validationSchema: ExamValidation,
+      onSubmit,
+    });
+
+  //function for the modal opening with the current exam data
+  const handleEditClick = (exam)=>{
+    setIsOn(true)
+    setCurrentExam(exam)
   }
-  
-  const {values,errors,touched,handleChange,handleSubmit,handleBlur} = 
-  useFormik({
-    initialValues:{
-      examName:"",
-      timeTable:"",
-      startDate:"",
-      endDate:"",
-      examDiscription:"",
-    },
-    validationSchema:ExamValidation,
-    onSubmit
-  })
+
+  //function for the pagination controll  
   const handlePageChange = (selectedPage) => {
     setCurrentPage(selectedPage.selected);
   };
+
+
   return (
     <div>
-      < ToastContainer />
+      <ToastContainer />
       <div className="md:ml-64 p-4">
+      {isOn && (
+         <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+         <PrinciplEditExam
+           setIsOn={setIsOn} 
+           loading={loading} 
+           currentExam={currentExam}
+         />
+       </div>
+      )}
         <div className="flex justify-center flex-col md:flex-row">
           <div className="flex w-1/2 bg-fuchsia-100 m-2 items-center justify-center  rounded-3xl shadow-xl">
             <div className="h-full w-">
@@ -85,27 +109,55 @@ const PrincipalExam = () => {
                   className="bg-white shadow-md  px-8 pt-6 pb-10 mb-10 rounded-xl"
                   onSubmit={handleSubmit}
                 >
-                  <div className="mb-6">
-                    <label
-                      className="block text-gray-700 text-sm font-bold mb-2"
-                      htmlFor="username"
-                    >
-                      Exam Name
-                    </label>
-                    <input
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      id="examName"
-                      type="text"
-                      placeholder="Exam Name"
-                      name="examName"
-                      value={values.examName}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                    />
-                    {errors.examName && touched.examName && (
-                      <p className="text-red-600">{errors.examName}</p>
-                    )}
+
+                  <div className="flex">
+                    <div className="mb-6">
+                      <label
+                        className="block text-gray-700 text-sm font-bold mb-2"
+                        htmlFor="username"
+                      >
+                        Exam Name
+                      </label>
+                      <input
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="examName"
+                        type="text"
+                        placeholder="Exam Name"
+                        name="examName"
+                        value={values.examName}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                      {errors.examName && touched.examName && (
+                        <p className="text-red-600">{errors.examName}</p>
+                      )}
+                    </div>
+
+                    <div className="mb-5 flex-1 ml-3">
+                      <label
+                        className="block text-gray-700 text-sm font-bold mb-2"
+                        htmlFor="endDate"
+                      >
+                        Class
+                      </label>
+
+                      <input
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="examClass"
+                        type="number"
+                        name="examClass"
+                        placeholder="Exam class"
+                        value={values.examClass}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                      {errors.examClass && touched.examClass && (
+                        <p className="text-red-600">{errors.examClass}</p>
+                      )}
+                    </div>
+
                   </div>
+
 
                   <div className="mb-6">
                     <label
@@ -214,21 +266,21 @@ const PrincipalExam = () => {
           </div>
 
           <div className="w-1/2 bg-fuchsia-100 m-2 rounded-2xl shadow-2xl">
-              <p className="text-center text-xl  m-5 dark:text underline underline-offset-4">
-                Scheduled Exams
-              </p>
+            <p className="text-center text-xl  m-5 dark:text underline underline-offset-4">
+              Scheduled Exams
+            </p>
             <div className="grid grid-cols-2">
-
-               {taskToDisplay.map((exam, index) => {
+              {taskToDisplay.map((exam, index) => {
                 return (
                   <a
                     key={index}
+                    onClick={()=>handleEditClick(exam)}
                     class="relative flex items-start justify-between dark:bg-white m-5 mt-4 rounded-xl border border-gray-100 p-4 shadow-xl sm:p-6 lg:p-8"
                   >
                     <div class=" text-gray-500">
                       <GiPaperTray className="w-10 h-10" />
 
-                       {/* <svg
+                      {/* <svg
                         class="h-8 w-8 sm:h-10 sm:w-10"
                         fill="none"
                         stroke="currentColor"
@@ -243,23 +295,28 @@ const PrincipalExam = () => {
                         ></path>
                       </svg>  */}
 
-                      <h3 class="mt-4 text-lg font-bold text-gray-900  sm:text-xl w-full" >
-                        {exam.examName}
+                      <h3 class="mt-4 text-sm font-bold text-gray-900  sm:text-md w-full">
+                        Name : {exam.examName}
+                       
+                      </h3>
+                      <h3 class="mt-4 text-sm font-bold text-gray-900  sm:text-md w-full">
+                        Class : {exam.examClass}
+                       
                       </h3>
 
                       {/* <p class="mt-2 hidden text-sm sm:block">
                         {exam.examDiscription}
                       </p> */}
-                    </div> 
-                    
+                    </div>
+
                     {/* <span
                       class="rounded-full bg-green-100 px-3 py-1.5 text-xs font-medium text-green-600"
                     >
                       4.3
                     </span>  */}
-                   </a>
+                  </a>
                 );
-              })} 
+              })}
             </div>
             <ReactPaginate
               containerClassName="flex justify-center items-center mt-5"

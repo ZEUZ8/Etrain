@@ -4,7 +4,7 @@ import { useFormik } from "formik";
 import Loader from "../../landing/loader/Loader";
 import { addStudentValidation } from "../../../validations/teachers/addStudentValidation";
 
-const TeacherAddStudent = ({ setIsOn, loading,handleAddStudent }) => {
+const TeacherAddStudent = ({ setIsOn, loading,handleAddStudent,currentTeacher }) => {
   const handleClick = () => {
     setIsOn(false);
   };
@@ -18,8 +18,8 @@ const TeacherAddStudent = ({ setIsOn, loading,handleAddStudent }) => {
       initialValues: {
         studentName: "",
         studentEmail: "",
-        studentClass: "",
-        studentDivision: "",
+        studentClass: currentTeacher.class,
+        studentDivision: currentTeacher.division,
       },
       validationSchema: addStudentValidation,
       onSubmit,
@@ -127,6 +127,7 @@ const TeacherAddStudent = ({ setIsOn, loading,handleAddStudent }) => {
                       value={values.studentClass}
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      readOnly
                     />
                     {errors.studentClass && touched.studentClass && (
                       <p className="text-red-600">{errors.studentClass}</p>
@@ -150,6 +151,7 @@ const TeacherAddStudent = ({ setIsOn, loading,handleAddStudent }) => {
                       value={values.studentDivision}
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      readOnly
                     />
                     {errors.studentDivision && touched.studentDivision && (
                       <p className="text-red-600">{errors.studentDivision}</p>

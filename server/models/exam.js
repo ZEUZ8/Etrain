@@ -10,6 +10,10 @@ const examSchema = mongoose.Schema({
     endDate:{
         type:Date
     },
+    examClass:{
+        type:Number,
+        required:true
+    },
     examDiscription:{
         type:String,
     },

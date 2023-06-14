@@ -280,7 +280,7 @@ const getStudents = async (req, res) => {
       division: teacher.division,
     });
     if (students) {
-      res.status(200).json({ msg: "succesfull", students: students });
+      res.status(200).json({ msg: "succesfull", students: students,teacher:teacher });
     } else {
       res.status(500).json({ msg: "students not found" });
     }
