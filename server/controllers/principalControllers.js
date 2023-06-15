@@ -145,6 +145,7 @@ const createExam = async(req,res)=>{
     const existingExam = await Exam.findOne({examName:examName})
     if(!existingExam){
       const response = await Exam.create({examName:examName,startDate:startDate,endDate:endDate,examDiscription:examDiscription,timeTable,examClass})
+      const updatedClass = await Class.updateMany({className:examClass},{$push:{exams:response._id}})
       if(response){
         res.status(200).json({msg:"Exam created",exam:response})
       }else{

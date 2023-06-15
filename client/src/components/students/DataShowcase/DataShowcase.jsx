@@ -16,7 +16,6 @@ import {
 } from "../../../axios/services/studentServices/studentServices";
 
 const DataShowcase = ({ page }) => {
-  const requiredPage = page;
   const navigate = useNavigate();
   const studentData = useSelector((state) => state.studentReducer.student);
   const token = studentData?.token;
@@ -35,55 +34,49 @@ const DataShowcase = ({ page }) => {
 
   useEffect(() => {
     setLoading(true);
+    setCurrentData("");
     const fetchComplaint = async () => {
       try {
-        if (requiredPage === "complaints") {
-
+        if (page === "complaints") {
           const response = await GetComplaints(token);
-          if(
-            response.msg == "Access Denied" ||
+          if (
+            response.msg === "Access Denied" ||
             response.msg === "jwt malformed" ||
             response.msg?.msg === "jwt expired"
           ) {
             navigate("/login");
-          }else if (response.msg === "succesfull") {
+          } else if (response.msg === "succesfull") {
             setComplaints(response.complaints);
-          }
-          else {
+          } else {
             toast.error(response.error);
           }
-
-        } else if (requiredPage === "reviews") {
-
+        } else if (page === "reviews") {
           const response = await GetReviews(token);
-          if(
-            response.msg == "Access Denied" ||
+          if (
+            response.msg === "Access Denied" ||
             response.msg === "jwt malformed" ||
             response.msg?.msg === "jwt expired"
-          ){
-            navigate("/login")
-          }else if (response.msg === "succesfull") {
+          ) {
+            navigate("/login");
+          } else if (response.msg === "succesfull") {
             setReviews(response.reviews);
           } else {
             toast.error(response.msg);
           }
-
-        } else if (requiredPage === "exams") {
-
+        } else if (page === "exams") {
           const response = await GetExams(token);
-          if(
-            response.msg == "Access Denied" ||
+          if (
+            response.msg === "Access Denied" ||
             response.msg === "jwt malformed" ||
             response.msg?.msg === "jwt expired"
-          ){
-            navigate("/login")
-          }else if (response.msg === "succesfull") {
+          ) {
+            navigate("/login");
+          } else if (response.msg === "succesfull") {
             setExams(response.exams);
           } else {
             console.log("enterd the inthe laskdf");
             toast.error(response.msg);
           }
-
         }
       } catch (error) {
         console.log(error);
@@ -91,26 +84,27 @@ const DataShowcase = ({ page }) => {
       setLoading(false);
     };
     fetchComplaint();
-  }, [requiredPage]);
+  }, [page]);
 
   console.log(exams, complaints, reviews);
+  let paginationPage;
+  let paginationState;
 
-  if (requiredPage === "complaints") {
-    var dataToDisplay = complaints.slice(
-      currentPage * datPerPage,
-      (currentPage + 1) * datPerPage
-    );
-  } else if (requiredPage === "reviews") {
-    var dataToDisplay = reviews.slice(
-      currentPage * datPerPage,
-      (currentPage + 1) * datPerPage
-    );
-  } else {
-    var dataToDisplay = exams.slice(
-      currentPage * datPerPage,
-      (currentPage + 1) * datPerPage
-    );
+  if (page === "complaints") {
+    paginationPage = complaints;
+    paginationState = complaints;
+  } else if (page === "reviews") {
+    paginationPage = reviews;
+    paginationState = reviews;
+  } else if (page === "exams") {
+    paginationPage = exams;
+    paginationState = exams;
   }
+
+  const dataToDisplay = paginationState.slice(
+    currentPage * datPerPage,
+    (currentPage + 1) * datPerPage
+  );
 
   const handlePageChange = (selectedPage) => {
     setCurrentPage(selectedPage.selected);
@@ -119,6 +113,7 @@ const DataShowcase = ({ page }) => {
   const handleModalClick = (data) => {
     setCurrentData(data);
   };
+  console.log(currentData)
 
   return (
     <div>
@@ -126,7 +121,7 @@ const DataShowcase = ({ page }) => {
         <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
           <TeacherComplaintEdit
             setIson={setIson}
-            requiredPage={requiredPage}
+            page={page}
             currentData={currentData}
             handleEdit={handleEdit}
           />
@@ -135,7 +130,7 @@ const DataShowcase = ({ page }) => {
       <ToastContainer />
       <div className="md:ml-64 p-4">
         <div className="flex justify-center flex-col md:flex-row">
-          <div className="flex w-1/2 bg-left-gradient m-2 items-center justify-center  rounded-3xl shadow-xl">
+          <div className="flex w-1/2 bg-left-gradient m-2 items-center justify-center   rounded-3xl shadow-xl">
             <div className="h-full w-">
               <p className="text-center text-xl  m-5 dark:text-white underline underline-offset-4">
                 Show Details
@@ -154,7 +149,7 @@ const DataShowcase = ({ page }) => {
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         id="studentName"
                         type="text"
-                        placeholder={currentData.examName}
+                        placeholder={currentData?.examName ? currentData.examName : currentData.studentId.name}
                         name="name"
                         readonly
                       />
@@ -248,6 +243,7 @@ const DataShowcase = ({ page }) => {
                         class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-200 dark:border-gray-600 dark:placeholder-gray-400 dark:text dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         readOnly
                         name="complaint"
+                        placeholder={currentData.examDiscription ? currentData.examDiscription : currentData.review? currentData.review : currentData.complaint }
                       ></textarea>
                     </div>
 
@@ -264,18 +260,29 @@ const DataShowcase = ({ page }) => {
                     </div>
                   </form>
                 ) : (
-                  <div className="dark:text-white flex justify-center items-center align-middle">
-                    Please Select
+                  <div>
+                    <div className="dark:text-white text-center sm:text-lg lg:text-2xl mt-5">
+                      <p className="dark:text-white sm:text-lg lg:text-2xl mt-5 ">
+                        Select A {page}
+                      </p>
+                    </div>
+                    <div className="flex justify-center items-center align-middle">
+                      <img
+                        className="dark:text-white rounded-2xl h-fit w-full"
+                        src="/img/select.svg"
+                        alt="Not selected"
+                      />
+                    </div>
                   </div>
                 )}
               </div>
             </div>
           </div>
 
-          <div className="w-1/2 bg-left-gradient m-2 rounded-2xl shadow-2xl">
+          <div className="w-1/2 bg-left-gradient m-2 h-fit rounded-2xl shadow-2xl">
             <p className="text-center text-xl  m-5 dark:text-white underline underline-offset-4">
               {/* Complaints */}
-              {requiredPage}
+              {page}
             </p>
             <div class="mb-3 mx-10">
               <input
@@ -287,84 +294,109 @@ const DataShowcase = ({ page }) => {
               />
             </div>
             {loading && <Loader />}
-            <div className="grid grid-cols-2">
-              {dataToDisplay.map((data, index) => {
-                if (requiredPage === "complaints") {
-                  return (
-                    <a
-                      key={index}
-                      onClick={() => handleModalClick(data)}
-                      class="relative flex items-start justify-between dark:bg-white m-5 mt-4 rounded-xl border border-gray-100 p-4 shadow-xl sm:p-6 lg:p-8"
-                    >
-                      <div class=" text-gray-500">
-                        <RiNewspaperFill className="w-10 h-10" />
-                        <p class="mt-4 text-sm font-bold text-gray-900  sm:text-sm w-full underline underline-offset-8">
-                          {data.studentId.name}
-                        </p>
-                        <p class="mt-2 hidden text-sm sm:block truncate max-w-sm">
-                          by : {data.teacherId.name}
-                          {`(${data.teacherId.subject})`}
-                        </p>
-                      </div>
-                    </a>
-                  );
-                } else if (requiredPage === "reviews") {
-                  return (
-                    <a
-                      key={index}
-                      onClick={() => handleModalClick(data)}
-                      class="relative flex items-start justify-between dark:bg-white m-5 mt-4 rounded-xl border border-gray-100 p-4 shadow-xl sm:p-6 lg:p-8"
-                    >
-                      <div class=" text-gray-500">
-                        <RiNewspaperFill className="w-10 h-10" />
-                        <p class="mt-4 text-sm font-bold text-gray-900  sm:text-sm w-full underline underline-offset-8">
-                          {data.studentId.name}
-                        </p>
-                        <p class="mt-2 hidden text-sm sm:block truncate max-w-sm">
-                          by : {data.teacherId.name}
-                          {`(${data.teacherId.subject})`}
-                        </p>
-                      </div>
-                    </a>
-                  );
-                } else {
-                  return (
-                    <a
-                      key={index}
-                      onClick={() => handleModalClick(data)}
-                      class="relative flex items-start justify-between dark:bg-white m-5 mt-4 rounded-xl border border-gray-100 p-4 shadow-xl sm:p-6 lg:p-8"
-                    >
-                      <div class=" text-gray-500">
-                        <RiNewspaperFill className="w-10 h-10" />
-                        <p class="mt-4 text-sm font-bold text-gray-900  sm:text-sm w-full underline underline-offset-8">
-                          {data.examName}
-                        </p>
-                        <p class="mt-2 hidden text-sm sm:block truncate max-w-sm">
-                          {/* from : {data.startDate} to : {data.endDate} */}
-                        </p>
-                      </div>
-                    </a>
-                  );
-                }
-              })}
-            </div>
-
-            <ReactPaginate
-              containerClassName="flex justify-center items-center mt-5"
-              pageLinkClassName="bg-violet-500  hover:bg-orange-500 text-white font-bold py-2 px-4 rounded-full mx-1"
-              previousLinkClassName="  text-white font-bold py-3 px-1 "
-              nextLinkClassName="  text-white font-bold py-3 px-1 "
-              previousLabel={<GrFormPrevious name="arrow-left" />}
-              nextLabel={<GrFormNext name="arrow-right" />}
-              breakLabel={"..."}
-              pageCount={Math.ceil(requiredPage.length / datPerPage)}
-              marginPagesDisplayed={2}
-              pageRangeDisplayed={5}
-              onPageChange={handlePageChange}
-              // containerClassName={'pagination'}
-              subContainerClassName={"pages pagination"}
-              activeClassName={"active"}
-            />
+            {dataToDisplay.length > 0 ? (
+              <div className="grid grid-cols-2">
+                {dataToDisplay?.map((data, index) => {
+                  if (page === "complaints") {
+                    return (
+                      <a
+                        key={index}
+                        onClick={() => handleModalClick(data)}
+                        class="relative flex items-start justify-between dark:bg-white m-5 mt-4 rounded-xl border border-gray-100 p-4 shadow-xl sm:p-6 lg:p-8"
+                      >
+                        <div class=" text-gray-500">
+                          <RiNewspaperFill className="w-10 h-10" />
+                          <p class="mt-4 text-sm font-bold text-gray-900  sm:text-sm w-full underline underline-offset-8">
+                            {data.studentId.name}
+                          </p>
+                          a
+                          <p class="mt-2 hidden text-sm sm:block truncate max-w-sm">
+                            by : {data.teacherId.name}
+                            {`(${data.teacherId.subject})`}
+                          </p>
+                        </div>
+                      </a>
+                    );
+                  } else if (page === "reviews") {
+                    return (
+                      <a
+                        key={index}
+                        onClick={() => handleModalClick(data)}
+                        class="relative flex items-start justify-between dark:bg-white m-5 mt-4 rounded-xl border border-gray-100 p-4 shadow-xl sm:p-6 lg:p-8"
+                      >
+                        <div class=" text-gray-500">
+                          <RiNewspaperFill className="w-10 h-10" />
+                          <p class="mt-4 text-sm font-bold text-gray-900  sm:text-sm w-full underline underline-offset-8">
+                            {data.studentId.name}
+                          </p>
+                          <p class="mt-2 hidden text-sm sm:block truncate max-w-sm">
+                            by : {data.teacherId.name}
+                            {`(${data.teacherId.subject})`}
+                          </p>
+                        </div>
+                      </a>
+                    );
+                  } else if (page === "exams") {
+                    return (
+                      <a
+                        key={index}
+                        onClick={() => handleModalClick(data)}
+                        class="relative flex items-start justify-between dark:bg-white m-5 mt-4 rounded-xl border border-gray-100 p-4 shadow-xl sm:p-6 lg:p-8"
+                      >
+                        <div class=" text-gray-500">
+                          <RiNewspaperFill className="w-10 h-10" />
+                          <p class="mt-4 text-sm font-bold text-gray-900  sm:text-sm w-full underline underline-offset-8">
+                            Exam : {data.examName}
+                          </p>
+                          <p class="mt-4 text-sm font-bold text-gray-900  sm:text-sm w-full underline underline-offset-8">
+                            Class : {data.examClass}
+                          </p>
+                          <p class="mt-2 hidden text-sm sm:block truncate max-w-sm">
+                            {/* from : {data.startDate} to : {data.endDate} */}
+                          </p>
+                        </div>
+                      </a>
+                    );
+                  }
+                })}
+              </div>
+            ) : (
+              <div className="">
+                <div className="text-center">
+                  <p className="dark:text-white sm:text-lg lg:text-2xl mt-5 underline underline-offset-4">
+                    Don't Have any {page}
+                  </p>
+                </div>
+                <div className="flex justify-center items-center m-5  rounded-2xl">
+                  <img
+                    className="dark:text-white rounded-2xl h-[30rem] w-full"
+                    src="/img/No data-rafiki.svg"
+                    alt="NoData"
+                  />
+                </div>
+              </div>
+            )
+            }
+            {dataToDisplay.length > 0 && (
+              <div>
+                <ReactPaginate
+                  containerClassName="flex justify-center items-center mt-5 "
+                  pageLinkClassName="bg-violet-500  hover:bg-orange-500 text-white font-bold py-2 px-4 rounded-full mx-1"
+                  previousLinkClassName="  text-white font-bold py-3 px-1 "
+                  nextLinkClassName="  text-white font-bold py-3 px-1 "
+                  previousLabel={<GrFormPrevious name="arrow-left" />}
+                  nextLabel={<GrFormNext name="arrow-right" />}
+                  breakLabel={"..."}
+                  pageCount={Math.ceil(paginationPage.length / datPerPage)}
+                  marginPagesDisplayed={2}
+                  pageRangeDisplayed={5}
+                  onPageChange={handlePageChange}
+                  // containerClassName={'pagination'}
+                  subContainerClassName={"pages pagination"}
+                  activeClassName={"active"}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>

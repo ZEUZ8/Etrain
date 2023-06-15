@@ -45,7 +45,8 @@ const ClassSchema = mongoose.Schema({
                 default:Date.now()
             }
         }
-    ]
+    ],
+    
 })
 
 const Class = mongoose.model("classes",ClassSchema)
