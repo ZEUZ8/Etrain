@@ -9,6 +9,7 @@ import TeacherWeeklyTasksPage from "../pages/teachers/weeklyTasks/TeacherWeeklyT
 import TeacherAttadencePage from "../pages/teachers/attandence/TeacherAttadencePage";
 import TeacherComplaintsPage from "../pages/teachers/complaints/TeacherComplaintsPage";
 import TeacherStudentsPage from "../pages/teachers/students/TeacherStudentsPage";
+import TeacherExamPage from "../pages/teachers/exams/TeacherExamPage";
 
 function TeacherRoutes(){
     return (
@@ -23,6 +24,7 @@ function TeacherRoutes(){
                 <Route path="/reviews" element={< TeacherComplaintsPage page="review" />}></Route>
                 <Route path="/complaints" element={< TeacherComplaintsPage page="complaint"/>}></Route>
                 <Route path="/students" element={< TeacherStudentsPage />}></Route>
+                <Route path="/exams" element={< TeacherExamPage />}></Route>
             </Routes>
         </div>
     )

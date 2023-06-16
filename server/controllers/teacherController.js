@@ -1,7 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const nodeMailer = require("nodemailer");
-const {sendNewMail} = require("./principalControllers")
+const { sendNewMail } = require("./principalControllers");
 const Teacher = require("../models/teacher");
 const OTP = require("../models/Otp");
 const Class = require("../models/Class");
@@ -10,6 +10,8 @@ const Attandence = require("../models/attandence");
 const moment = require("moment");
 const Complaint = require("../models/complaint");
 const Review = require("../models/Review");
+const Exam = require("../models/exam");
+const Mark = require("../models/marks");
 // const { options } = require("../routes/teacherRoutes");
 
 // //controller for handling the teacher signUp funcion
@@ -51,31 +53,30 @@ const teacherLogin = async (req, res) => {
     if (!existingTeacher) {
       res.json({ msg: "teacher don't exist" });
     } else {
-        const checkedPassword = await bcrypt.compare(
-          password,
-          existingTeacher.password
-        );
-        if (!checkedPassword) {
-          res.json({ msg: "Invalid Credentials" });
-        } else {
-          const token = jwt.sign(
-            {
-              name: existingTeacher.name,
-              email: existingTeacher.email,
-              id: existingTeacher.id,
-              role: "teacher",
-            },
-            "TeacherTokenSecret",
-            { expiresIn: "2d" }
-          );
-          res.status(200).json({
-            msg: "login succesfull",
-            token: token,
-            user: "teacher",
-            id: existingTeacher._id,
+      const checkedPassword = await bcrypt.compare(
+        password,
+        existingTeacher.password
+      );
+      if (!checkedPassword) {
+        res.json({ msg: "Invalid Credentials" });
+      } else {
+        const token = jwt.sign(
+          {
+            name: existingTeacher.name,
             email: existingTeacher.email,
-          });
-        
+            id: existingTeacher.id,
+            role: "teacher",
+          },
+          "TeacherTokenSecret",
+          { expiresIn: "2d" }
+        );
+        res.status(200).json({
+          msg: "login succesfull",
+          token: token,
+          user: "teacher",
+          id: existingTeacher._id,
+          email: existingTeacher.email,
+        });
       }
     }
   } catch (error) {
@@ -265,7 +266,9 @@ const addNewStudent = async (req, res) => {
 const getStudents = async (req, res) => {
   const teacherId = req.user.id;
   try {
-    const teacher = await Teacher.findOne({ _id: teacherId });
+    const teacher = await Teacher.findOne({ _id: teacherId }).select(
+      "-password"
+    );
     const existingClass = await Class.findOne({
       className: teacher.class,
       division: teacher.division,
@@ -280,7 +283,9 @@ const getStudents = async (req, res) => {
       division: teacher.division,
     });
     if (students) {
-      res.status(200).json({ msg: "succesfull", students: students,teacher:teacher });
+      res
+        .status(200)
+        .json({ msg: "succesfull", students: students, teacher: teacher });
     } else {
       res.status(500).json({ msg: "students not found" });
     }
@@ -557,6 +562,93 @@ const UpdateReviews = async (req, res) => {
   }
 };
 
+/* teacher controller function for getting all the existing exams, so the
+ teacher teacher could eid the student marks 
+*/
+const GetExams = async (req, res) => {
+  const { id } = req.user;
+  console.log("entered in the exam finding function for the teracher");
+  try {
+    const teacher = await Teacher.findOne({ _id: id });
+    const existingExam = await Exam.find({ examClass: teacher.class });
+    if (existingExam) {
+      res.status(200).json({ msg: "succesfull", exams: existingExam });
+    } else {
+      res.json({ msg: "Exam not found" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: error.message });
+  }
+};
+
+/* teacher controller function for getting the existing edited exam marks and 
+if not exists one then create one and return it 
+*/
+const CreateExamMarks = async (req, res) => {
+  const { id } = req.user;
+  const { value, exam, studentId } = req.body;
+  const options = {
+    upsert: true, // Create a new document if it doesn't exist
+    new: true, // Return the updated document
+  };
+  try {
+    const teacher = await Teacher.findOne({ _id: id });
+    if (teacher) {
+      const existingExam = await Exam.findOne({ _id: exam._id });
+      if (existingExam) {
+        const response = await Mark.findOneAndUpdate(
+          { studentId },
+          {
+            examId: exam._id,
+            english: value.english,
+            mathematics: value.mathematics,
+            science: value.science,
+            malayalam: value.malayalam,
+            totalMark:value.totalMark,
+            grade:value.grade
+          },options
+        );
+        res.status(200).json({msg:"updated",marks:response})
+      } else {
+        res.json({ msg: "Exam not found" });
+      }
+    } else {
+      res.json({ msg: "Teacher not found" });
+    }
+    // const existingExam = await Exam.find({examClass:teacher.class})
+    // if(existingExam){
+    //   res.status(200).json({msg:"succesfull",exams:existingExam})
+    // }else{
+    //   res.json({msg:"Exam not found"})
+    // }
+  } catch (error) {
+    console.log(error);
+    // res.status(500).json({msg:error.message})
+  }
+};
+
+/* teacher contrller function for getting all the existing edited exam marks and listing all 
+ them to the teacher so she/he can edit it
+*/
+const getExamMarks = async (req, res) => {
+  console.log("entered in the exam Marks findinfg  function for the teracher");
+  const { studentId,examId } = req.params;
+  console.log(studentId,examId,"consoling the id's")
+  try {
+    const response = await Mark.findOne({ examId: examId, studentId:studentId});
+    console.log(response,' consoling the result')
+    if (response) {
+      res.status(200).json({ msg: "succesfull", Mark: response });
+    } else {
+      res.json({ msg: "Mark not found" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: error.message });
+  }
+};
+
 module.exports = {
   // teacherRegister,
   teacherLogin,
@@ -572,4 +664,9 @@ module.exports = {
   GetReviews,
   UpdateReviews,
   addNewStudent,
+
+  GetExams,
+
+  CreateExamMarks,
+  getExamMarks,
 };

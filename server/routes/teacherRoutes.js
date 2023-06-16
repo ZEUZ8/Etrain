@@ -3,7 +3,7 @@ const router = Router()
 
 //controllers for the teachers
 const {
-    teacherRegister,
+    // teacherRegister,
     teacherLogin,
     otpVerification,
     createWeeklyTask ,
@@ -19,7 +19,13 @@ const {
 
     makeReview,
     GetReviews,
-    UpdateReviews
+    UpdateReviews,
+
+    GetExams,
+
+    CreateExamMarks,
+    getExamMarks
+
 } = require("../controllers/teacherController")
 
 
@@ -56,5 +62,11 @@ router.post("/review",verifyTokenTeacher,checkingTeacher,makeReview)
 router.get("/review",verifyTokenTeacher,GetReviews)
 
 router.put("/review",verifyTokenTeacher,UpdateReviews)
+
+router.get("/exams",verifyTokenTeacher,GetExams)
+
+router.get("/marks/:studentId/:examId",verifyTokenTeacher,getExamMarks)
+
+router.put("/marks",verifyTokenTeacher,CreateExamMarks)
 
 module.exports = router

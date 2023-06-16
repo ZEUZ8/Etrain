@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
@@ -17,6 +18,8 @@ const PrincipalExam = () => {
   );
   const token = pricnipalData?.token;
 
+  const navigate = useNavigate()
+
   const [loading,setLoading] = useState(false)
   const [exams, setExams] = useState([]);
   const [currentExam,setCurrentExam] = useState('')
@@ -29,16 +32,19 @@ const PrincipalExam = () => {
       console.log("entered in the fetch dat");
       try {
         const response = await GetExam(token);
-        setExams(response.exams);
-        console.log(response);
+        if(response === "Access Denied" || response.message === "jwt malformed" || response.message === "jwt expired"){
+          navigate("/principal/login")
+        }else{
+          setExams(response.exams);
+        }
       } catch (error) {
         console.log(error);
       }
     };
     fetchData();
-  }, []);
+  },[]);
 
-  const taskToDisplay = exams.slice(
+  const taskToDisplay = exams?.slice(
     currentPage * examPerPage,
     (currentPage + 1) * examPerPage
   );
@@ -270,7 +276,7 @@ const PrincipalExam = () => {
               Scheduled Exams
             </p>
             <div className="grid grid-cols-2">
-              {taskToDisplay.map((exam, index) => {
+              {taskToDisplay?.map((exam, index) => {
                 return (
                   <a
                     key={index}
@@ -326,7 +332,7 @@ const PrincipalExam = () => {
               previousLabel={<GrFormPrevious name="arrow-left" />}
               nextLabel={<GrFormNext name="arrow-right" />}
               breakLabel={"..."}
-              pageCount={Math.ceil(exams.length / examPerPage)}
+              pageCount={Math.ceil(exams?.length / examPerPage)}
               marginPagesDisplayed={2}
               pageRangeDisplayed={5}
               onPageChange={handlePageChange}

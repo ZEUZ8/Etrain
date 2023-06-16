@@ -25,9 +25,6 @@ const StudentSchema = mongoose.Schema({
         type:String,
         required:true
     },
-    tempToken:{
-        type:String,
-    },
     address:{
         type:String
     },
@@ -35,18 +32,18 @@ const StudentSchema = mongoose.Schema({
         type:Boolean,
         default:false
     },
-    gardian:{
-        type:Object,
-        gardianName:{
-            type:String
-        },
-        gardianPhone:{
-            type:Number
-        },
-        gardianEmail:{
-            type:String
-        }
-    }
+    // gardian:{
+    //     type:Object,
+    //     gardianName:{
+    //         type:String
+    //     },
+    //     gardianPhone:{
+    //         type:Number
+    //     },
+    //     gardianEmail:{
+    //         type:String
+    //     }
+    // }
 })
 const Student = mongoose.model("student",StudentSchema)
 

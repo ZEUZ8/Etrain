@@ -145,7 +145,66 @@ export const MarkAttandence = async(token,marking)=>{
     }
 }
 
+//service function for gett all the existing exams for the teacher 
+export const GetExams = async(token)=>{
+    console.log("entred in the exams finding function for teacher")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosTeacherInstance.get("/exams",config)
+        return response.data
+    }catch(error){
+        console.log(error)
+        return(error.response.data)
+    }
+}
 
+
+/* function for the teacher to create exam mark updating document if not exists then 
+create one and return it
+*/
+export const CreateExamMark = async(token,formData)=>{
+    console.log("entred in the exams Marks updating function for teacher")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosTeacherInstance.put("/marks",formData,config)
+        return response.data
+    }catch(error){
+        console.log(error)
+        return(error.response.data)
+    }
+}
+
+//function for the teahers to find all the existing edited marks of the exams 
+export const GetMarks = async(token,studentId,exmaId)=>{
+    console.log("entred in the exams Marks updating function for teacher")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosTeacherInstance.get(`/marks/${studentId}/${exmaId}`,config)
+        console.log(response)
+        return response.data
+    }catch(error){
+        console.log(error)
+        return(error.response.data)
+    }
+}
 
 // all the complaint section code goes here
 

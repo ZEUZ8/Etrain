@@ -27,7 +27,6 @@ const verifyTokenAdmin = async (req, res, next) => {
 };
 
 const verifyTokenTeacher = async (req, res, next) => {
-  console.log("Teacher middleWare")
     try {
       let token = req.headers["authorization"];
       if (!token) {

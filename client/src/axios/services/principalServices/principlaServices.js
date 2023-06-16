@@ -156,6 +156,7 @@ export const GetExam = async(token)=>{
         const response = await axiosPrincipalInstance.get('/exam',config)
         return(response.data)
     }catch(error){
+        return(error.response.data)
         console.log("eroro occured at the principal exam finding services",error)
     }
 }

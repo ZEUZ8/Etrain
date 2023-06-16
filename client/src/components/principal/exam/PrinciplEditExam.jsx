@@ -2,9 +2,6 @@ import React, { useState } from "react";
 import { useFormik } from "formik";
 import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
-import { GrFormPrevious, GrFormNext } from "react-icons/gr";
-import ReactPaginate from "react-paginate";
-import { GiPaperTray } from "react-icons/gi";
 
 import "react-toastify/dist/ReactToastify.css";
 import { ExamValidation } from "../../../validations/principal/examValidation";
