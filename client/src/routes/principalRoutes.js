@@ -13,7 +13,7 @@ const PrincipalRoutes = () => {
     <div>
         <Routes>
             <Route path="/login" element={<Login userType="principal"/>}></Route>
-            <Route path="/" element={<PrincipalDashBoard/>}></Route>
+            <Route path="/" element={<PrincipalDashBoard user="principal"/>}></Route>
             <Route path="/class" element={< PrincipalClass/>}></Route>
             <Route path="/teachers" element={< PrincipalTeachersPage />}></Route>
             <Route path="/exams" element={< PrincipalExamPage />}></Route>

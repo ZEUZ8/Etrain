@@ -11,6 +11,7 @@ const { default: mongoose } = require("mongoose");
 const Complaint = require("../models/complaint");
 const Review = require("../models/Review");
 const Exam = require("../models/exam");
+const Leave = require("../models/leave")
 
 // let config = {
 //   service: "gmail",
@@ -267,7 +268,7 @@ const GetReviews = async (req, res) => {
   }
 };
 
-//student controller for finding all the existing reviews
+//student controller for finding all the existing reviewsf
 const GetComplaints = async (req, res) => {
   const { id } = req.user;
   try {
@@ -304,6 +305,65 @@ const GetExams = async (req, res) => {
   }
 };
 
+
+
+
+/*                      Leave forms                               */
+/*controller function for creating a new leave form for the teacher,
+innorder to identify the user,extracting the user from the request 
+*/
+const CreateLeave = async (req, res) => {
+  console.log("entered in the leave creating function for the teracher");
+  const { startDate, endDate, leaveReason } = req.body;
+  const { id, role } = req.user;
+  const options = {
+    upsert: true, // Create a new document if it doesn't exist
+    new: true, // Return the updated document
+  };
+  try {
+    const existingStudent = await Student.findOne({ _id: id });
+    if (existingStudent) {
+      const response = await Leave.findOneAndUpdate(
+        { studentId: id, startDate, endDate },
+        { reason: leaveReason, user: role },
+        options
+      );
+      if(response){
+        res.status(200).json({msg:"succesfull",leaves:response})
+      }else{
+        res.json({msg:"Leave not Created"})
+      }
+    } else {
+      res.json({ msg: "Student not found" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: error.message });
+  }
+};
+
+
+/*controller function for finding all the existing leaves that 
+student created and returing int he response
+*/
+const GetLeaves = async (req, res) => {
+  console.log("entered in the student Leaves findinfg  function for the teracher");
+  const {id} = req.user
+  try {
+    const existingLeaves = await Leave.find({studentId:id})
+    if(existingLeaves){
+      res.status(200).json({msg:"succesfull",leaves:existingLeaves})
+    }else{
+      res.json({msg:"Leave not found"})
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: error.message });
+  }
+};
+
+
+
 module.exports = {
   // studentRegister,
   studentLogin,
@@ -314,4 +374,7 @@ module.exports = {
   GetReviews,
   GetComplaints,
   GetExams,
+
+  CreateLeave,
+  GetLeaves
 };

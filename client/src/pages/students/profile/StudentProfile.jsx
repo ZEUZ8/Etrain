@@ -4,12 +4,12 @@ import SideBar from '../../../components/landing/sideBar/SideBar'
 import Navbar from '../../../components/landing/navbar/Navbar'
 import ProfileComponent from '../../../components/landing/profileComponent/ProfileComponent'
 
-const StudentProfile = () => {
+const StudentProfile = ({user}) => {
   return (
     <div>
       < SideBar />
       < Navbar />
-      < ProfileComponent />
+      < ProfileComponent user={user}/>
       < Profile />
     </div>
   )

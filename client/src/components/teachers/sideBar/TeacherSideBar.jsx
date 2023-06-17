@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { teacherLogout } from "../../../redux/teacher";
 import { BsClipboardDataFill } from "react-icons/bs";
 import { TbReport } from "react-icons/tb";
+import { GrFormCalendar } from "react-icons/gr";
 
 const TeacherSideBar = () => {
   const dispatch = useDispatch();
@@ -210,27 +211,17 @@ const TeacherSideBar = () => {
               </a>
             </li>
 
-            <li>
-              <a
-                href="#"
-                class="flex items-center p-2 text-gray-900 rounded-lg dark:text-gray hover:bg-gray-100 dark:hover:bg-gray-300"
-              >
-                <svg
-                  aria-hidden="true"
-                  class="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-900 group-hover:text-gray-900 dark:group-hover:text-white"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
+            <Link to="/teacher/leave">
+              <li>
+                <a
+                  class="flex items-center p-2 text-gray-900 rounded-lg dark:text-gray hover:bg-gray-100 dark:hover:bg-gray-300"
                 >
-                  <path
-                    fill-rule="evenodd"
-                    d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z"
-                    clip-rule="evenodd"
-                  ></path>
-                </svg>
-                <span class="flex-1 ml-3 whitespace-nowrap">Leave Form</span>
-              </a>
-            </li>
+                  <GrFormCalendar className="w-6 h-6 " />
+                  <span class="flex-1 ml-3 whitespace-nowrap">Leave Form</span>
+                </a>
+              </li>
+            </Link>
+
             <li>
               <a
                 onClick={handleLogOut}

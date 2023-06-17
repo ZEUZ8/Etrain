@@ -331,4 +331,45 @@ export const GetMarks = async(token,studentId,exmaId)=>{
             }
         }
 
+//function for creating a new leave form for the teacehr 
+export const CreateTeacherLeave = async(token,values)=>{
+    console.log("entered in the leaveforms creating service function")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosTeacherInstance.post("/leave",values,config)
+        return(response.data)
+    }catch(error){
+        console.log(error)
+        return(error.response.data)
+    }
+}
+
+
+        
+//function for getting all the leave forms that teacher created 
+export const GetTeacherLeaves = async(token)=>{
+    console.log("entered in the leaveforms finding function")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosTeacherInstance.get("/leave",config)
+        return(response.data)
+    }catch(error){
+        console.log(error)
+        return(error.response.data)
+    }
+}
+
+
 

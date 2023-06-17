@@ -9,6 +9,9 @@ const  {
     GetReviews,
     GetComplaints,
     GetExams,
+
+    CreateLeave,
+    GetLeaves
 } = require("../controllers/studentsController");
 
 
@@ -29,6 +32,10 @@ router.get('/reviews',verifyStudent,GetReviews)
 router.get('/complaints',verifyStudent,GetComplaints)
 
 router.get('/exams',verifyStudent,GetExams)
+
+router.get("/leave",verifyStudent,GetLeaves)
+
+router.post("/leave",verifyStudent,CreateLeave)
 
 
 module.exports = router

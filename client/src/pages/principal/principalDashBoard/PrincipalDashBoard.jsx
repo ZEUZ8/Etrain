@@ -4,12 +4,12 @@ import DashBoard from '../../../components/principal/DashBoard/DashBoard'
 import Navbar from '../../../components/landing/navbar/Navbar'
 import ProfileComponent from '../../../components/landing/profileComponent/ProfileComponent'
 
-const PrincipalDashBoard = () => {
+const PrincipalDashBoard = ({user}) => {
   return (
     <div>
       < PrincipalSideBar />
       < Navbar />
-      < ProfileComponent/>
+      < ProfileComponent user={user}/>
       < DashBoard />
     </div>
   )

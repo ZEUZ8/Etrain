@@ -12,6 +12,7 @@ const Complaint = require("../models/complaint");
 const Review = require("../models/Review");
 const Exam = require("../models/exam");
 const Mark = require("../models/marks");
+const Leave = require("../models/leave");
 // const { options } = require("../routes/teacherRoutes");
 
 // //controller for handling the teacher signUp funcion
@@ -605,11 +606,12 @@ const CreateExamMarks = async (req, res) => {
             mathematics: value.mathematics,
             science: value.science,
             malayalam: value.malayalam,
-            totalMark:value.totalMark,
-            grade:value.grade
-          },options
+            totalMark: value.totalMark,
+            grade: value.grade,
+          },
+          options
         );
-        res.status(200).json({msg:"updated",marks:response})
+        res.status(200).json({ msg: "updated", marks: response });
       } else {
         res.json({ msg: "Exam not found" });
       }
@@ -633,11 +635,14 @@ const CreateExamMarks = async (req, res) => {
 */
 const getExamMarks = async (req, res) => {
   console.log("entered in the exam Marks findinfg  function for the teracher");
-  const { studentId,examId } = req.params;
-  console.log(studentId,examId,"consoling the id's")
+  const { studentId, examId } = req.params;
+  console.log(studentId, examId, "consoling the id's");
   try {
-    const response = await Mark.findOne({ examId: examId, studentId:studentId});
-    console.log(response,' consoling the result')
+    const response = await Mark.findOne({
+      examId: examId,
+      studentId: studentId,
+    });
+    console.log(response, " consoling the result");
     if (response) {
       res.status(200).json({ msg: "succesfull", Mark: response });
     } else {
@@ -648,6 +653,62 @@ const getExamMarks = async (req, res) => {
     res.status(500).json({ msg: error.message });
   }
 };
+
+
+/*                      Leave forms                               */
+/*controller function for creating a new leave form for the teacher,
+innorder to identify the user,extracting the user from the request 
+*/
+const CreateLeave = async (req, res) => {
+  console.log("entered in the leave creating function for the teracher");
+  const { startDate, endDate, leaveReason } = req.body;
+  const { id, role } = req.user;
+  const options = {
+    upsert: true, // Create a new document if it doesn't exist
+    new: true, // Return the updated document
+  };
+  try {
+    const existingTeacher = await Teacher.findOne({ _id: id });
+    if (existingTeacher) {
+      const response = await Leave.findOneAndUpdate(
+        { teacherId: id, startDate, endDate },
+        { reason: leaveReason, user: role },
+        options
+      );
+      if(response){
+        res.status(200).json({msg:"succesfull",leaves:response})
+      }else{
+        res.json({msg:"Leave not Created"})
+      }
+    } else {
+      res.json({ msg: "Teacher not found" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: error.message });
+  }
+};
+
+
+/*controller function for finding all the existing leaves that 
+teacher created and returing int he response
+*/
+const GetLeaves = async (req, res) => {
+  console.log("entered in the Teacher Leaves findinfg  function for the teracher");
+  const {id} = req.user
+  try {
+    const existingLeaves = await Leave.find({teacherId:id})
+    if(existingLeaves){
+      res.status(200).json({msg:"succesfull",leaves:existingLeaves})
+    }else{
+      res.json({msg:"Leave not found"})
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: error.message });
+  }
+};
+
 
 module.exports = {
   // teacherRegister,
@@ -669,4 +730,7 @@ module.exports = {
 
   CreateExamMarks,
   getExamMarks,
+
+  CreateLeave,
+  GetLeaves
 };

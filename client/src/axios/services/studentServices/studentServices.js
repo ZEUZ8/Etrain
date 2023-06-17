@@ -125,3 +125,44 @@ export const GetExams = async(token)=>{
         return({msg:error.message})
     }
 }
+        
+
+//function for creating a new leave form for the teacehr 
+export const CreateStudentLeave = async(token,values)=>{
+    console.log("entered in the leaveforms creating service function")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosStudentInstance.post("/leave",values,config)
+        return(response.data)
+    }catch(error){
+        console.log(error)
+        return(error.response.data)
+    }
+}
+
+
+        
+//function for getting all the leave forms that teacher created 
+export const GetStudentLeaves = async(token)=>{
+    console.log("entered in the leaveforms finding function")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosStudentInstance.get("/leave",config)
+        return(response.data)
+    }catch(error){
+        console.log(error)
+        return(error.response.data)
+    }
+}

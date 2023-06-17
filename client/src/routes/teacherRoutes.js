@@ -10,13 +10,14 @@ import TeacherAttadencePage from "../pages/teachers/attandence/TeacherAttadenceP
 import TeacherComplaintsPage from "../pages/teachers/complaints/TeacherComplaintsPage";
 import TeacherStudentsPage from "../pages/teachers/students/TeacherStudentsPage";
 import TeacherExamPage from "../pages/teachers/exams/TeacherExamPage";
+import LeaveFormPage from "../pages/common/leaveForm/LeaveFormPage";
 
 function TeacherRoutes(){
     return (
         <div>
             <Routes>
                 {console.log("insn")}
-                <Route path="/" element={< DashBoard />}></Route>
+                <Route path="/" element={< DashBoard user="teacher" />}></Route>
                 {/* <Route path="/register" element={< TeacherSignUpPage />}></Route> */}
                 <Route path="/login" element={< Login userType="teacher"/>}></Route>
                 <Route path="/weeklyTasks" element={< TeacherWeeklyTasksPage />}></Route>
@@ -25,6 +26,7 @@ function TeacherRoutes(){
                 <Route path="/complaints" element={< TeacherComplaintsPage page="complaint"/>}></Route>
                 <Route path="/students" element={< TeacherStudentsPage />}></Route>
                 <Route path="/exams" element={< TeacherExamPage />}></Route>
+                <Route path="/leave" element={< LeaveFormPage user="teacher" />}></Route>
             </Routes>
         </div>
     )
