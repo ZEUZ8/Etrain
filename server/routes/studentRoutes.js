@@ -11,7 +11,9 @@ const  {
     GetExams,
 
     CreateLeave,
-    GetLeaves
+    GetLeaves,
+
+    GetCurrentStudent
 } = require("../controllers/studentsController");
 
 
@@ -36,6 +38,9 @@ router.get('/exams',verifyStudent,GetExams)
 router.get("/leave",verifyStudent,GetLeaves)
 
 router.post("/leave",verifyStudent,CreateLeave)
+
+router.get("/student/:id",verifyStudent,GetCurrentStudent)
+
 
 
 module.exports = router

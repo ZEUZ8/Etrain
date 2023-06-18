@@ -25,16 +25,13 @@ const TeacherStudetns = () => {
   const [students, setStudents] = useState([]);
   const [loading,setLoading] = useState(false)
   const taskPerPage = 10;
+  const errorMsgs = ["Access Decied", "jwt malformed", "jwt expired"]
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await GetStudents(token);
-        if (
-          response.msg === "jwt malformed" ||
-          response.msg == "Access Denied" ||
-          response.msg === "jwt Expired"
-        ) {
+        if (errorMsgs.some((msg)=>msg === response.msg)){
           navigate("/teacher/login");
         } else if (response.msg === "succesfull") {
           setStudents(response.students);

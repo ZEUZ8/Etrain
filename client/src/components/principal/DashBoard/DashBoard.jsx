@@ -3,7 +3,8 @@ import React from 'react'
 const DashBoard = () => {
   return (
     <div>
-      <div className='p-4 sm:ml-64'>
+      <div className='md:ml-64'>
+        pricniapl dashBoad goes here
       </div>
     </div>
   )

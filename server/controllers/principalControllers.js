@@ -247,6 +247,27 @@ const sendNewMail = async (result) => {
 };
 
 
+/* controller function for getting the current student for the 
+profile component, the id for the searching is sended from the front End
+as the parms
+*/
+const GetCurrentPrincipal = async( req,res)=>{
+  console.log('entered in the current Principal finding function')
+  const {id} = req.params
+  try{
+    const principal = await Admin.findOne({_id:id}).select("-password")
+    if(principal){
+      res.status(200).json({msg:"succesfull",principal:principal})
+    }else{
+      res.json({msg:"principal not found"})
+    }
+  }catch(error){
+    console.log(error)
+    res.status(500).json({msg:error.message})
+  }
+}
+
+
 module.exports = {
   principalLogin,
   classCreation,
@@ -257,4 +278,6 @@ module.exports = {
   GetExam,
   addNewTeacher,
   sendNewMail,
+
+  GetCurrentPrincipal,
 };

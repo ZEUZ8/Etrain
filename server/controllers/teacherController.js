@@ -710,6 +710,28 @@ const GetLeaves = async (req, res) => {
 };
 
 
+/* controller function for getting the current teacher for the 
+profile component, the id for the searching is sended from the front End
+as the parms
+*/
+const GetCurrentTeacher = async( req,res)=>{
+  console.log('entered in the current teacher finding function')
+  const {id} = req.params
+  try{
+    const teacher = await Teacher.findOne({_id:id}).select("-password")
+    if(teacher){
+      res.status(200).json({msg:"succesfull",teacher:teacher})
+    }else{
+      res.json({msg:"teacher not found"})
+    }
+  }catch(error){
+    console.log(error)
+    res.status(500).json({msg:error.message})
+  }
+}
+
+
+
 module.exports = {
   // teacherRegister,
   teacherLogin,
@@ -732,5 +754,7 @@ module.exports = {
   getExamMarks,
 
   CreateLeave,
-  GetLeaves
+  GetLeaves,
+
+  GetCurrentTeacher
 };

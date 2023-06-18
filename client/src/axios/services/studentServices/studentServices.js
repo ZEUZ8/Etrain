@@ -166,3 +166,26 @@ export const GetStudentLeaves = async(token)=>{
         return(error.response.data)
     }
 }
+
+
+
+/* student services function for find the current student for the
+profile component
+*/
+export const GetStudent = async(token,id)=>{
+    console.log("entered in current student finding section")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosStudentInstance.get(`/student/${id}`,config)
+        return(response.data)
+    }catch(error){
+        console.log(error)
+        return(error.response.data)
+    }
+}

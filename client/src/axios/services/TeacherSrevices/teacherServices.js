@@ -371,5 +371,27 @@ export const GetTeacherLeaves = async(token)=>{
     }
 }
 
+/* teacher services function for find the current teacher for the
+profile component
+*/
+export const GetTeacher = async(token,id)=>{
+    console.log("entered in current teacher finding section")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosTeacherInstance.get(`/teacher/${id}`,config)
+        return(response.data)
+    }catch(error){
+        console.log(error)
+        return(error.response.data)
+    }
+}
+
+
 
 

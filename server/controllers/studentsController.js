@@ -362,6 +362,26 @@ const GetLeaves = async (req, res) => {
   }
 };
 
+/* controller function for getting the current student for the 
+profile component, the id for the searching is sended from the front End
+as the parms
+*/
+const GetCurrentStudent = async( req,res)=>{
+  console.log('entered in the current student finding function')
+  const {id} = req.params
+  try{
+    const student = await Student.findOne({_id:id}).select("-password")
+    if(student){
+      res.status(200).json({msg:"succesfull",student:student})
+    }else{
+      res.json({msg:"Student not found"})
+    }
+  }catch(error){
+    console.log(error)
+    res.status(500).json({msg:error.message})
+  }
+}
+
 
 
 module.exports = {
@@ -376,5 +396,7 @@ module.exports = {
   GetExams,
 
   CreateLeave,
-  GetLeaves
+  GetLeaves,
+
+  GetCurrentStudent
 };

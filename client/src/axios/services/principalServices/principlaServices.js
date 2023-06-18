@@ -176,3 +176,24 @@ export const GetExam = async(token)=>{
 //         return(error.message)
 //     }
 // }
+
+/* principal services function for fiding the admin, for
+profile component
+*/
+export const GetPrincipal = async(token,id)=>{
+    console.log("entered in current teacher finding section")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosPrincipalInstance.get(`/principal/${id}`,config)
+        return(response.data)
+    }catch(error){
+        console.log(error)
+        return(error.response.data)
+    }
+}
