@@ -65,6 +65,22 @@ const PrincipalExam = () => {
     }
   };
 
+  /* function for Updating the exam that created by the principal */
+  const handleUpdation = async(value)=>{
+    try {
+      const response = await CreateExam(token, values);
+      console.log(response.msg);
+      if (response.msg === "Exam created") {
+        setExams([...exams,response.exam])
+        toast.success(response.msg);
+      } else {
+        toast.error(response.msg);
+      }
+  } catch (error) {
+    console.log(error);
+  }
+  }
+
   const { values, errors, touched, handleChange, handleSubmit, handleBlur } =
     useFormik({
       initialValues: {
@@ -101,6 +117,7 @@ const PrincipalExam = () => {
            setIsOn={setIsOn} 
            loading={loading} 
            currentExam={currentExam}
+           handleUpdation={handleUpdation}
          />
        </div>
       )}

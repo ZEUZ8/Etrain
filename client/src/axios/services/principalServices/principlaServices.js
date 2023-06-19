@@ -161,6 +161,8 @@ export const GetExam = async(token)=>{
     }
 }
 
+/* service function for updating the created exam goes here */
+
 // export const principalOtpVerification = async (value,user,id)=>{
 //     console.log(value,"consoling the serivces")
 //     const config = {
@@ -191,6 +193,27 @@ export const GetPrincipal = async(token,id)=>{
     };
     try{
         const response = await axiosPrincipalInstance.get(`/principal/${id}`,config)
+        return(response.data)
+    }catch(error){
+        console.log(error)
+        return(error.response.data)
+    }
+}
+
+/* service function for updating the user data name,phone,emial,password here the user could update the 
+password that getted by the mail
+*/
+export const UpdatePrincipal = async(token,id,values)=>{
+    console.log("entered in current principal updating section")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosPrincipalInstance.put(`/principal/${id}`,values,config)
         return(response.data)
     }catch(error){
         console.log(error)

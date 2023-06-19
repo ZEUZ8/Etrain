@@ -29,8 +29,8 @@ const {
     CreateLeave,
     GetLeaves,
 
-    GetCurrentTeacher
-
+    GetCurrentTeacher,
+    UpdateTeacher
 } = require("../controllers/teacherController")
 
 
@@ -79,5 +79,7 @@ router.get("/leave",verifyTokenTeacher,GetLeaves)
 router.post("/leave",verifyTokenTeacher,CreateLeave)
 
 router.get("/teacher/:id",verifyTokenTeacher,GetCurrentTeacher)
+
+router.put("/teacher/:id",verifyTokenTeacher,UpdateTeacher)
 
 module.exports = router

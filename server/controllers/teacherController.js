@@ -730,6 +730,28 @@ const GetCurrentTeacher = async( req,res)=>{
   }
 }
 
+/* controller function for updating the teacher info  for the profile component*/
+const UpdateTeacher = async( req,res)=>{
+  const {id} = req.params
+  const {name,email,phone,password} = req.body
+  try{
+    if(password){
+      const hashedPassword = bcrypt.hash(password)
+      var teacher = await Teacher.findOneAndUpdate({_id:id},{name,email,phone,password:hashedPassword},{new:true})
+    }else{
+      var teacher = await Teacher.findOneAndUpdate({_id:id},{name,email,phone},{new:true})
+    }
+    if(teacher){
+      res.status(200).json({msg:"succesfull",teacher:teacher})
+    }else{
+      res.json({msg:"Teacher not Found"})
+    }
+  }catch(error){
+    console.log(error)
+    res.status(500).json({msg:error.message})
+  }
+}
+
 
 
 module.exports = {
@@ -756,5 +778,6 @@ module.exports = {
   CreateLeave,
   GetLeaves,
 
-  GetCurrentTeacher
+  GetCurrentTeacher,
+  UpdateTeacher
 };

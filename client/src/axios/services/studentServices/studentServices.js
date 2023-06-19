@@ -189,3 +189,25 @@ export const GetStudent = async(token,id)=>{
         return(error.response.data)
     }
 }
+
+
+/* service function for updating the user data name,phone,emial,password here the user could update the 
+password that getted by the mail
+*/
+export const UpdateStudent = async(token,id,values)=>{
+    console.log("entered in current student updating section")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosStudentInstance.put(`/student/${id}`,values,config)
+        return(response.data)
+    }catch(error){
+        console.log(error)
+        return(error.response.data)
+    }
+}

@@ -371,6 +371,7 @@ const GetCurrentStudent = async( req,res)=>{
   const {id} = req.params
   try{
     const student = await Student.findOne({_id:id}).select("-password")
+    console.log(student)
     if(student){
       res.status(200).json({msg:"succesfull",student:student})
     }else{
@@ -381,6 +382,30 @@ const GetCurrentStudent = async( req,res)=>{
     res.status(500).json({msg:error.message})
   }
 }
+
+/* controller function for updating the teacher info  for the profile component*/
+const UpdateCurrentStudent = async( req,res)=>{
+  const {id} = req.params
+  const {name,email,phone,password} = req.body
+  try{
+    if(password){
+      const hashedPassword = bcrypt.hash(password)
+      var student = await Student.findOneAndUpdate({_id:id},{name,email,phone,password:hashedPassword},{new:true})
+    }else{
+      var student = await Student.findOneAndUpdate({_id:id},{name,email,phone},{new:true})
+    }
+    if(student){
+      res.status(200).json({msg:"succesfull",student:student})
+    }else{
+      res.json({msg:"Student not Found"})
+    }
+  }catch(error){
+    console.log(error)
+    res.status(500).json({msg:error.message})
+  }
+}
+
+
 
 
 
@@ -398,5 +423,6 @@ module.exports = {
   CreateLeave,
   GetLeaves,
 
-  GetCurrentStudent
+  GetCurrentStudent,
+  UpdateCurrentStudent
 };

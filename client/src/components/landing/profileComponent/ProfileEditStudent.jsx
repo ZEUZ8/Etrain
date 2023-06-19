@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import Loader from "../../../components/landing/loader/Loader";
 import { userUpdation } from "../../../validations/students/updateValidation";
 
-const ProfileEdit = ({ setIsOn, teacher, loading ,handleUpdation}) => {
+const ProfileEditStudent = ({ setIsOn, student, loading ,handleUpdation}) => {
 
   const errorMsgs = ["Access Denied", "jwt malformed", "jwt expired"];
 
@@ -18,9 +18,9 @@ const ProfileEdit = ({ setIsOn, teacher, loading ,handleUpdation}) => {
   const { values, errors, touched, handleChange, handleSubmit, handleBlur } =
     useFormik({
       initialValues: {
-        name: teacher ? teacher?.name : "",
-        email: teacher ? teacher?.email : "",
-        phone: teacher ? teacher?.phone : "",
+        name: student ? student?.name : "",
+        email: student ? student?.email : "",
+        phone: student ? student?.phone : "",
         password: "",
       },
       validationSchema: userUpdation,
@@ -32,7 +32,7 @@ const ProfileEdit = ({ setIsOn, teacher, loading ,handleUpdation}) => {
       <div className=" bg-white">
         <div class="h-fit  bg-gray-900 bg-opacity-50 py-6 flex flex-col justify-center sm:py-12">
           <div class="relative py-3 sm:max-w-xl sm:mx-auto">
-            <div class="absolute inset-0 bg-gradient-to-r from-violet-300 to-violet-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-orange-300 to-orange-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
             <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
               <div class="max-w-md mx-auto">
                 <div className="flex   w-screen">
@@ -161,7 +161,7 @@ const ProfileEdit = ({ setIsOn, teacher, loading ,handleUpdation}) => {
                           <Loader />
                         ) : (
                           <button
-                            className="bg-violet-300 hover:bg-violet-400 w-full mt-3  font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                            className="bg-gradient-to-r from-orange-300 to-orange-600 text-white hover:bg-violet-400 w-full mt-3  font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                             type="submit"
                           >
                             Update
@@ -177,25 +177,10 @@ const ProfileEdit = ({ setIsOn, teacher, loading ,handleUpdation}) => {
               </div>
             </div>
           </div>
-          {/* <div class="divide-y divide-gray-200">
-<div class="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
-    <div class="relative">
-        <input autocomplete="off" id="email" name="email" type="text" class="peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:borer-rose-600" placeholder="Email address" />
-        <label for="email" class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Email Address</label>
-    </div>
-    <div class="relative">
-        <input autocomplete="off" id="password" name="password" type="password" class="peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:borer-rose-600" placeholder="Password" />
-        <label for="password" class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Password</label>
-    </div>
-    <div class="relative">
-        <button class="bg-blue-500 text-white rounded-md px-2 py-1">Submit</button>
-    </div>
-</div>
-</div> */}
         </div>
       </div>
     </div>
   );
 };
 
-export default ProfileEdit;
+export default ProfileEditStudent;

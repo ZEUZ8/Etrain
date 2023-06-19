@@ -1,13 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import { useFormik } from "formik";
-import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
 import { ExamValidation } from "../../../validations/principal/examValidation";
 import Loader from "../../landing/loader/Loader";
 
-const PrinciplEditExam = ({ setIsOn, loading, currentExam }) => {
+const PrinciplEditExam = ({ setIsOn, loading, currentExam,handleUpdation}) => {
   const {
     endDate,
     examName,
@@ -16,20 +15,20 @@ const PrinciplEditExam = ({ setIsOn, loading, currentExam }) => {
     timeTable,
     examDiscription,
   } = currentExam;
-  const onSubmit = async () => {
-    try {
-      //   const response = await CreateExam(token, values);
-      //   console.log(response.msg);
-      //   if (response.msg === "Exam created") {
-      //     setExams([...exams,response.exam])
-      //     toast.success(response.msg);
-      //   } else {
-      //     toast.error(response.msg);
-      //   }
-    } catch (error) {
-      console.log(error);
-      //   toast.error(error.msg);
-    }
+  const onSubmit = async (values) => {
+    handleUpdation(values)
+    // try {
+    //     const response = await CreateExam(token, values);
+    //     console.log(response.msg);
+    //     if (response.msg === "Exam created") {
+    //       setExams([...exams,response.exam])
+    //       toast.success(response.msg);
+    //     } else {
+    //       toast.error(response.msg);
+    //     }
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   const { values, errors, touched, handleChange, handleSubmit, handleBlur } =
@@ -37,8 +36,8 @@ const PrinciplEditExam = ({ setIsOn, loading, currentExam }) => {
       initialValues: {
         examName: examName,
         timeTable: timeTable,
-        startDate: startDate,
-        endDate: endDate,
+        startDate:new Date(startDate).toISOString().split("T")[0],
+        endDate: new Date(endDate).toISOString().split("T")[0],
         examDiscription: examDiscription,
         examClass: examClass,
       },

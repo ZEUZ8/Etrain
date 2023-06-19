@@ -253,9 +253,9 @@ as the parms
 */
 const GetCurrentPrincipal = async( req,res)=>{
   console.log('entered in the current Principal finding function')
-  const {id} = req.params
   try{
-    const principal = await Admin.findOne({_id:id}).select("-password")
+    // const principal = await Admin.findOne({_id:id}).select("-password")
+    const principal = await Admin.findOne({}).select("-password")
     if(principal){
       res.status(200).json({msg:"succesfull",principal:principal})
     }else{
@@ -266,6 +266,32 @@ const GetCurrentPrincipal = async( req,res)=>{
     res.status(500).json({msg:error.message})
   }
 }
+
+
+
+/* controller function for updating the teacher info  for the profile component*/
+const UpdateCurrentPrincipal = async( req,res)=>{
+  const {id} = req.params
+  const {name,email,phone,password} = req.body
+  try{
+    if(password){
+      const hashedPassword = bcrypt.hash(password)
+      var principal = await Admin.findOneAndUpdate({},{name,email,phone,password:hashedPassword},{new:true})
+    }else{
+      var principal = await Admin.findOneAndUpdate({},{name,email,phone},{new:true})
+    }
+    if(principal){
+      res.status(200).json({msg:"succesfull",principal:principal})
+    }else{
+      res.json({msg:"Principal not Found"})
+    }
+  }catch(error){
+    console.log(error)
+    res.status(500).json({msg:error.message})
+  }
+}
+
+
 
 
 module.exports = {
@@ -280,4 +306,5 @@ module.exports = {
   sendNewMail,
 
   GetCurrentPrincipal,
+  UpdateCurrentPrincipal
 };

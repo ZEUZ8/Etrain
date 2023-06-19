@@ -13,7 +13,8 @@ const {
     addNewTeacher,
     // otpVerification,
 
-    GetCurrentPrincipal
+    GetCurrentPrincipal,
+    UpdateCurrentPrincipal
 
 }= require("../controllers/principalControllers")
 
@@ -37,6 +38,8 @@ router.post('/exam',verifyTokenAdmin,createExam)
 router.get('/exam',verifyTokenAdmin,GetExam)
 
 router.get('/principal/:id',verifyTokenAdmin,GetCurrentPrincipal)
+
+router.put('/principal/:id',verifyTokenAdmin,UpdateCurrentPrincipal)
 
 // router.post("/verify/:id",otpVerification)
 

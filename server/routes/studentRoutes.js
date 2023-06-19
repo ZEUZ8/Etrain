@@ -13,7 +13,8 @@ const  {
     CreateLeave,
     GetLeaves,
 
-    GetCurrentStudent
+    GetCurrentStudent,
+    UpdateCurrentStudent
 } = require("../controllers/studentsController");
 
 
@@ -40,6 +41,8 @@ router.get("/leave",verifyStudent,GetLeaves)
 router.post("/leave",verifyStudent,CreateLeave)
 
 router.get("/student/:id",verifyStudent,GetCurrentStudent)
+
+router.put("/student/:id",verifyStudent,UpdateCurrentStudent)
 
 
 
