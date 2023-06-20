@@ -213,7 +213,7 @@ const SideBar = () => {
                 <a class="flex items-center p-2 text-gray-900 rounded-lg dark:text-gray hover:bg-gray-100 dark:hover:bg-gray-300">
                 <GrFormCalendar className="w-6 h-6 " />
 
-                  <span class="flex-1 ml-3 whitespace-nowrap">Leave Form</span>
+                  <span class="flex-1 ml-3 whitespace-nowrap">Leaves</span>
                 </a>
               </li>
             </Link>

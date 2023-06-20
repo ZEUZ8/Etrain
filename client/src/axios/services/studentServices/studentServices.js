@@ -108,7 +108,7 @@ export const GetComplaints = async(token)=>{
 
 
 //stuent service function for getting all the existing Exams
-export const GetExams = async(token)=>{
+export const GetExams = async(token,id)=>{
     console.log("this is the exam finding function")
     const config = {
         headers:{
@@ -118,7 +118,7 @@ export const GetExams = async(token)=>{
         },
     };
     try{
-        const respone = await axiosStudentInstance.get("/exams",config)
+        const respone = await axiosStudentInstance.get(`/exams`,config)
         return respone.data
     }catch(error){
         console.log(error)

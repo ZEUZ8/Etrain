@@ -156,12 +156,29 @@ export const GetExam = async(token)=>{
         const response = await axiosPrincipalInstance.get('/exam',config)
         return(response.data)
     }catch(error){
-        return(error.response.data)
         console.log("eroro occured at the principal exam finding services",error)
+        return(error.response.data)
     }
 }
 
 /* service function for updating the created exam goes here */
+export const UpdateExam = async(token,id,value)=>{
+    console.log('entered in the exam updating service function')
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosPrincipalInstance.put(`/exam/${id}`,value,config)
+        return(response.data)
+    }catch(error){
+        console.log("error occured in the principal exam creating services",error)
+        return(error.response.data)
+    }
+}
 
 // export const principalOtpVerification = async (value,user,id)=>{
 //     console.log(value,"consoling the serivces")
@@ -178,6 +195,8 @@ export const GetExam = async(token)=>{
 //         return(error.message)
 //     }
 // }
+
+
 
 /* principal services function for fiding the admin, for
 profile component
@@ -217,6 +236,25 @@ export const UpdatePrincipal = async(token,id,values)=>{
         return(response.data)
     }catch(error){
         console.log(error)
+        return(error.response.data)
+    }
+}
+
+/* service function for getting all the leaves for principal*/
+export const GetLeaves = async(token)=>{
+    console.log("entered in the leaves getting principal services")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosPrincipalInstance.get('/leaves',config)
+        return(response.data)
+    }catch(error){
+        console.log("eroro occured at the principal leaves finding services",error)
         return(error.response.data)
     }
 }

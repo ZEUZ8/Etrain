@@ -28,10 +28,10 @@ const ProfileEidtPrincipal = ({ setIsOn, principal, loading, handleUpdation }) =
 
   return (
     <div>
-      <div className=" bg-white">
-        <div class="h-fit  bg-gray-900 bg-opacity-50 py-6 flex flex-col justify-center sm:py-12">
+      <div className="d">
+        <div class="h-fit bg-opacity-50 py-6 flex flex-col justify-center sm:py-12">
           <div class="relative py-3 sm:max-w-xl sm:mx-auto">
-            <div class="absolute inset-0 bg-gradient-to-r from-fuchsia-300 to-fuchsia-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-fuchsia-200 to-fuchsia-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
             <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
               <div class="max-w-md mx-auto">
                 <div className="flex   w-screen">
@@ -160,7 +160,7 @@ const ProfileEidtPrincipal = ({ setIsOn, principal, loading, handleUpdation }) =
                           <Loader />
                         ) : (
                           <button
-                            className="bg-gradient-to-r from-fuchsia-300 to-fuchsia-600 text-white hover:bg-violet-400 w-full mt-3  font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                            className="bg-gradient-to-r from-fuchsia-300 to-fuchsia-500 text-white hover:bg-violet-400 w-full mt-3  font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                             type="submit"
                           >
                             Update

@@ -9,17 +9,20 @@ import { GiPaperTray } from "react-icons/gi";
 
 import "react-toastify/dist/ReactToastify.css";
 import { ExamValidation } from "../../../validations/principal/examValidation";
-import { CreateExam,GetExam } from "../../../axios/services/principalServices/principlaServices";
+import { CreateExam,GetExam,UpdateExam } from "../../../axios/services/principalServices/principlaServices";
 import PrinciplEditExam from "./PrinciplEditExam";
 
 const PrincipalExam = () => {
+
   const pricnipalData = useSelector(
     (state) => state.principalReducer.principal
   );
   const token = pricnipalData?.token;
 
+
   const navigate = useNavigate()
 
+  const errorMsgs = ["Access Denied","jwt malformed","jwt expired"]
   const [loading,setLoading] = useState(false)
   const [exams, setExams] = useState([]);
   const [currentExam,setCurrentExam] = useState('')
@@ -29,7 +32,6 @@ const PrincipalExam = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log("entered in the fetch dat");
       try {
         const response = await GetExam(token);
         if(response === "Access Denied" || response.message === "jwt malformed" || response.message === "jwt expired"){
@@ -52,7 +54,6 @@ const PrincipalExam = () => {
   const onSubmit = async () => {
     try {
       const response = await CreateExam(token, values);
-      console.log(response.msg);
       if (response.msg === "Exam created") {
         setExams([...exams,response.exam])
         toast.success(response.msg);
@@ -68,11 +69,20 @@ const PrincipalExam = () => {
   /* function for Updating the exam that created by the principal */
   const handleUpdation = async(value)=>{
     try {
-      const response = await CreateExam(token, values);
+      const response = await UpdateExam(token, currentExam._id,value);
       console.log(response.msg);
-      if (response.msg === "Exam created") {
-        setExams([...exams,response.exam])
+      if(errorMsgs.some((msg)=> msg === response.msg || response.message)){
+        navigate("/principal/login")
+      }else if (response.msg === "Exam Updated") {
+
+        setExams(exams.map((exam)=>{
+          if(exam._id === response.exam._id){
+            return response.exam
+          }
+          return exam
+        }))
         toast.success(response.msg);
+        setIsOn(false)
       } else {
         toast.error(response.msg);
       }

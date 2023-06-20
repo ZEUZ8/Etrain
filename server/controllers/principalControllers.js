@@ -5,6 +5,7 @@ const Class = require("../models/Class");
 const Teacher = require("../models/teacher")
 const Admin = require("../models/admin");
 const Exam = require("../models/exam");
+const Leave = require("../models/leave");
 
 //the config contian the password and the user for sending the mail
 let config = {
@@ -169,7 +170,6 @@ const GetExam = async(req,res)=>{
   try{
     const response = await Exam.find({})
     if(response){
-      console.log(response)
       res.status(200).json({msg:"success",exams:response})
     }else{
       console.log(response)
@@ -179,6 +179,32 @@ const GetExam = async(req,res)=>{
     res.status(500).json({msg:error.message})
   }
 }
+
+/*                        Update Created Exam                            */
+/*controller function for updating the existing exam getting the id from the params and finding and updating 
+exam that created by the principal 
+*/
+const UpdateExam = async(req,res)=>{
+  console.log("entered in the exam Updating function")
+  const {id} = req.params
+  console.log(id,req.body)
+  try{
+    const {examName,startDate,endDate,examDiscription,timeTable,examClass} = req.body
+    const response = await Exam.findOneAndUpdate({_id:id},{examName,examDiscription,startDate,endDate,timeTable,examClass},{new:true})
+    if(response){
+      res.status(200).json({msg:"Exam Updated",exam:response})
+    }else{
+      res.json({msg:"Exam updation failed"})
+    }
+  }catch(error){
+    console.log(error)
+    res.status(500).json({msg:error.message})
+  }
+}
+
+
+
+
 
 {/*                                   Add a New Teacher 
 Controller function for addin a new teacher in the teacher collection with 
@@ -291,6 +317,24 @@ const UpdateCurrentPrincipal = async( req,res)=>{
   }
 }
 
+/* controller functions for finding all the leaves created by the students and teachers and showing 
+them to the principal so he can analys it, and he could rise an Query on the leave forms
+*/
+const GetLeaves = async( req,res)=>{
+  console.log('entered in the Leaves finding function')
+  try{
+    const leaves = await Leave.find({}).populate(`studentId`,'-password').populate(`teacherId`,'-password')
+    if(leaves){
+      res.status(200).json({msg:"succesfull",leaves:leaves})
+    }else{
+      res.json({msg:"leaves not found"})
+    }
+  }catch(error){
+    console.log(error)
+    res.status(500).json({msg:error.message})
+  }
+}
+
 
 
 
@@ -300,11 +344,16 @@ module.exports = {
   getClasses,
   getTeachers,
   updateTeachers,
+
   createExam,
   GetExam,
+  UpdateExam,
+
   addNewTeacher,
   sendNewMail,
 
   GetCurrentPrincipal,
-  UpdateCurrentPrincipal
+  UpdateCurrentPrincipal,
+
+  GetLeaves
 };

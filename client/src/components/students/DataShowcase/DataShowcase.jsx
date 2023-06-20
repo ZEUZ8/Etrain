@@ -64,7 +64,8 @@ const DataShowcase = ({ page }) => {
             toast.error(response.msg);
           }
         } else if (page === "exams") {
-          const response = await GetExams(token);
+          const response = await GetExams(token,studentData.id);
+          console.log(response)
           if (
             response.msg === "Access Denied" ||
             response.msg === "jwt malformed" ||

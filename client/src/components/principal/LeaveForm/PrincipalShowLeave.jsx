@@ -3,45 +3,24 @@ import { useFormik } from "formik";
 import Loader from "../../../components/landing/loader/Loader";
 import { userUpdation } from "../../../validations/students/updateValidation";
 
-const ProfileEditStudent = ({ setIsOn, student, loading ,handleUpdation}) => {
-
-  const errorMsgs = ["Access Denied", "jwt malformed", "jwt expired"];
-
-  const handleClick = () => {
-    setIsOn(false);
-  };
-
-  const onSubmit = async(values) => {
-    handleUpdation(values)
-  };
-
-  const { values, errors, touched, handleChange, handleSubmit, handleBlur } =
-    useFormik({
-      initialValues: {
-        name: student ? student?.name : "",
-        email: student ? student?.email : "",
-        phone: student ? student?.phone : "",
-        password: "",
-      },
-      validationSchema: userUpdation,
-      onSubmit,
-    });
-
+const PrincipalShowLeave = ({ currentLeave, loading, setIsOn }) => {
   return (
     <div>
       <div className="">
-        <div class="h-fit bg-opacity-50 py-6 flex flex-col justify-center sm:py-12">
+        <div class="h-fit  rounded-3xl bg-opacity-50 py-6 flex flex-col justify-center sm:py-12">
           <div class="relative py-3 sm:max-w-xl sm:mx-auto">
-            <div class="absolute inset-0 bg-gradient-to-r from-orange-300 to-orange-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
+            <div class={`absolute inset-0 bg-gradient-to-r  from-orange-300 to-orange-600  shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl`}></div>
             <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
               <div class="max-w-md mx-auto">
                 <div className="flex   w-screen">
                   <div>
-                    <h1 class="text-2xl font-semibold">Edit Profile</h1>
+                    <h1 class="text-2xl font-semibold">Leave Details</h1>
                   </div>
                   <div className="ml-4">
                     <button
-                      onClick={handleClick}
+                      onClick={() => {
+                        setIsOn(false);
+                      }}
                       type="button"
                       className="   text-gray-900  bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-blue-200 dark:hover:text-white"
                       data-modal-hide="authentication-modal"
@@ -65,7 +44,33 @@ const ProfileEditStudent = ({ setIsOn, student, loading ,handleUpdation}) => {
                 </div>
                 <div class="divide-y divide-gray-200">
                   <div class="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
-                    <form className="" onSubmit={handleSubmit}>
+                    <div>
+                      <div className="text-center underline underline-offset-4">
+                        {currentLeave?.studentId?.name}
+                      </div>
+                      <div className="mt-5 m-4">
+                        <div className="flex mt-5">
+                          <p>Start Date    : </p>
+                          <p>
+                            {" "}
+                            {'\u00A0'}{new Date(currentLeave?.startDate).toDateString()}
+                          </p>
+                        </div>
+                        <div className="flex pt-5">
+                            <p>End Date : </p>
+                            <p>{'\u00A0'}{new Date(currentLeave?.endDate).toDateString()}</p>
+                        </div>
+                        <div className="flex pt-5">
+                            <p>Phone :  </p>
+                            <p>{'\u00A0'}{currentLeave?.studentId?.phone}</p>
+                        </div>
+                        <div className="flex pt-5 ">
+                            <p>Reason : </p> <p className="max-w-fit">{'\u00A0'}{currentLeave?.reason}</p>
+                        </div>
+
+                      </div>
+                    </div>
+                    {/* <form className="">
                       <div className="mb-6">
                         <label
                           className="block text-gray-700 text-sm font-bold mb-2"
@@ -161,17 +166,15 @@ const ProfileEditStudent = ({ setIsOn, student, loading ,handleUpdation}) => {
                           <Loader />
                         ) : (
                           <button
-                            className="bg-gradient-to-r from-orange-300 to-orange-600 text-white hover:bg-violet-400 w-full mt-3  font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                            className="bg-violet-300 hover:bg-violet-400 w-full mt-3  font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                             type="submit"
                           >
                             Update
                           </button>
                         )}
-                        {/* <a className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="#">
-                        Forgot Password?
-                    </a> */}
+
                       </div>
-                    </form>
+                    </form> */}
                   </div>
                 </div>
               </div>
@@ -183,4 +186,4 @@ const ProfileEditStudent = ({ setIsOn, student, loading ,handleUpdation}) => {
   );
 };
 
-export default ProfileEditStudent;
+export default PrincipalShowLeave;

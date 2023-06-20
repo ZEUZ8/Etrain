@@ -77,7 +77,7 @@ const LeaveForm = ({ user }) => {
         const response = await CreateStudentLeave(studentToken, values);
         if (errorMsgs.some((error) => error === response.msg)) {
           navigate("/login");
-        } else if (response.msg === "successfull") {
+        } else if (response.msg === "succesfull") {
           setStudentLeaveForms([...studentLeaveFroms, response.leaves]);
         }
       }
@@ -308,7 +308,7 @@ const LeaveForm = ({ user }) => {
             </div>
            {taskToDisplay.length>0 && <ReactPaginate
               containerClassName="flex justify-center items-center mt-5"
-              pageLinkClassName="bg-left-gradient  hover:bg-orange-500 text-white font-bold py-2 px-4 rounded-full mx-1"
+              pageLinkClassName={`${user=== "teacher"? `bg-left-gradient` : `bg-violet-500`}  hover:bg-orange-500 text-white font-bold py-2 px-4 rounded-full mx-1`}
               previousLinkClassName="  text-white font-bold py-3 px-1 "
               nextLinkClassName="  text-white font-bold py-3 px-1 "
               previousLabel={<GrFormPrevious name="arrow-left" />}

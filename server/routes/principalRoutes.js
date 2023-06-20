@@ -8,10 +8,15 @@ const {
     getClasses,
     getTeachers,
     updateTeachers,
+
     createExam,
     GetExam,
+    UpdateExam,
+
     addNewTeacher,
     // otpVerification,
+
+    GetLeaves,
 
     GetCurrentPrincipal,
     UpdateCurrentPrincipal
@@ -37,9 +42,13 @@ router.post('/exam',verifyTokenAdmin,createExam)
 
 router.get('/exam',verifyTokenAdmin,GetExam)
 
+router.put('/exam/:id',verifyTokenAdmin,UpdateExam)
+
 router.get('/principal/:id',verifyTokenAdmin,GetCurrentPrincipal)
 
 router.put('/principal/:id',verifyTokenAdmin,UpdateCurrentPrincipal)
+
+router.get('/leaves',verifyTokenAdmin,GetLeaves)
 
 // router.post("/verify/:id",otpVerification)
 

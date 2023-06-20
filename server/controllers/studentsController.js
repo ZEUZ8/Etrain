@@ -289,11 +289,12 @@ const GetComplaints = async (req, res) => {
 
 //student controller for finding all the existing reviews
 const GetExams = async (req, res) => {
+  console.log(req.user.id)
   const {id} = req.user
   try {
-    const student = await Student.find({_id:id})
-    const {studentClass,division} = student
-    const response = await Exam.find({examClass:studentClass,examDivision:division});
+    const student = await Student.findOne({_id:id})
+    const response = await Exam.find({examClass:student.studentClass});
+    console.log(response,'the response')
     if (response) {
       res.status(200).json({ msg: "succesfull", exams: response });
     } else {
