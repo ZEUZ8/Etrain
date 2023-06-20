@@ -25,7 +25,7 @@ const ProfileEdit = ({ setIsOn, teacher, loading, handleUpdation }) => {
       validationSchema: userUpdation,
       onSubmit,
     });
-
+   console.log("safhad's idea")
   return (
     <div>
       <div className="">
