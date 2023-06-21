@@ -12,7 +12,7 @@ const attendenceSchema = mongoose.Schema({
         attandence:[
             {
                 day:{
-                    type:Date,
+                    type:String,
                 },
                 status:{
                     type:String

@@ -218,29 +218,10 @@ const getStudentsAttandence = async (req, res) => {
     const checkDate = new Date(formattedDate);
     const CheckMonth = checkDate.getMonth() + 1;
 
-    const response = await Attandence.aggregate([
-      {
-        $match: {
-          studentId: new mongoose.Types.ObjectId(userId),
-        },
-      },
-      {
-        $unwind: "$attandence", // Unwind the attendance array
-      },
-      {
-        $group: {
-          _id: { $month: "$attandence.day" },
-          attendance: { $push: "$attandence" }, // Collect the attendance objects in an array
-        },
-      },
-      {
-        $match: {
-          _id: CheckMonth,
-        },
-      },
-    ]);
+    const response = await Attandence.findOne({studentId:userId})
+    console.log(response)
     if (response) {
-      res.status(200).json({ msg: "succesfull", presents: response[0] });
+      res.status(200).json({ msg: "succesfull", presents: response });
     } else {
       res.status(500).json({ msg: "Couldn't find Marked Attandence" });
     }
@@ -289,12 +270,10 @@ const GetComplaints = async (req, res) => {
 
 //student controller for finding all the existing reviews
 const GetExams = async (req, res) => {
-  console.log(req.user.id)
   const {id} = req.user
   try {
     const student = await Student.findOne({_id:id})
     const response = await Exam.find({examClass:student.studentClass});
-    console.log(response,'the response')
     if (response) {
       res.status(200).json({ msg: "succesfull", exams: response });
     } else {
@@ -372,7 +351,6 @@ const GetCurrentStudent = async( req,res)=>{
   const {id} = req.params
   try{
     const student = await Student.findOne({_id:id}).select("-password")
-    console.log(student)
     if(student){
       res.status(200).json({msg:"succesfull",student:student})
     }else{

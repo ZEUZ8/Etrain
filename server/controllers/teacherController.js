@@ -317,7 +317,8 @@ const markStudentAttadence = async (req, res) => {
       });
       const classId = existingClass._id;
       const date = new Date(Date.now());
-      const formattedDate = date.toISOString().substring(0, 10);
+      const formattedDate = date.toDateString()
+      console.log(formattedDate,'formated date')
       var response = await Attandence.findOneAndUpdate(
         {
           classId: classId,
@@ -327,7 +328,7 @@ const markStudentAttadence = async (req, res) => {
           $push: {
             attandence: {
               status: status,
-              day: date,
+              day: formattedDate,
             },
           },
         },

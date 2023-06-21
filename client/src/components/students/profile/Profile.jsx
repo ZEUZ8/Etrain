@@ -7,6 +7,10 @@ import ReactPaginate from "react-paginate";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
 import "react-toastify/dist/ReactToastify.css";
 import { GetAttandence } from "../../../axios/services/studentServices/studentServices";
+import Calendar from "react-calendar";
+// import 'react-calendar/dist/Calendar.css'
+import './calendar.css'
+
 import Loader from "../../landing/loader/Loader";
 
 const Profile = () => {
@@ -19,6 +23,7 @@ const Profile = () => {
   const [studentPresents, setStudentPresents] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const taskPerPage = 30;
 
   useEffect(() => {
@@ -29,16 +34,16 @@ const Profile = () => {
     const fetchData = async () => {
       try {
         const response = await GetAttandence(token);
+        console.log(response)
         if (
           response.msg == "Access Denied" ||
           response.msg === "jwt malformed" ||
           response.msg?.msg === "jwt expired"
         ) {
-          
           navigate("/login");
         } else if (response.msg === "succesfull") {
-          if (response.presents.attendance) {
-            setStudentPresents(response.presents.attendance);
+          if (response?.presents.attandence) {
+            setStudentPresents(response.presents.attandence);
           } else {
             toast.error("Don't have marked attendance");
           }
@@ -53,6 +58,27 @@ const Profile = () => {
     };
     fetchData();
   }, []);
+
+
+  const isAbsent = ({date})=>{
+
+    const formattedDate = date.toDateString()
+    const present = studentPresents.find((attandence)=>{
+      const attendanceDate = new Date(attandence.day).toDateString()
+      return attendanceDate === formattedDate
+    })
+
+    if (present) {
+      if (present.status === "absent") {
+        return "absent";
+      } else if (present.status === "present") {
+        return "present";
+      } else if (present.status === "holiday") {
+        return "holiday";
+      }
+    }
+  }
+
   const taskToDisplay = studentPresents.slice(
     currentPage * taskPerPage,
     (currentPage + 1) * taskPerPage
@@ -61,6 +87,8 @@ const Profile = () => {
   const handlePageChange = (selectedPage) => {
     setCurrentPage(selectedPage.selected);
   };
+
+  
 
   return (
     <div>
@@ -86,8 +114,15 @@ const Profile = () => {
               <div class="flex items-center justify-center rounded-[1rem]  bg-gray-50 h-[30rem] dark:bg-sky-100">
                 <p class="text-2xl text-gray-400 dark:text-gray-500">GRAPH</p>
               </div>
-              <div class=" w-full rounded-2xl bg-gray-50 h-[30rem] dark:bg-sky-100">
-                <div class="m-5">
+
+              <div class="w-full flex-col flex justify-start p-10  items-center rounded-2xl bg-gray-50 h-[30rem] dark:bg-sky-100">
+                <div className="inline-block m-10 underline underline-offset-4">
+                  Attendance 
+                </div>
+                <div className=" bg-white rounded-xl p-3 w-fit">
+                  <Calendar className="h-fit w-fit" value={selectedDate} tileClassName={isAbsent} onChange={setSelectedDate} />
+                </div>
+                {/* <div class="m-5">
                   <p className="pl-3 underline underline-offset-4">
                     {currentMonth}
                   </p>
@@ -128,9 +163,9 @@ const Profile = () => {
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> */}
                 {/* <p class="text-2xl text-gray-400 dark:text-gray-500">+</p> */}
-                <div className="flex justify-center items-end mt-5 flex-column">
+                {/* <div className="flex justify-center items-end mt-5 flex-column">
                   <ReactPaginate
                     containerClassName="flex justify-center  items-center mt-5"
                     pageLinkClassName="bg-left-gradient  hover:bg-orange-500 text-white font-bold py-2 px-4 rounded-full mx-1"
@@ -147,8 +182,9 @@ const Profile = () => {
                     subContainerClassName={"pages pagination"}
                     activeClassName={"active"}
                   />
-                </div>
+                </div> */}
               </div>
+
               {/* <div class="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
                 <p class="text-2xl text-gray-400 dark:text-gray-500">+</p>
               </div>
