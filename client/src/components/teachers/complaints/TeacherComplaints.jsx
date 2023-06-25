@@ -39,8 +39,8 @@ const TeacherComplaints = ({ page, makeSubmit }) => {
         } else {
           var response = await GetReviews(token);
         }
-        setData(response.complaints);
-        console.log(response);
+        setData(response?.complaints);
+        console.log(response,'the response in the prr');
       } catch (error) {
         console.log(error);
       }
@@ -62,15 +62,15 @@ const TeacherComplaints = ({ page, makeSubmit }) => {
       if (response.msg === "Complaint Updated") {
         let result = data.map((value) => {
           let val = { ...value };
-          if (value._id === response.complaint._id) {
-            val.complaint = response.complaint.complaint;
+          if (value._id === response?.complaint._id) {
+            val.complaint = response?.complaint.complaint;
           }
           return val;
         });
         setData(result);
-        toast.success(response.msg);
+        toast.success(response?.msg);
       } else {
-        toast.error(response.msg);
+        toast.error(response?.msg);
       }
     } catch (error) {
       console.log(error);
@@ -87,7 +87,7 @@ const TeacherComplaints = ({ page, makeSubmit }) => {
         toast.success(response.msg);
         console.log(data,'   consoling the data for checking the items arranged properly')
         console.log(response.complaint,"   the result in the reques")
-        setData([...data,response.complaint])
+        setData([...data,response?.complaint])
       } else {
         toast.error(response.msg);
       }
@@ -347,11 +347,11 @@ const TeacherComplaints = ({ page, makeSubmit }) => {
                       </svg>  */}
 
                       <p class="mt-4 text-sm font-bold text-gray-900  sm:text-sm w-full underline underline-offset-8">
-                        {data.studentId.name}
+                        {data?.studentId?.name}
                       </p>
 
                       <p class="mt-2 hidden text-sm sm:block truncate max-w-sm">
-                        by : {data.teacherId.name}
+                        by : {data?.teacherId?.name}
                         {`(${data.teacherId.subject})`}
                       </p>
                     </div>

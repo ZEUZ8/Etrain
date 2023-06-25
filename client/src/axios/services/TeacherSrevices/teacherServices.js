@@ -1,4 +1,4 @@
-import { axiosTeacherInstance } from "../../axios";
+import {axiosTeacherInstance } from "../../axios";
 
 
 
@@ -413,6 +413,93 @@ export const UpdateTeacher = async(token,id,values)=>{
         return(error.response.data)
     }
 }
+
+
+
+/* service function for creating converstation for teacher
+*/
+export const GetTeacherConversation = async(token,id)=>{
+    console.log("entered in conversation finding function")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosTeacherInstance.get(`/conversation/${id}`,config)
+        return(response.data)
+    }catch(error){
+        console.log(error)
+        return(error.response.data)
+    }
+}
+
+
+/* service function for creating messages for teacher
+*/
+export const CreateTeacherMessages = async(token,value)=>{
+    console.log("entered in messages  creating function")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosTeacherInstance.post(`/messages`,value,config)
+        console.log(response,'   consoling in the service function')
+        return(response.data)
+    }catch(error){
+        console.log(error,'consolin the error int he services')
+        return(error.response.data)
+    }
+}
+
+
+
+/* service function for getting Messgaes  for teachers
+*/
+export const GetTeacherMessages = async(token,id)=>{
+    console.log("entered in conversation finding function")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosTeacherInstance.get(`/messages/${id}`,config)
+        return(response.data)
+    }catch(error){
+        console.log(error)
+        return(error.response.data)
+    }
+}
+
+/* service function for getting chat persons  for principal
+*/
+export const TeacherChatMember = async(token,id)=>{
+    console.log("entered in chat member finding function")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosTeacherInstance.get(`/chatMember/${id}`,config)
+        return(response.data)
+    }catch(error){
+        console.log(error)
+        return(error.response.data)
+    }
+}
+
 
 
 

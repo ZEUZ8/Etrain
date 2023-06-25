@@ -13,7 +13,14 @@ const  {
     GetLeaves,
 
     GetCurrentStudent,
-    UpdateCurrentStudent
+    UpdateCurrentStudent,
+
+    CreateConversation,
+    GetConversation,
+
+    CreateMessages,
+    GetMessages,
+    GetChatMember
 } = require("../controllers/studentsController");
 
 
@@ -43,6 +50,18 @@ router.get("/student/:id",verifyStudent,GetCurrentStudent)
 
 router.put("/student/:id",verifyStudent,UpdateCurrentStudent)
 
+router.get('/chatMember/:id',verifyStudent,GetChatMember)
 
+//new conversation
+router.post("/conversation",verifyStudent,CreateConversation)
 
-module.exports = router
+//new conversation
+router.get("/conversation/:userId",verifyStudent,GetConversation)
+
+//add mesages
+router.post('/messages',verifyStudent,CreateMessages)
+
+//get messages
+router.get("/messages/:conversationId",verifyStudent,GetMessages)
+
+module.exports = router 

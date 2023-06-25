@@ -18,12 +18,12 @@ const TeacherComplaintEdit = ({ setIson, requiredPage ,currentData,handleEdit}) 
   const { values, errors, touched, handleChange, handleSubmit, handleBlur } =
     useFormik({
       initialValues: {
-        studentName: currentData.studentId.name,
-        studentClass: currentData.studentId.studentClass,
-        studentDivision: currentData.studentId.division,
-        teacherName: currentData.teacherId.name,
-        teacherSubject: currentData.teacherId.subject,
-        complaint: currentData.complaint?currentData.complaint:currentData.review,
+        studentName: currentData?.studentId?.name,
+        studentClass: currentData?.studentId?.studentClass,
+        studentDivision: currentData?.studentId?.division,
+        teacherName: currentData?.teacherId?.name,
+        teacherSubject: currentData?.teacherId?.subject,
+        complaint: currentData?. complaint ? currentData?.complaint:currentData?.review,
       },
       validationSchema: complaintValidation,
       onSubmit,
@@ -214,8 +214,8 @@ const TeacherComplaintEdit = ({ setIson, requiredPage ,currentData,handleEdit}) 
                         onChange={handleChange}
                         onBlur={handleBlur}
                     ></textarea>
-                    {errors.complaint && touched.complaint && (
-                        <p className="text-red-600">{errors.complaint}</p>
+                    {errors?.complaint && touched?.complaint && (
+                        <p className="text-red-600">{errors?.complaint}</p>
                         )}
                   </div>
 

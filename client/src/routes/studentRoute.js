@@ -11,6 +11,7 @@ import Login from "../pages/students/login/studentLoginPage"
 import StudentTimeTable from "../pages/students/timeTable/StudentTimeTable";
 import DataShowcasePage from "../pages/students/DataShowcase/DataShowcasePage";
 import LeaveFormPage from "../pages/common/leaveForm/LeaveFormPage";
+import ChatPage from "../pages/common/Chat/ChatPage";
 
 function StudentRoutes(){
     return (
@@ -27,6 +28,7 @@ function StudentRoutes(){
                 <Route path="/complaints" element={< DataShowcasePage page="complaints"/>}></Route>
                 <Route path="/reviews" element={< DataShowcasePage page="reviews"/>}></Route>
                 <Route path="/leave" element={<LeaveFormPage user="student"/>}></Route>
+                <Route path="/chat" element={<ChatPage user="student"/>}></Route>
             </Routes>
         </div>
     )

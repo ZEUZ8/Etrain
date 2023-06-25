@@ -7,8 +7,9 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import Loader from "../../../components/landing/loader/Loader"
+import EditClass from "./EditClass";
 import { classCreationSchema } from "../../../validations/principal/classCreationSchema";
-import { classCreation,classes } from '../../../axios/services/principalServices/principlaServices';
+import { classCreation,classes,availableTeachers } from '../../../axios/services/principalServices/principlaServices';
 
 
 const PrincipalClass = () => {
@@ -18,7 +19,9 @@ const PrincipalClass = () => {
 
   const [loading,setLoading] = useState(false)
   const [data,setData] = useState([])
+  const [freeTeacher,setFreeTeacher] = useState([])
   const navigate = useNavigate()
+  const errMsgs = ['jwt expired','Acces Denied','jwt malformed']
 
   useEffect(()=>{
     let isCancelled = false;
@@ -36,6 +39,24 @@ const PrincipalClass = () => {
         console.log(error)
       }
       setLoading(false)
+    }
+    fetchData()
+  },[])
+
+
+  useEffect(()=>{
+    const fetchData = async()=>{
+      try{
+        const response = await availableTeachers(token)
+        if(errMsgs.some(msg => msg === response.msg || response.message)){
+          navigate("/principal/login")
+        }
+        else if(response && response.length > 0){
+          setFreeTeacher(response.teacher)
+        }
+      }catch(error){
+        console.log(error)
+      }
     }
     fetchData()
   },[])
@@ -69,7 +90,6 @@ const PrincipalClass = () => {
 
   return (
     <>
-   
       <div className="p-4 sm:ml-64 h-full align-middle">
         <p className="underline underline-offset-4 mb-5">Classes</p>
         <section className="bg-fuchsia-100 rounded-3xl bottom-10">
@@ -77,9 +97,12 @@ const PrincipalClass = () => {
           <div class="max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
          {loading&& <Loader/>}
             <div class="grid  gap-4 sm:grid-cols-3">
-             {data?.map((item)=>( 
+             {data?.map((item)=>
+             {
+             return( 
              <div
                 key={item._id}
+                onClick={()=>navigate("/principal/editClass",{state:{data:item}})}
                 class="block rounded-xl border border-gray-500 p-4 shadow-sm hover:border-gray-200 hover:ring-1 hover:ring-gray-200 focus:outline-none focus:ring"
               >
                 <span class="inline-block rounded-lg bg-gray-50 p-3">
@@ -107,7 +130,7 @@ const PrincipalClass = () => {
                   Class Teacher :  {item.classTeacher?item.classTeacher:"Not Assigned"}
                 </p>
               </div>
-              ))}
+              )})}
              
             </div>
           </div>

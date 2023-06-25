@@ -14,6 +14,7 @@ import {
   GetComplaints,
   GetReviews,
 } from "../../../axios/services/studentServices/studentServices";
+import StudentCreateComplaint from "./StudentCreateComplaint";
 
 const DataShowcase = ({ page }) => {
   const navigate = useNavigate();
@@ -25,6 +26,7 @@ const DataShowcase = ({ page }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [currentData, setCurrentData] = useState("");
   const [data, setData] = useState([]);
+  const [isOn,setIsOn] = useState(false)
 
   const [reviews, setReviews] = useState([]);
   const [complaints, setComplaints] = useState([]);
@@ -64,8 +66,8 @@ const DataShowcase = ({ page }) => {
             toast.error(response.msg);
           }
         } else if (page === "exams") {
-          const response = await GetExams(token,studentData.id);
-          console.log(response)
+          const response = await GetExams(token, studentData.id);
+          console.log(response);
           if (
             response.msg === "Access Denied" ||
             response.msg === "jwt malformed" ||
@@ -114,7 +116,7 @@ const DataShowcase = ({ page }) => {
   const handleModalClick = (data) => {
     setCurrentData(data);
   };
-  console.log(currentData)
+
 
   return (
     <div>
@@ -130,6 +132,20 @@ const DataShowcase = ({ page }) => {
       )} */}
       <ToastContainer />
       <div className="md:ml-64 p-4">
+        {page === "complaints" && (
+          <div className="flex justify-end mx-5">
+            <div className="bg-fuchsia-300 rounded-2xl mb-5 hover:bg-fuchsia-400">
+              <p onClick={()=>setIsOn(true)} className="items-center p-3 ">
+                Make Complaint
+              </p>
+            </div>
+          </div>
+        )}
+        {isOn && (
+            <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+              <StudentCreateComplaint setIson={setIsOn} />
+            </div>
+        )}
         <div className="flex justify-center flex-col md:flex-row">
           <div className="flex w-1/2 bg-left-gradient m-2 items-center justify-center   rounded-3xl shadow-xl">
             <div className="h-full w-">
@@ -150,7 +166,11 @@ const DataShowcase = ({ page }) => {
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         id="studentName"
                         type="text"
-                        placeholder={currentData?.examName ? currentData.examName : currentData.studentId.name}
+                        placeholder={
+                          currentData?.examName
+                            ? currentData.examName
+                            : currentData.studentId.name
+                        }
                         name="name"
                         readonly
                       />
@@ -244,7 +264,13 @@ const DataShowcase = ({ page }) => {
                         class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-200 dark:border-gray-600 dark:placeholder-gray-400 dark:text dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         readOnly
                         name="complaint"
-                        placeholder={currentData.examDiscription ? currentData.examDiscription : currentData.review? currentData.review : currentData.complaint }
+                        placeholder={
+                          currentData.examDiscription
+                            ? currentData.examDiscription
+                            : currentData.review
+                            ? currentData.review
+                            : currentData.complaint
+                        }
                       ></textarea>
                     </div>
 
@@ -376,8 +402,7 @@ const DataShowcase = ({ page }) => {
                   />
                 </div>
               </div>
-            )
-            }
+            )}
             {dataToDisplay.length > 0 && (
               <div>
                 <ReactPaginate

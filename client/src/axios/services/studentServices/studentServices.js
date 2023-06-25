@@ -211,3 +211,126 @@ export const UpdateStudent = async(token,id,values)=>{
         return(error.response.data)
     }
 }
+
+/* service function for creating converstation for teacher
+*/
+export const CreateStudentConversation = async(token,id,values)=>{
+    console.log("entered in conversation creating function")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosStudentInstance.put(`/conversation/${id}`,values,config)
+        return(response.data)
+    }catch(error){
+        console.log(error)
+        return(error.response.data)
+    }
+}
+
+
+/* service function for creating converstation for teacher
+*/
+export const GetStudentConversation = async(token,id)=>{
+    console.log("entered in conversation finding function")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosStudentInstance.get(`/conversation/${id}`,config)
+        return(response.data)
+    }catch(error){
+        console.log(error)
+        return(error.response.data)
+    }
+}
+
+
+
+/* service function for creating messages for students
+*/
+export const CreateStudentMessages = async(token,value)=>{
+    console.log("entered in messages  creating function")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosStudentInstance.post(`/messages`,value,config)
+        console.log(response,'   consoling in the service function')
+        return(response.data)
+    }catch(error){
+        console.log(error,'consolin the error int he services')
+        return(error.response.data)
+    }
+}
+
+
+/* service function for getting Messgaes  for students
+*/
+export const GetStudentMessages = async(token,id)=>{
+    console.log("entered in conversation finding function")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosStudentInstance.get(`/messages/${id}`,config)
+        return(response.data)
+    }catch(error){
+        console.log(error)
+        return(error.response.data)
+    }
+}
+
+
+
+/* service function for getting chat persons  for principal
+*/
+export const StudentChatMember = async(token,id)=>{
+    console.log("entered in conversation finding function")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosStudentInstance.get(`/chatMember/${id}`,config)
+        return(response.data)
+    }catch(error){
+        console.log(error)
+        return(error.response.data)
+    }
+}
+
+
+
+
+
+
+// router.post("/conversation",verifyStudent,CreateConversation)
+
+// //new conversation
+// router.get("/conversation/:userId",verifyStudent,GetConversation)
+
+// //add mesages
+// router.post('/messages',verifyStudent,CreateMessages)
+
+// //get messages
+// router.get("/messages/:conversationId",verifyStudent,GetMessages)

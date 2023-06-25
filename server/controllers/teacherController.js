@@ -13,6 +13,7 @@ const Review = require("../models/Review");
 const Exam = require("../models/exam");
 const Mark = require("../models/marks");
 const Leave = require("../models/leave");
+const Admin = require("../models/admin");
 // const { options } = require("../routes/teacherRoutes");
 
 // //controller for handling the teacher signUp funcion
@@ -754,6 +755,27 @@ const UpdateTeacher = async( req,res)=>{
 }
 
 
+/* for get the all the chat members*/
+const GetChatMember = async( req,res)=>{
+  const {id} = req.params
+  try{
+    const student = await Student.findOne({_id:id})
+    const principal = await Admin.findOne({_id:id})
+    if(student){
+      res.status(200).json({msg:"succesfull",user:student})
+      if(principal){
+        res.status(200).json({msg:"succesfull",user:principal})
+      }
+    }else{
+      res.json({msg:"user not Found"})
+    }
+  }catch(error){
+    console.log(error)
+    res.status(500).json({msg:error.message})
+  }
+}
+
+
 
 module.exports = {
   // teacherRegister,
@@ -780,5 +802,6 @@ module.exports = {
   GetLeaves,
 
   GetCurrentTeacher,
-  UpdateTeacher
+  UpdateTeacher,
+  GetChatMember
 };

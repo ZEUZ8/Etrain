@@ -7,7 +7,8 @@ import PrincipalTeachersPage from "../pages/principal/teachers/PrincipalTeachers
 import Login from "../pages/students/login/studentLoginPage"
 import PrincipalExamPage from "../pages/principal/exam/PrincipalExamPage";
 import PrincipalLeavepage from "../pages/principal/LeaveForm/PrincipalLeavepage";
-
+import ChatPage from "../pages/common/Chat/ChatPage";
+import PrincipalEditClassPage from "../pages/principal/Class/PrincipalEditClassPage";
 
 const PrincipalRoutes = () => {
   return (
@@ -19,6 +20,8 @@ const PrincipalRoutes = () => {
             <Route path="/teachers" element={< PrincipalTeachersPage />}></Route>
             <Route path="/exams" element={< PrincipalExamPage />}></Route>
             <Route path="/leave" element={< PrincipalLeavepage />}></Route>
+            <Route path="/chat" element={< ChatPage user="principal" />}></Route>
+            <Route path="/editClass" element={< PrincipalEditClassPage />}></Route>
         </Routes>
     </div>
   )

@@ -3,9 +3,9 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import ReactPaginate from "react-paginate";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
-import "react-toastify/dist/ReactToastify.css";
 import { GetAttandence } from "../../../axios/services/studentServices/studentServices";
 import Calendar from "react-calendar";
 // import 'react-calendar/dist/Calendar.css'

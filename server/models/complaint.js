@@ -11,7 +11,7 @@ const complaintShcema = mongoose.Schema({
     },
     complaint:{
         type:String,
-    }
+    },
     // consplaints:[
     //     {
     //         complaint:{

@@ -1,19 +1,52 @@
-import React from 'react'
+import React, { useState } from "react";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { Pie } from "react-chartjs-2";
 
-const graph = () => {
-  return (
-    <div>
-      <div class="mx-auto w-3/5 overflow-hidden">
-        <canvas
-            data-te-chart="doughnut"
-            data-te-dataset-label="Traffic"
-            data-te-labels="['Monday', 'Tuesday' , 'Wednesday' , 'Thursday' , 'Friday' , 'Saturday' , 'Sunday ']"
-            data-te-dataset-data="[2112, 2343, 2545, 3423, 2365, 1985, 987]"
-            data-te-dataset-background-color="['rgba(63, 81, 181, 0.5)', 'rgba(77, 182, 172, 0.5)', 'rgba(66, 133, 244, 0.5)', 'rgba(156, 39, 176, 0.5)', 'rgba(233, 30, 99, 0.5)', 'rgba(66, 73, 244, 0.4)', 'rgba(66, 133, 244, 0.2)']">
-        </canvas>
-        </div>
-    </div>
-  )
+export function PieGraph({ attendance }) {
+    ChartJS.register(ArcElement, Tooltip, Legend);
+
+    let labels = [];
+    let DonutData = [];
+    const [holliday,setHolliday] = useState(false)
+
+    for (let i = 0; i < attendance?.length; i++) {
+        labels.push(attendance[i]._id);
+        DonutData.push(attendance[i].count);
+      
+    }
+
+    if(holliday){
+      var data = {
+        labels: "Holliday",
+        // labels: ["Red", "Green"],
+        datasets: [
+            {
+                label: "Leave",
+                // data: DonutData,
+                data: [1],
+                backgroundColor: ["(154, 182, 235, 0.5)"],
+                borderColor: [ "(154, 182, 235, 1)"],
+                borderWidth: 1,
+            },
+        ],
+    };
+
+    }else{
+      var data = {
+        labels: labels,
+        // labels: ["Red", "Green"],
+        datasets: [
+            {
+                label: "Total ",
+                data: DonutData,
+                // data: [12, 19,67,77],
+                backgroundColor: [ "rgba(54, 162, 235, 0.2)","rgba(255, 99, 132, 0.2)"],
+                borderColor: [ "rgba(54, 162, 235, 1)","rgba(255, 99, 132, 1)"],
+                borderWidth: 1,
+            },
+        ],
+    };
+    }
+
+    return <Pie data={data} />;
 }
-
-export default graph

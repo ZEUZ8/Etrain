@@ -6,7 +6,10 @@ const {
     principalLogin,
     classCreation,
     getClasses,
+    
     getTeachers,
+    GetAvailableTeacher,
+
     updateTeachers,
 
     createExam,
@@ -17,11 +20,21 @@ const {
     // otpVerification,
 
     GetLeaves,
+    GetAllAttendance,
 
     GetCurrentPrincipal,
-    UpdateCurrentPrincipal
+    UpdateCurrentPrincipal,
+
+    GetChatMember
 
 }= require("../controllers/principalControllers")
+
+const {
+    CreateConversation,
+    GetConversation,
+    CreateMessages,
+    GetMessages,
+  } = require("../controllers/studentsController");
 
 //middlewares for the principal
 const {verifyTokenAdmin} = require("../middlewares/auth")
@@ -50,6 +63,23 @@ router.put('/principal/:id',verifyTokenAdmin,UpdateCurrentPrincipal)
 
 router.get('/leaves',verifyTokenAdmin,GetLeaves)
 
+router.get('/chatMember/:id',verifyTokenAdmin,GetChatMember)
+
 // router.post("/verify/:id",otpVerification)
+
+router.post("/conversation",verifyTokenAdmin,CreateConversation)
+
+//new conversation
+router.get("/conversation/:userId",verifyTokenAdmin,GetConversation)
+
+//add mesages
+router.post('/messages',verifyTokenAdmin,CreateMessages)
+
+//get messages
+router.get("/messages/:conversationId",verifyTokenAdmin,GetMessages)
+
+router.get("/availableTeacher",verifyTokenAdmin,GetAvailableTeacher)
+
+router.get(`/attendance/:date`,verifyTokenAdmin,GetAllAttendance)
 
 module.exports= router

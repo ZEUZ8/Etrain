@@ -12,6 +12,8 @@ const dotenv = require("dotenv")
 const studentRoutes = require("./routes/studentRoutes")
 const principalRoutes = require("./routes/principalRoutes")
 const teacherRoutes = require("./routes/teacherRoutes")
+//socket connection 
+const socketConnection = require("./socketIO")
 
 dotenv.config();
 
@@ -58,13 +60,14 @@ app.use(function(err, req, res, next) {
 });
 
 const port = process.env.PORT
-const server = http.createServer(app)
+// const server = http.createServer(app)
 
-// socketConnection(server)
 
-server.listen(port,()=>{
-  console.log("server running in port",port)
-});
+const server = app.listen(port,()=>{
+    console.log(`server running at port ${port}`.bgYellow.white)
+})
+
+socketConnection(server)
 
 
 

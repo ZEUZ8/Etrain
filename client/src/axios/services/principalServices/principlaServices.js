@@ -103,6 +103,28 @@ export const teachers  = async (token)=>{
     }
 }
 
+//principla service function for finding all the available  teachers
+export const availableTeachers  = async (token)=>{
+    // console.log("entered in the teachers finding service function")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const respons = await axiosPrincipalInstance.get(`/availableTeacher`,config)
+        return(respons.data)
+    }catch(error){
+        console.log("error occured in the principal teachers finding services")
+        console.log(error)
+        return(error.response.data)
+    }
+}
+
+
+
 //principal teachers editig functions services goes  here
 export const updateTeacher  = async (token,formData)=>{
     console.log("entered in the teachers updating service function")
@@ -258,3 +280,89 @@ export const GetLeaves = async(token)=>{
         return(error.response.data)
     }
 }
+
+
+
+/* service function for creating converstation for principal
+*/
+export const GetPrincipalConversation = async(token,id)=>{
+    console.log("entered in conversation finding function")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosPrincipalInstance.get(`/conversation/${id}`,config)
+        return(response.data)
+    }catch(error){
+        console.log(error)
+        return(error.response.data)
+    }
+}
+
+
+/* service function for getting Messgaes  for principal
+*/
+export const GetPrincipalMessages = async(token,id)=>{
+    console.log("entered in conversation finding function")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosPrincipalInstance.get(`/messages/${id}`,config)
+        return(response.data)
+    }catch(error){
+        console.log(error)
+        return(error.response.data)
+    }
+}
+
+
+/* service function for getting chat persons  for principal
+*/
+export const principalChatMember = async(token,id)=>{
+    console.log("entered in conversation finding function")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosPrincipalInstance.get(`/chatMember/${id}`,config)
+        return(response.data)
+    }catch(error){
+        console.log(error)
+        return(error.response.data)
+    }
+}
+
+/* service function for getting chat persons  for principal
+*/
+export const PrincipalAllAttendance = async(token,date)=>{
+    console.log("entered in conversation finding function")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosPrincipalInstance.get(`/attendance/${date}`,config)
+        return(response.data)
+    }catch(error){
+        console.log(error)
+        return(error.response.data)
+    }
+}
+
+

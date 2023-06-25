@@ -6,6 +6,8 @@ const Teacher = require("../models/teacher")
 const Admin = require("../models/admin");
 const Exam = require("../models/exam");
 const Leave = require("../models/leave");
+const Student = require("../models/students");
+const Attandence = require("../models/attandence");
 
 //the config contian the password and the user for sending the mail
 let config = {
@@ -117,6 +119,26 @@ const getTeachers = async (req, res) => {
     res.status(500).json({msg:"Error at finding Teachers"})
   }
 };
+
+
+//controller function for getting all the teachres who not assigned to classes,then it could show to the principal when creating classes 
+const GetAvailableTeacher = async (req, res) => {
+  console.log(
+    "entered at the available teachers finding function at backend principal controllers"
+  );
+  try{
+    const teacher = await Teacher.find({class:'',division:''})
+    if(teacher){
+        res.status(200).json(teacher)
+    }else{
+        res.status(500).json({msg:"Teachers don't exist"})
+    }
+  }catch(error){
+    console.log(error)
+    res.status(500).json({msg:"Error at finding Teachers"})
+  }
+};
+
 
 //controller function for updating the teacher 
 const updateTeachers = async (req,res)=>{
@@ -336,13 +358,69 @@ const GetLeaves = async( req,res)=>{
 }
 
 
+/* for get the all the chat members*/
+const GetChatMember = async( req,res)=>{
+  const {id} = req.params
+  try{
+    const teacher = await Teacher.findOne({_id:id})
+    const student = await Student.findOne({_id:id})
+    if(teacher){
+      res.status(200).json({msg:"succesfull",user:teacher})
+      if(student){
+        res.status(200).json({msg:"succesfull",user:student})
+      }
+    }else{
+      res.json({msg:"user not Found"})
+    }
+  }catch(error){
+    console.log(error)
+    res.status(500).json({msg:error.message})
+  }
+}
+
+
+
+/* for get the all the students attendance */
+const GetAllAttendance = async( req,res)=>{
+  const {date} = req.params
+  console.log(date,'the date right now')
+  try{
+    const attandence = await Attandence.aggregate([
+      {
+        $unwind:"$attandence"
+      },
+      {
+        $match:{
+          "attandence.day":date
+        }
+      },
+      {
+        $group:{
+          _id:"$attandence.status",
+          count:{$sum:1}
+        }
+      }
+    ])
+    console.log(attandence,' the result')
+    if(attandence){
+      res.status(200).json(attandence)
+    }else{
+      res.json({msg:"attendance not found"})
+    }
+  }catch(error){
+    console.log(error)
+    res.status(500).json({msg:error.message})
+  }
+}
 
 
 module.exports = {
   principalLogin,
   classCreation,
   getClasses,
+
   getTeachers,
+  GetAvailableTeacher,
   updateTeachers,
 
   createExam,
@@ -355,5 +433,9 @@ module.exports = {
   GetCurrentPrincipal,
   UpdateCurrentPrincipal,
 
-  GetLeaves
+  GetLeaves,
+  GetAllAttendance,
+
+  GetChatMember,
+
 };

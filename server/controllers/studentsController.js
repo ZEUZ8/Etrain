@@ -11,7 +11,11 @@ const { default: mongoose } = require("mongoose");
 const Complaint = require("../models/complaint");
 const Review = require("../models/Review");
 const Exam = require("../models/exam");
-const Leave = require("../models/leave")
+const Leave = require("../models/leave");
+const Conversation = require("../models/Conversation");
+const Message = require('../models/Message');
+const Teacher = require("../models/teacher");
+const Admin = require("../models/admin");
 
 // let config = {
 //   service: "gmail",
@@ -386,8 +390,83 @@ const UpdateCurrentStudent = async( req,res)=>{
 
 
 
+/* controller function for updating the teacher info  for the profile component*/
+const  CreateConversation = async( req,res)=>{
+  const newConversation = new Conversation({
+    members :[req.body.senderId,req.body.receiverId]
+  })
+  try{
+    const savedConversation = await newConversation.save()
+    res.status(200).json({msg:"ConvCreated",savedConversation})
+  }catch(error){
+    console.log(error)
+    res.status(500).json({msg:error.message})
+  }
+}
 
 
+/* controller function for updating the teacher info  for the profile component*/
+const  GetConversation = async( req,res)=>{
+  console.log(req.params.userId,' the data')
+  try{
+    const conversation = await Conversation.find({
+      members:{$in:[req.params.userId]}
+    })
+    res.status(200).json(conversation)
+  }catch(error){
+    console.log(error)
+    res.status(500).json({msg:error.message})
+  }
+}
+
+/* controller function for updating the teacher info  for the profile component*/
+const  CreateMessages = async( req,res)=>{
+  console.log(req.body,'enterefd inthe message creating function')
+  const newMessages =  new Message(req.body)
+  try{
+    const savedMessages = await newMessages.save();
+    res.status(200).json(savedMessages)
+  }catch(error){
+    console.log(error)
+    res.status(500).json({msg:error.message})
+  }
+}
+
+/* controller function  for getting messages*/
+const  GetMessages = async( req,res)=>{
+  try{
+    const messages = await Message.find({
+      conversationId : req.params.conversationId 
+    })
+    res.status(200).json(messages)
+  }catch(error){
+    console.log(error)
+    res.status(500).json({msg:error.message})
+  }
+}
+
+
+/* for get the all the chat members*/
+const GetChatMember = async( req,res)=>{
+  const {id} = req.params
+  try{
+    const teacher = await Teacher.findOne({_id:id})
+    const principal = await Admin.findOne({_id:id})
+    if(teacher){
+      res.status(200).json({msg:"succesfull",user:teacher})
+      if(principal){
+        res.status(200).json({msg:"succesfull",user:principal})
+      }
+    }else{
+      res.json({msg:"user not Found"})
+    }
+  }catch(error){
+    console.log(error)
+    res.status(500).json({msg:error.message})
+  }
+}
+
+ 
 module.exports = {
   // studentRegister,
   studentLogin,
@@ -403,5 +482,12 @@ module.exports = {
   GetLeaves,
 
   GetCurrentStudent,
-  UpdateCurrentStudent
+  UpdateCurrentStudent,
+
+  CreateConversation,
+  GetConversation,
+
+  CreateMessages,
+  GetMessages,
+  GetChatMember
 };
