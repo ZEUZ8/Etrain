@@ -22,6 +22,12 @@ const ClassSchema = mongoose.Schema({
             ref:"exams"
         }
     ],
+    students:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"student"
+        },
+    ],
     weeklyTasks:[
         {
             taskName:{

@@ -14,7 +14,7 @@ import { classCreation,classes,availableTeachers } from '../../../axios/services
 
 const PrincipalClass = () => {
 
-  const principalData = useSelector(state => state.principalReducer.principal)
+  const principalData = useSelector(state => state.principalReducer)
   const token = principalData?.token
 
   const [loading,setLoading] = useState(false)

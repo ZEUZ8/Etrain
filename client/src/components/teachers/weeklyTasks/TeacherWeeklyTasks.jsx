@@ -12,16 +12,19 @@ import { weaklyTaskValidation } from "../../../validations/teachers/weeklyTaskVa
 import { weeklyTasks } from "../../../axios/services/TeacherSrevices/teacherServices";
 import { GetWeeklyTasks } from "../../../axios/services/TeacherSrevices/teacherServices";
 import { useNavigate } from "react-router-dom";
+import UpdateWeeklyTask from "./UpdateWeeklyTask";
 
 const TeacherWeeklyTasks = () => {
 
-  const teacherDate = useSelector(state => state.teacherReducer.teacher)
+  const teacherDate = useSelector(state => state.teacherReducer)
   const token = teacherDate?.token
 
   const navigate = useNavigate()
   const [loading,setLoading] = useState(false)
   const [currentPage,setCurrentPage] = useState(0)
+  const [currentTask,setCurrentTask] = useState('')
   const [scheduledTasks,setScheduledTask] = useState([])
+  const [isOn,setIsOn] = useState(false)
   const taskPerPage = 2;
 
   useEffect(()=>{
@@ -29,7 +32,7 @@ const TeacherWeeklyTasks = () => {
       try{
         const response = await GetWeeklyTasks(token)
         if(response.msg === "succesfull"){
-          setScheduledTask(response.tasks)
+          setScheduledTask(response?.tasks)
         }else if(response.msg === "jwt malformed" || response.msg == "Access Denied"|| response.msg === "jwt Expired" ){
           navigate("/teacher/login")
         }else{
@@ -62,6 +65,11 @@ const TeacherWeeklyTasks = () => {
     }
   };
 
+  const handleClick = (task)=>{
+    setCurrentTask(task)
+    setIsOn(true)
+  }
+
   const {
     values,
     errors,
@@ -90,6 +98,11 @@ const TeacherWeeklyTasks = () => {
     <div>
         <ToastContainer />
       <div className="p-4 sm:ml-64">
+      {isOn && (
+            <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+              <UpdateWeeklyTask setIsOn={setIsOn} currentTask={currentTask}/>
+            </div>
+        )}
 
         <div className="flex justify-center flex-col md:flex-row">
 
@@ -120,8 +133,8 @@ const TeacherWeeklyTasks = () => {
                       onChange={handleChange}
                       onBlur={handleBlur}
                     />
-                      {errors.taskName && touched.taskName && (
-                            <p className='text-red-600'>{errors.taskName}</p>
+                      {errors?.taskName && touched?.taskName && (
+                            <p className='text-red-600'>{errors?.taskName}</p>
                           )}
                   </div>
 
@@ -221,9 +234,11 @@ const TeacherWeeklyTasks = () => {
               </p>
               
               {taskToDisplay.map((task,index)=>{
-
                 return(
-                  <a key={index} class="relative flex items-start justify-between dark:bg-white m-5 mt-4 rounded-xl border border-gray-100 p-4 shadow-xl sm:p-6 lg:p-8">
+                  <a
+                   key={index}
+                   onClick={()=>handleClick(task)} 
+                  class="relative flex items-start justify-between dark:bg-white m-5 mt-4 rounded-xl border border-gray-100 p-4 shadow-xl sm:p-6 lg:p-8">
                   <div class=" text-gray-500">
                     <SiBookstack className="w-10 h-10" />
   
@@ -243,11 +258,11 @@ const TeacherWeeklyTasks = () => {
                         </svg> */}
   
                     <h3 class="mt-4 text-lg font-bold text-gray-900 sm:text-xl">
-                     {task.taskName}
+                     {task?.taskName}
                     </h3>
   
                     <p class="mt-2 hidden text-sm sm:block">
-                      {task.taskDiscription}
+                      {task?.taskDiscription}
                     </p>
                   </div>
                   {/* 

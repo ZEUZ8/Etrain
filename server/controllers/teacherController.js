@@ -206,6 +206,7 @@ by this controller teacher can create student and also he/she can add the studen
 const addNewStudent = async (req, res) => {
   const { studentClass, studentDivision, studentName, studentEmail } = req.body;
   const teacherId = req.user.id;
+  console.log(studentClass,studentDivision,studentEmail,teacherId,   '    the deatisle for creating a new student in the ')
   const options = {
     upsert: true, // Create a new document if it doesn't exist
     new: true, // Return the updated document
@@ -222,6 +223,7 @@ const addNewStudent = async (req, res) => {
       console.log("class where removed");
     }
     const existingStudent = await Student.findOne({ email: studentEmail });
+    console.log(existingStudent,'the student is already added')
     if (existingStudent) {
       const students = await Student.findOneAndUpdate(
         { email: studentEmail },
@@ -250,8 +252,9 @@ const addNewStudent = async (req, res) => {
         email: studentEmail,
         studentClass: studentClass,
         division: studentDivision,
+        classId:existingClass._id
       });
-      console.log("all the function where completed", result);
+      const addClass = await Class.findOneAndUpdate({_id:existingClass._id},{ $push: { students: result._id } },)
       if (result) {
         res.status(200).json({ msg: "Student Created", student: result });
       } else {
@@ -260,7 +263,7 @@ const addNewStudent = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.status(500).json({ msg: "Students not found" });
+    res.status(500).json({ msg: "Students not found last" });
   }
 };
 
@@ -289,7 +292,7 @@ const getStudents = async (req, res) => {
         .status(200)
         .json({ msg: "succesfull", students: students, teacher: teacher });
     } else {
-      res.status(500).json({ msg: "students not found" });
+      res.status(500).json({ msg: "students not foundd" });
     }
   } catch (error) {
     console.log(error);
@@ -369,11 +372,12 @@ const makeComplaint = async (req, res) => {
     });
     if (existingStudent) {
       if (teacher) {
-        const respone = await Complaint.create({
+        const result = await Complaint.create({
           studentId: existingStudent._id,
           teacherId: teacher._id,
           complaint: complaint,
         });
+        const respone = await Complaint.findOne({_id:result?._id}).populate("studentId").populate("teacherId")
         res.status(200).json({ msg: "Complaint Created", complaint: respone });
       } else {
         res.status(500).json({ msg: "Teacher Not Found" });
@@ -563,7 +567,7 @@ const UpdateReviews = async (req, res) => {
     console.log(error);
     res.status(500).json({ msg: error.message });
   }
-};
+}
 
 /* teacher controller function for getting all the existing exams, so the
  teacher teacher could eid the student marks 
@@ -776,6 +780,90 @@ const GetChatMember = async( req,res)=>{
 }
 
 
+/* for get the all the chat members*/
+const GetMonthlyAttendance = async( req,res)=>{
+  const date = new Date();
+  const currentMonth = date.toLocaleString("default", { month: "long" }).slice(0,3);
+  const {id} = req?.user
+  try{
+    const teacher = await Teacher.findOne({_id:id}).populate("assignedClass","_id")
+
+    if(teacher){
+       const response = await Attandence.find({classId:teacher?.assignedClass?._id})
+       const count = response?.length
+        const attendance = await Attandence.aggregate([
+          {
+            $match:{classId:teacher.assignedClass._id, "attandence.day": {
+              $regex: currentMonth
+            }}
+          },
+          
+          {$unwind:"$attandence"},
+          {
+            $group:{
+              _id:"$attandence.status",
+              count:{$sum:1}
+            }
+          }
+        ])
+        if(attendance && attendance.length > 0){
+          res.status(200).json({attendance,count})
+        }else{
+          res.json({msg:"attendance not found"})
+        }
+    }else{
+      res.json({ms:"teracher Not found"})
+    }
+  }catch(error){
+    console.log(error)
+    res.status(500).json({msg:error.message})
+  }
+}
+
+
+
+/* for get the all the chat members*/
+const GetAnnualAttendance = async( req,res)=>{
+  const date = new Date();
+  const currentYeart = date.getFullYear();
+  const currentYear = currentYeart.toString()
+  console.log(currentYear);
+  const {id} = req?.user
+  try{
+    const teacher = await Teacher.findOne({_id:id}).populate("assignedClass","_id")
+    if(teacher){
+       const response = await Attandence.find({classId:teacher?.assignedClass?._id})
+       const count = response?.length
+        const attendance = await Attandence.aggregate([
+          {
+            $match:{classId:teacher.assignedClass._id, "attandence.day": {
+              $regex: currentYear
+            }}
+          },
+          
+          {$unwind:"$attandence"},
+          {
+            $group:{
+              _id:"$attandence.status",
+              count:{$sum:1}
+            }
+          }
+        ])
+        if(attendance && attendance.length > 0){
+          res.status(200).json({attendance,count})
+        }else{
+          res.json({msg:"attendance not found"})
+        }
+    }else{
+      res.json({ms:"teracher Not found"})
+    }
+  }catch(error){
+    console.log(error)
+    res.status(500).json({msg:error.message})
+  }
+}
+
+
 
 module.exports = {
   // teacherRegister,
@@ -784,7 +872,11 @@ module.exports = {
   createWeeklyTask,
   getWeeklyTask,
   getStudents,
+
   markStudentAttadence,
+  GetMonthlyAttendance,
+  GetAnnualAttendance,
+
   makeComplaint,
   GetComplaints,
   UpdateComplaints,

@@ -16,6 +16,10 @@ const TeacherSchema = mongoose.Schema({
         type:Boolean,
         default:false
     },
+    assignedClass:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"classes"
+    },
     class:{
         type:Number
     },

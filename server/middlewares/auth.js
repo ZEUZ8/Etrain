@@ -27,6 +27,7 @@ const verifyTokenAdmin = async (req, res, next) => {
 };
 
 const verifyTokenTeacher = async (req, res, next) => {
+  console.log('teacher middleware')
     try {
       let token = req.headers["authorization"];
       if (!token) {
@@ -45,7 +46,7 @@ const verifyTokenTeacher = async (req, res, next) => {
         return res.status(403).send("Access Denied");
       }
     } catch (err) {
-      console.log(err.message)
+      console.log(err,'the ereoer')
       res.status(500).json({ msg:err.message });
     }
 };
@@ -72,7 +73,7 @@ const verifyStudent = async (req, res, next) => {
         return res.status(403).send("Access Denied");
       }
     } catch (err) {
-      console.log("error occured in student middleware")
+      console.log("error occured in student middleware",err)
       res.status(500).json({ msg:err.message });
     }
 };

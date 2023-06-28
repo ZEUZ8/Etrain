@@ -18,7 +18,7 @@ import StudentCreateComplaint from "./StudentCreateComplaint";
 
 const DataShowcase = ({ page }) => {
   const navigate = useNavigate();
-  const studentData = useSelector((state) => state.studentReducer.student);
+  const studentData = useSelector((state) => state.studentReducer);
   const token = studentData?.token;
 
   const [loading, setLoading] = useState(false);
@@ -143,7 +143,7 @@ const DataShowcase = ({ page }) => {
         )}
         {isOn && (
             <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
-              <StudentCreateComplaint setIson={setIsOn} />
+              <StudentCreateComplaint setIsOn={setIsOn} />
             </div>
         )}
         <div className="flex justify-center flex-col md:flex-row">

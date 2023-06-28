@@ -19,7 +19,7 @@ import { complaintValidation } from "../../../validations/teachers/conplaintVali
 const TeacherComplaints = ({ page, makeSubmit }) => {
   const requiredPage = page;
 
-  const teacherData = useSelector((state) => state.teacherReducer.teacher);
+  const teacherData = useSelector((state) => state.teacherReducer);
   const token = teacherData?.token;
 
   const [loading, setLoading] = useState(false);
@@ -57,8 +57,6 @@ const TeacherComplaints = ({ page, makeSubmit }) => {
   const handleEdit = async (value) => {
     try {
       const response = await EditComplaint(value, token);
-      console.log(response, "res");
-      console.log(data, "cosningthe a");
       if (response.msg === "Complaint Updated") {
         let result = data.map((value) => {
           let val = { ...value };
@@ -80,13 +78,12 @@ const TeacherComplaints = ({ page, makeSubmit }) => {
   const onSubmit = async (values) => {
     try {
       const response = await makeSubmit(values, token);
+      console.log(response,'the response')
       if (
         response.msg === "Complaint Created" ||
         response.msg === "Review Created"
       ) {
-        toast.success(response.msg);
-        console.log(data,'   consoling the data for checking the items arranged properly')
-        console.log(response.complaint,"   the result in the reques")
+        toast.success(response?.msg);
         setData([...data,response?.complaint])
       } else {
         toast.error(response.msg);
@@ -321,7 +318,7 @@ const TeacherComplaints = ({ page, makeSubmit }) => {
             </div>
             {loading && <Loader />}
             <div className="grid grid-cols-2">
-              {dataToDisplay.map((data, index) => {
+              {dataToDisplay?.map((data, index) => {
                 return (
                   <a
                     key={index}
@@ -352,7 +349,7 @@ const TeacherComplaints = ({ page, makeSubmit }) => {
 
                       <p class="mt-2 hidden text-sm sm:block truncate max-w-sm">
                         by : {data?.teacherId?.name}
-                        {`(${data.teacherId.subject})`}
+                        {`(${data?.teacherId?.subject})`}
                       </p>
                     </div>
 

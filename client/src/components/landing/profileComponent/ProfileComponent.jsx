@@ -16,16 +16,16 @@ import ProfileEditPrincipal from "./ProfileEidtPrincipal";
 import ProfileEditStudent from "./ProfileEditStudent";
 
 const ProfileComponent = ({ user }) => {
-  const teacherData = useSelector((state) => state.teacherReducer.teacher);
+  const teacherData = useSelector((state) => state.teacherReducer);
   const teacherToken = teacherData?.token;
   const teacherId = teacherData?.id;
 
-  const studentData = useSelector((state) => state.studentReducer.student);
+  const studentData = useSelector((state) => state.studentReducer);
   const studentToken = studentData?.token;
   const studentId = studentData?.id;
 
   const principalData = useSelector(
-    (state) => state.principalReducer.principal
+    (state) => state.principalReducer
   );
   const principalToken = principalData?.token;
   const principalId = principalToken?.id;

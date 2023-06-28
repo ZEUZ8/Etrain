@@ -25,6 +25,10 @@ const StudentSchema = mongoose.Schema({
         type:String,
         required:true
     },
+    classId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"classes"
+    },
     address:{
         type:String
     },

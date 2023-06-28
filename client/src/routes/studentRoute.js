@@ -1,7 +1,7 @@
 import React from "react"
 import {Routes,Route} from "react-router-dom"
 
-import Home from "../components/landing/home/Home";
+import Home from "../components/landing/home/home"
 import SignUp from "../components/students/signUp/SignUp";
 import Attendence from "../components/students/attendence/Attendence"
 
@@ -18,9 +18,7 @@ function StudentRoutes(){
         <div>
             <Routes>
                 <Route path="/" element={< Home />}></Route>
-                {/* <Route path="/signup" element={< SignUp />}></Route> */}
                 <Route path="/login" element={< Login userType="student" />}></Route>
-                {/* <Route path="/otp" element={< OTPverification />}></Route> */}
                 <Route path="/profile" element={< StudentProfile user="student" />}></Route>
                 <Route path="/attendence" element={< Attendence />}></Route>
                 <Route path="/timetable" element={< StudentTimeTable />}></Route>

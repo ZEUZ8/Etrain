@@ -88,12 +88,12 @@ const TeacherComplaintEdit = ({ setIson, requiredPage ,currentData,handleEdit}) 
                       type="text"
                       placeholder="Student Name"
                       name="studentName"
-                        value={values.studentName}
+                        value={values?.studentName}
                         onChange={handleChange}
                         onBlur={handleBlur}
                     />
-                    {errors.studentName && touched.studentName && (
-                        <p className="text-red-600">{errors.studentName}</p>
+                    {errors?.studentName && touched?.studentName && (
+                        <p className="text-red-600">{errors?.studentName}</p>
                         )}
                   </div>
 
@@ -112,12 +112,12 @@ const TeacherComplaintEdit = ({ setIson, requiredPage ,currentData,handleEdit}) 
                         type="number"
                         placeholder="Student Class"
                         name="studentClass"
-                        value={values.studentClass}
+                        value={values?.studentClass}
                         onChange={handleChange}
                         onBlur={handleBlur}
                       />
-                      {errors.studentClass && touched.studentClass && (
-                            <p className="text-red-600">{errors.studentClass}</p>
+                      {errors?.studentClass && touched?.studentClass && (
+                            <p className="text-red-600">{errors?.studentClass}</p>
                         )}
                     </div>
 
@@ -135,12 +135,12 @@ const TeacherComplaintEdit = ({ setIson, requiredPage ,currentData,handleEdit}) 
                         type="text"
                         placeholder="Student Division"
                         name="studentDivision"
-                        value={values.studentDivision}
+                        value={values?.studentDivision}
                         onChange={handleChange}
                         onBlur={handleBlur}
                       />
-                      {errors.studentDivision && touched.studentDivision && (
-                            <p className="text-red-600">{errors.studentDivision}</p>
+                      {errors?.studentDivision && touched?.studentDivision && (
+                            <p className="text-red-600">{errors?.studentDivision}</p>
                         )}
                     </div>
                   </div>
@@ -160,11 +160,11 @@ const TeacherComplaintEdit = ({ setIson, requiredPage ,currentData,handleEdit}) 
                         type="text"
                         placeholder="Teacher Name"
                         name="teacherName"
-                        value={values.teacherName}
+                        value={values?.teacherName}
                         onChange={handleChange}
                         onBlur={handleBlur}
                       />
-                      {errors.teacherName && touched.teacherName && (
+                      {errors?.teacherName && touched?.teacherName && (
                             <p className="text-red-600">{errors.teacherName}</p>
                         )}
                     </div>
@@ -183,12 +183,12 @@ const TeacherComplaintEdit = ({ setIson, requiredPage ,currentData,handleEdit}) 
                         type="text"
                         placeholder="Teacher Subject"
                         name="teacherSubject"
-                        value={values.teacherSubject}
+                        value={values?.teacherSubject}
                         onChange={handleChange}
                         onBlur={handleBlur}
                       />
-                      {errors.teacherSubject && touched.teacherSubject && (
-                            <p className="text-red-600">{errors.teacherSubject}</p>
+                      {errors?.teacherSubject && touched?.teacherSubject && (
+                            <p className="text-red-600">{errors?.teacherSubject}</p>
                         )}
                     </div>
                   </div>
@@ -210,7 +210,7 @@ const TeacherComplaintEdit = ({ setIson, requiredPage ,currentData,handleEdit}) 
                           : `Write the Review`
                       }
                       name="complaint"
-                        value={values.complaint}
+                        value={values?.complaint}
                         onChange={handleChange}
                         onBlur={handleBlur}
                     ></textarea>

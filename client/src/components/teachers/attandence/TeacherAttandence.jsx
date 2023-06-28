@@ -10,7 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 const TeacherAttandence = () => {
 
-    const teacherData = useSelector(state => state.teacherReducer.teacher)
+    const teacherData = useSelector(state => state.teacherReducer)
     const token = teacherData?.token
 
     const [students,setStudents] = useState([])

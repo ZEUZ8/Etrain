@@ -20,17 +20,15 @@ import Conversation from "./Conversation";
 import Message from "./Message";
 
 const Chat = ({ user }) => {
-  const pricnipalData = useSelector(
-    (state) => state.principalReducer.principal
-  );
+  const pricnipalData = useSelector((state) => state.principalReducer);
   const principalToken = pricnipalData?.token;
   const principalId = pricnipalData?.id;
 
-  const teacherData = useSelector((state) => state.teacherReducer.teacher);
+  const teacherData = useSelector((state) => state.teacherReducer);
   const teacherToken = teacherData?.token;
   const teacherId = teacherData?.id;
 
-  const studentData = useSelector((state) => state.studentReducer.student);
+  const studentData = useSelector((state) => state.studentReducer);
   const studentToken = studentData?.token;
   const studentId = studentData?.id;
 
@@ -39,6 +37,7 @@ const Chat = ({ user }) => {
   const [messages, setMessages] = useState([]);
   const [newMessages, setNewMessages] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState(null);
+  
   const scrollRef = useRef();
   const socket = useRef();
 
@@ -62,18 +61,18 @@ const Chat = ({ user }) => {
     socket.current.on("getUsers", (users) => {
       // console.log(users,'the users')
     });
-    console.log(currentUser,currentUser.id,' all the users in the console')
+    console.log(currentUser, currentUser.id, " all the users in the console");
   }, [currentUser]);
 
   useEffect(() => {
     socket.current.on("getMessage", (res) => {
-      if(res.receiverId === currentUser.id){
+      if (res.receiverId === currentUser.id) {
         setArrivalMessage({
           sender: res.senderId,
-        text: res.text,
-        createdAt: Date.now(),
-      });
-    }
+          text: res.text,
+          createdAt: Date.now(),
+        });
+      }
     });
     console.log(arrivalMessage, "the messages");
   });
@@ -175,8 +174,8 @@ const Chat = ({ user }) => {
             </div> */}
             <img
               class="w-10 h-10 shadow-2xl rounded-full"
-              src="img/girl.jpg"
-              alt="Rounded avatar"
+              src="/img/girl.jpg"
+              alt="Profile"
             ></img>
             <div className="px-3"></div>
           </div>
@@ -196,35 +195,47 @@ const Chat = ({ user }) => {
               ))}
             </div>
 
-            <div class="w-full px-5 flex flex-col justify-between overflow-y-auto h-[39rem]">
-              <div class="flex flex-col mt-5">
-                {messages?.map((m) => {
-                  return (
-                    <React.Fragment key={m._id}>
-                      <Message
-                        message={m}
-                        owned={m.sender === currentUser.id}
-                      />
-                    </React.Fragment>
-                  );
-                })}
-              </div>
-              <div class="py-5 flex">
-                <input
-                  class="w-full bg-gray-300 py-5 px-3 rounded-xl"
-                  type="text"
-                  placeholder="type your message here..."
-                  ref={scrollRef}
-                  value={newMessages}
-                  onChange={(e) => setNewMessages(e.target.value)}
-                />
-                <button
-                  className="m-2 bg-red-300 rounded-lg"
-                  onClick={handleSubmit}
-                >
-                  send
-                </button>
-              </div>
+            <div class={`w-full px-5 flex flex-col justify-between ${currentChat && "overflow-y-auto h-[39rem]"  }`}>
+              {currentChat ? (
+                <>
+                  <div class="flex flex-col mt-5">
+                    {messages?.map((m) => {
+                      return (
+                        <React.Fragment key={m._id}>
+                          <Message
+                            message={m}
+                            owned={m.sender === currentUser.id}
+                          />
+                        </React.Fragment>
+                      );
+                    })}
+                  </div>
+                  <div class="py-5 flex">
+                    <input
+                      class="w-full bg-gray-300 py-5 px-3 rounded-xl"
+                      type="text"
+                      placeholder="type your message here..."
+                      ref={scrollRef}
+                      value={newMessages}
+                      onChange={(e) => setNewMessages(e.target.value)}
+                    />
+                    <button
+                      className="m-2 bg-red-300 rounded-lg"
+                      onClick={handleSubmit}
+                    >
+                      send
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <div className="flex justify-center items-center align-middle ">
+                  <img
+                    src="/img/chat.jpg"
+                    className="h-fit w-fit"
+                    alt="userpng"
+                  />
+                </div>
+              )}
             </div>
             {/* <div class="w-2/5 border-l-2 px-5">
               <div class="flex flex-col">

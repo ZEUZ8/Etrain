@@ -9,7 +9,9 @@ const principalSlice = createSlice({
     },
     reducers:{
         principalLogin:(state,action)=>{
-            state.principal = action.payload
+            state.token = action.payload.token
+            state.user = action.payload.user
+            state.id = action.payload.id
         },
         principalLogout:(state)=>{
             state.principal = {

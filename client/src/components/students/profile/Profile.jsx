@@ -4,10 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Calendar from "react-calendar";
 import ReactPaginate from "react-paginate";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
-import { GetAttandence } from "../../../axios/services/studentServices/studentServices";
-import Calendar from "react-calendar";
+import { GetAttandence, GetMonthlyAttendance } from "../../../axios/services/studentServices/studentServices";
+import { StudentPieGraph } from "./StudentGraph";
 // import 'react-calendar/dist/Calendar.css'
 import './calendar.css'
 
@@ -16,25 +17,30 @@ import Loader from "../../landing/loader/Loader";
 const Profile = () => {
   const navigate = useNavigate();
 
-  const studentData = useSelector((state) => state.studentReducer.student);
+  const studentData = useSelector((state) => state.studentReducer);
   const token = studentData?.token;
+  const id = studentData?.id
 
-  const [currentMonth, setCurrentMonth] = useState("");
+  const errMsgs = ["jwt expired","Access Denied","jwt malformed"]
+
   const [studentPresents, setStudentPresents] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [monthlyAttendance,setMonthlyAttendance] = useState([])
+  const [month,setMont] = useState('')
+  
   const taskPerPage = 30;
 
+
   useEffect(() => {
-    setLoading(true);
-    const date = new Date();
-    const month = date.toLocaleString("default", { month: "long" });
-    setCurrentMonth(month);
     const fetchData = async () => {
+      const date = new Date()
+      const currentMonth = date.toLocaleString("default", { month: "long" }).slice(0,3);
+      setMont(currentMonth)
+      setLoading(true);
       try {
         const response = await GetAttandence(token);
-        console.log(response)
         if (
           response.msg == "Access Denied" ||
           response.msg === "jwt malformed" ||
@@ -42,8 +48,8 @@ const Profile = () => {
         ) {
           navigate("/login");
         } else if (response.msg === "succesfull") {
-          if (response?.presents.attandence) {
-            setStudentPresents(response.presents.attandence);
+          if (response?.presents?.attandence) {
+            setStudentPresents(response?.presents?.attandence);
           } else {
             toast.error("Don't have marked attendance");
           }
@@ -51,7 +57,6 @@ const Profile = () => {
           toast.error(response.msg);
         }
       } catch (error) {
-        toast.error(error.msg);
         console.log(error);
       }
       setLoading(false);
@@ -59,22 +64,40 @@ const Profile = () => {
     fetchData();
   }, []);
 
+  useEffect(()=>{
+    const fetchData = async()=>{
+      setLoading(true)
+      try{
+        const response = await GetMonthlyAttendance(token)
+        if(errMsgs.some((msg)=> msg === response.msg || response.message)){
+          navigate('/login')
+        }else if(response && response.length>0){
+          setMonthlyAttendance(response)
+        }
+      }catch(error){
+        console.log(error)
+      }
+      setLoading(false)
+    }
+    fetchData()
+  },[])
+
+
 
   const isAbsent = ({date})=>{
-
     const formattedDate = date.toDateString()
     const present = studentPresents.find((attandence)=>{
-      const attendanceDate = new Date(attandence.day).toDateString()
+      const attendanceDate = new Date(attandence?.day).toDateString()
       return attendanceDate === formattedDate
     })
 
     if (present) {
-      if (present.status === "absent") {
+      if (present?.status === "absent") {
         return "absent";
-      } else if (present.status === "present") {
+      } else if (present?.status === "present") {
         return "present";
-      } else if (present.status === "holiday") {
-        return "holiday";
+      } else if (present?.status === "holliday") {
+        return "holliday";
       }
     }
   }
@@ -94,30 +117,36 @@ const Profile = () => {
     <div>
       <div>
         <ToastContainer />
+        {loading && (
+            <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-gray-400 bg-opacity-50 z-50">
+              <Loader/>
+            </div>
+        )}
         <div class="p-4 sm:ml-64">
+
           <div class="p-4  border-gray-200 rounded-lg dark:border-gray-700">
-            {/* <div class="grid grid-cols-3 gap-4 mb-4">
-              <div class="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
-                <p class="text-2xl text-gray-400 dark:text-gray-500">+</p>
+
+            <div class="grid grid-cols-2 gap-4 mb-4">
+              <div class="flex items-center justify-center  rounded  ">
+                <p class="text-xl underline underline-offset-4 text-gray-400 dark:text-gray-500">Attendance of the Year</p>
               </div>
-              <div class="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
-                <p class="text-2xl text-gray-400 dark:text-gray-500">+</p>
+            
+              <div class="flex items-center justify-center  rounded  ">
+                <p class="text-xl text-gray-400 underline underline-offset-4 dark:text-gray-500">Attendance of the {month}</p>
               </div>
-              <div class="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
-                <p class="text-2xl text-gray-400 dark:text-gray-500">+</p>
-              </div>
-            </div> */}
+            </div>
             {/* <div class="flex items-center justify-center h-48 mb-4 rounded bg-gray-50 dark:bg-gray-800">
               <p class="text-2xl text-gray-400 dark:text-gray-500">+</p>
             </div> */}
             <div class="grid md:grid-cols-2 gap-4 mb-4">
-              <div class="flex items-center justify-center rounded-[1rem]  bg-gray-50 h-[30rem] dark:bg-sky-100">
-                <p class="text-2xl text-gray-400 dark:text-gray-500">GRAPH</p>
+              <div class="flex items-center justify-center rounded-[1rem]  bg-gray-50 h-[30rem] dark:bg-sky-100 p-5">
+                
+                <StudentPieGraph monthlyAttendance={monthlyAttendance}/>
               </div>
 
               <div class="w-full flex-col flex justify-start p-10  items-center rounded-2xl bg-gray-50 h-[30rem] dark:bg-sky-100">
                 <div className="inline-block m-10 underline underline-offset-4">
-                  Attendance 
+                  {month} 
                 </div>
                 <div className=" bg-white rounded-xl p-3 w-fit">
                   <Calendar className="h-fit w-fit" value={selectedDate} tileClassName={isAbsent} onChange={setSelectedDate} />

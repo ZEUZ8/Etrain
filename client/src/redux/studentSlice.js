@@ -9,7 +9,9 @@ const studentSlice = createSlice({
     },
     reducers:{
         userLogin:(state,action)=>{
-            state.student = action.payload
+            state.token = action.payload.token
+            state.user = action.payload.user
+            state.id = action.payload.id
         },
         userLogOut:(state)=>{
             state.student = {

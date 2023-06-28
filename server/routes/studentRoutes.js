@@ -4,7 +4,10 @@ const router = Router();
 const  {
     studentLogin,
     otpVerification,
+    
     getStudentsAttandence,
+    GetMonthlyAttendance,
+
     GetReviews,
     GetComplaints,
     GetExams,
@@ -35,6 +38,8 @@ router.post("/login",studentLogin)
 router.post("/verify/:id",otpVerification)
 
 router.get("/attandence",verifyStudent,getStudentsAttandence)
+
+router.get('/monthlyAttendance',verifyStudent,GetMonthlyAttendance)
 
 router.get('/reviews',verifyStudent,GetReviews)
 

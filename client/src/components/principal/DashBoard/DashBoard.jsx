@@ -9,7 +9,7 @@ import { PrincipalAllAttendance } from "../../../axios/services/principalService
 
 const DashBoard = () => {
   const principalData = useSelector(
-    (state) => state.principalReducer.principal
+    (state) => state.principalReducer
   );
   const token = principalData?.token;
 

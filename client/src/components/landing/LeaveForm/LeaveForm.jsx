@@ -20,10 +20,10 @@ import {
 } from "../../../axios/services/studentServices/studentServices";
 
 const LeaveForm = ({ user }) => {
-  const teacherDate = useSelector((state) => state.teacherReducer.teacher);
+  const teacherDate = useSelector((state) => state.teacherReducer);
   const teacherToken = teacherDate?.token;
 
-  const studentData = useSelector((state) => state.studentReducer.student);
+  const studentData = useSelector((state) => state.studentReducer);
   const studentToken = studentData?.token;
 
   const navigate = useNavigate();

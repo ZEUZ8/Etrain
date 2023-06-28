@@ -14,7 +14,7 @@ import {
 } from "../../../axios/services/TeacherSrevices/teacherServices";
 
 const TeacherStudetns = () => {
-  const teacherData = useSelector((state) => state.teacherReducer.teacher);
+  const teacherData = useSelector((state) => state.teacherReducer);
   const token = teacherData?.token;
 
   const navigate = useNavigate();

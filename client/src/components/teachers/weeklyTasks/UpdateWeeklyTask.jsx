@@ -2,28 +2,28 @@ import React from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { useFormik } from "formik";
 
-import Loader from "../../landing/loader/Loader";
+import { weaklyTaskValidation } from "../../../validations/teachers/weeklyTaskValidation";
 
-import { addTeacherValidation } from "../../../validations/principal/addTeacherValidation";
-
-const StudentCreateComplaint = ({ setIsOn, handleAddTeacherSubmit,loading}) => {
+const UpdateWeeklyTask = ({ setIsOn, currentTask }) => {
   const handleClick = () => {
-    setIsOn(false)
+    setIsOn(false);
   };
 
 
   const onSubmit = async (values) => {
-    handleAddTeacherSubmit(values)
+    // handleEdit(values)
+    console.log(values)
   };
 
   const { values, errors, touched, handleChange, handleSubmit, handleBlur } =
     useFormik({
       initialValues: {
-        teacherName: "",
-        teacherSubject: "",
-        teacherEmail:""
+        taskName:currentTask?.taskName,
+        startDate:currentTask?.startDate,
+        endDate:currentTask?.endDate,
+        taskDiscription:currentTask?.taskDiscription
       },
-      validationSchema: addTeacherValidation,
+      validationSchema: weaklyTaskValidation,
       onSubmit,
     });
 
@@ -31,12 +31,12 @@ const StudentCreateComplaint = ({ setIsOn, handleAddTeacherSubmit,loading}) => {
   return (
     <div>
         <div className="flex justify-center flex-col md:flex-row">
-          <div className="flex w-max bg-violet-50 m-2 items-center justify-center  rounded-3xl shadow-2xl">
+          <div className="flex w-max bg-gray-100 m-2 items-center justify-center  rounded-3xl shadow-2xl">
             <div className="h-full w-max m-10">
-                <div className="flex  justify-between items-center mt-5">
+                <div className="flex  justify-between items-center">
                      <div>
-                        <p className="text-center text-xl  m-3 dark:text underline underline-offset-4">
-                            Make Complaint
+                        <p className="text-center text-xl  m-5 dark:text underline underline-offset-4">
+                            Edit Weekly Task
                         </p>
 
                     </div>
@@ -63,58 +63,60 @@ const StudentCreateComplaint = ({ setIsOn, handleAddTeacherSubmit,loading}) => {
                             <span className="sr-only">Close modal</span>
                         </button>
                     </div>
+             
+
                 </div>
               <div className="w-full pt-10">
-                <form
-                  className="bg-white shadow-md  px-8 pt-6 pb-10  rounded-xl"
-                    onSubmit={handleSubmit}
+              <form
+                  className="bg-white shadow-md  px-8 pt-6 pb-10 mb-10 rounded-xl"
+                  onSubmit={handleSubmit}
                 >
                   <div className="mb-6">
                     <label
                       className="block text-gray-700 text-sm font-bold mb-2"
                       htmlFor="username"
                     >
-                      Teacher Name
+                      Task Name
                     </label>
                     <input
                       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      id="teacherName"
+                      id="taskName"
                       type="text"
-                      placeholder="Teacher Name"
-                      name="teacherName"
-                        value={values.teacherName}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
+                      placeholder="taskName"
+                      name="taskName"
+                      value={values.taskName}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
                     />
-                    {errors.teacherName && touched.teacherName && (
-                        <p className="text-red-600">{errors.teacherName}</p>
-                        )}
+                      {errors?.taskName && touched?.taskName && (
+                            <p className='text-red-600'>{errors?.taskName}</p>
+                          )}
                   </div>
 
-                  
+        
 
                   <div className="flex">
+
                     <div className="mb-5 flex-1">
                       <label
                         className="block text-gray-700 text-sm font-bold mb-2"
                         htmlFor="startDate"
                       >
-                        Teacher Email
+                        Start Date
                       </label>
 
                       <input
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="teacherEmail"
-                        type="email"
-                        placeholder="Teacher Email"
-                        name="teacherEmail"
-                        value={values.teacherEmail}
+                        id="date"
+                        type="date"
+                        name="startDate"
+                        value={values.startDate}
                         onChange={handleChange}
                         onBlur={handleBlur}
                       />
-                      {errors.teacherEmail && touched.teacherEmail && (
-                            <p className="text-red-600">{errors.teacherEmail}</p>
-                        )}
+                      {errors.startDate && touched.startDate && (
+                        <p className="text-red-600">{errors.startDate}</p>
+                      )}
                     </div>
 
                     <div className="mb-5 flex-1 ml-3">
@@ -122,40 +124,60 @@ const StudentCreateComplaint = ({ setIsOn, handleAddTeacherSubmit,loading}) => {
                         className="block text-gray-700 text-sm font-bold mb-2"
                         htmlFor="endDate"
                       >
-                        Teacher Subject
+                        End Date
                       </label>
 
                       <input
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="TeacherSubject"
-                        type="text"
-                        placeholder="Teacher Subject"
-                        name="teacherSubject"
-                        value={values.teacherSubject}
+                        id="date"
+                        type="date"
+                        name="endDate"
+                        value={values.endDate}
                         onChange={handleChange}
                         onBlur={handleBlur}
                       />
-                      {errors.teacherSubject && touched.teacherSubject && (
-                            <p className="text-red-600">{errors.teacherSubject}</p>
-                        )}
+                        {errors.endDate && touched.endDate && (
+                              <p className='text-red-600'>{errors.endDate}</p>
+                            )}
                     </div>
                   </div>
 
+                    <div className="mb-3">
+                      <label
+                        for="message"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text"
+                      >
+                        Task Discription
+                      </label>
+                      <textarea
+                        id="discription"
+                        rows="4"
+                        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-200 dark:border-gray-600 dark:placeholder-gray-400 dark:text dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="Write Discription"
+                        name="taskDiscription"
+                        value={values.taskDiscription}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      ></textarea>
+                        {errors.taskDiscription && touched.taskDiscription && (
+                              <p className='text-red-600'>{errors.taskDiscription}</p>
+                            )}
+                    </div>
+
+                
 
                   <div className="flex items-center justify-center">
-                  {loading? <Loader/> : <button
-                      className="bg-fuchsia-200 hover:bg-fuchsia-300 w-full mt-3  font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    <button
+                      className="bg-violet-400 hover:bg-violet-300 w-full mt-3 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                       type="submit"
                     >
-                      Create
-                    </button>}
+                      Update
+                    </button>
                     {/* <a className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="#">
-                        Forgot Password?
+                      Forgot Password?
                     </a> */}
                   </div>
                 </form>
-                <p className="text-center pt-3">this complaint you creating will be annonymouse</p>
-
               </div>
             </div>
           </div>
@@ -165,4 +187,4 @@ const StudentCreateComplaint = ({ setIsOn, handleAddTeacherSubmit,loading}) => {
   );
 };
 
-export default StudentCreateComplaint;
+export default UpdateWeeklyTask;

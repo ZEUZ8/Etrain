@@ -17,7 +17,7 @@ import Loader from "../../landing/loader/Loader"
 
 const PrincipalTeachers = () => {
 
-  const principalData = useSelector(state => state.principalReducer.principal)
+  const principalData = useSelector(state => state.principalReducer)
   const token = principalData?.token
   const navigate = useNavigate()
   const [ison,setIson] = useState(false)

@@ -500,6 +500,50 @@ export const TeacherChatMember = async(token,id)=>{
     }
 }
 
+/* service function for getting the students monthly attendence for graphical representation for teacher 
+*/
+export const GetMonthlyAttendance = async(token)=>{
+    console.log("entered in monthlyAttendance finding function")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosTeacherInstance.get(`/monthlyAttendance`,config)
+        return(response.data)
+    }catch(error){
+        console.log(error)
+        return(error.response.data)
+    }
+}
+
+/* service function for getting the students monthly attendence for graphical representation for teacher 
+*/
+export const GetAnnualAttendance = async(token)=>{
+    console.log("entered in AnnualAttendance finding function in the teacher")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosTeacherInstance.get("/annualAttendance",config)
+        return(response.data)
+    }catch(error){
+        console.log(error)
+        return(error.response.data)
+    }
+}
+
+
+
+
+
 
 
 

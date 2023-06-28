@@ -3,23 +3,33 @@ import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import './home.css'
 
-const Home = ({userType}) => {
-  console.log(userType)
-  const data = useSelector(state => state.studentReducer)
-  console.log(data)
+const Home = () => {
+
+  const studentData = useSelector(state => state.studentReducer)
+  const teacherData = useSelector(state => state.teacherReducer)
+  const principalData = useSelector(state => state.principalReducer)
+  console.log(teacherData,'the teacher data')
+  console.log(principalData,'princiapal data')
+  console.log(studentData,'student data')
+
+  const currentUser = studentData ? studentData : teacherData ? teacherData : principalData
+  console.log(currentUser,'current user in the page')
   const navigate = useNavigate()
+
+
   const profileClick = ()=>{
+    if(currentUser){
+      if(currentUser?.user === 'teacher'){
+        navigate("/teacher")
 
-    if(data.student.token){
-      if(data.student.user === "student"){
+      }else if(currentUser?.user === "student"){
+
         navigate("/profile")
-      }else{
-        navigate("/login")
-      }
-    }else{
-      navigate("/signup")
-    }
+      }else if(currentUser?.user === "principal"){
 
+        navigate("/principal")
+      }
+    }
   }
 
   return (
@@ -78,14 +88,14 @@ const Home = ({userType}) => {
                 his void unto last session for bite. Set have great you'll male grass  yielding yielding man</p>
                 <div className='flex m-5'>
                   <div className='profile bg-[#FF663B] w-[8rem] rounded-full h-[3rem] flex items-center justify-center '>
-                        <a href={data?.student?.token?`/`:`/signup`} class=" py-2 pl-3 pr-4 text-white-900  text-white 
+                        <a  class=" py-2 pl-3 pr-4 text-white-900  text-white 
                         md:border-0  md:p-0 
-                        flex justify-center">Create</a>
+                        flex justify-center">Get Started</a>
                   </div>
                   <div className='profile border-2 border-[black] w-[8rem] rounded-full h-[3rem] flex items-center justify-center ml-4'>
-                      <a href={data?.student?.token?`/`:`/login`} class=" py-2 pl-3 pr-4 text-white-900  text-[black]
+                      <a  class=" py-2 pl-3 pr-4 text-white-900  text-[black]
                       md:border-0  md:p-0 
-                      flex justify-center">Get Started</a>
+                      flex justify-center">View More</a>
                   </div>
                 </div>
             </div>

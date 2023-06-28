@@ -63,7 +63,7 @@
     background: #6f48eb;
     color: white;
    } */
-   .react-calendar--selectRange .react-calendar__tile--hover {
+   /* .react-calendar--selectRange .react-calendar__tile--hover {
     background-color: #f8f8fa;
    }
    .react-calendar__tile--range {
@@ -86,18 +86,20 @@
     border-bottom-right-radius: 6px;
     background: #6f48eb;
     color: white;
-   }
+   } */
 
     .present{
-    background-color: green;
-    color: white;
+    background-color: rgb(97, 234, 97);
+    border-radius: .60rem;
+
   }
   .absent{
-    background-color: #d10000;
-    border-radius: .40rem;
+    background-color: #e62626;
+    border-radius: .60rem;
     color: white;
   }
   .holliday{
-    background-color: #6f48eb;
+    background-color: #7e5de9;
     color: white;
+    border-radius: .60rem;
   }

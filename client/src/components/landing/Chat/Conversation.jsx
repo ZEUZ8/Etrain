@@ -38,7 +38,7 @@ const Conversation = ({conversation,currentUser}) => {
         </div>
         <div class="w-full">
           <div class="text-lg font-semibold">{user?.name}</div>
-          <span class="text-gray-500">Pick me at 9:00 Am</span>
+          {/* <span class="text-gray-500">Pick me at 9:00 Am</span> */}
         </div>
       </div>
     </>

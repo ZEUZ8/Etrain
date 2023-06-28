@@ -15,7 +15,7 @@ import PrinciplEditExam from "./PrinciplEditExam";
 const PrincipalExam = () => {
 
   const pricnipalData = useSelector(
-    (state) => state.principalReducer.principal
+    (state) => state.principalReducer
   );
   const token = pricnipalData?.token;
 

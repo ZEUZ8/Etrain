@@ -11,7 +11,7 @@ import { GetLeaves } from "../../../axios/services/principalServices/principlaSe
 
 const PrincipalLeave = () => {
   const principalData = useSelector(
-    (state) => state.principalReducer.principal
+    (state) => state.principalReducer
   );
   const token = principalData?.token;
 

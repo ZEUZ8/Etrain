@@ -9,6 +9,7 @@ const Leave = require("../models/leave");
 const Student = require("../models/students");
 const Attandence = require("../models/attandence");
 
+
 //the config contian the password and the user for sending the mail
 let config = {
   service: "gmail",
@@ -146,7 +147,8 @@ const updateTeachers = async (req,res)=>{
     const {className,division,teacherId} = req.body
     const existingClass = await Class.findOne({className:className,division:division})
     if(existingClass){
-      const teacher = await Teacher.findOneAndUpdate({_id:teacherId},{class:existingClass.className,division:existingClass.division})
+      const teacher = await Teacher.findOneAndUpdate({_id:teacherId},{class:existingClass.className,division:existingClass.division,assignedClass:existingClass._id})
+      const classUpdate = await Class.findOneAndUpdate({className,className,division:division},{classTeacher:teacherId})
       if(teacher){
         res.status(200).json({msg:"updation successfull",teacher:teacher})
       }else{
@@ -420,8 +422,8 @@ module.exports = {
   getClasses,
 
   getTeachers,
-  GetAvailableTeacher,
   updateTeachers,
+  GetAvailableTeacher,
 
   createExam,
   GetExam,

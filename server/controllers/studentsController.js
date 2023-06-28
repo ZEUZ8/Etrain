@@ -223,7 +223,6 @@ const getStudentsAttandence = async (req, res) => {
     const CheckMonth = checkDate.getMonth() + 1;
 
     const response = await Attandence.findOne({studentId:userId})
-    console.log(response)
     if (response) {
       res.status(200).json({ msg: "succesfull", presents: response });
     } else {
@@ -466,14 +465,52 @@ const GetChatMember = async( req,res)=>{
   }
 }
 
+
+/* for get the all the chat members*/
+const GetMonthlyAttendance = async( req,res)=>{
+  const date = new Date();
+  const currentYeart = date.getFullYear();
+  const currentYear = currentYeart.toString()
+  console.log(currentYear);
+  const {id} = req?.user
+  try{
+    const attendance = await Attandence.aggregate([
+      {
+        $match:{
+          studentId: new mongoose.Types.ObjectId(id),
+          "attandence.day": {
+            $regex: currentYear
+          }
+        }
+      },
+      {
+        $unwind:"$attandence"
+      },
+      {
+        $group:{_id:"$attandence.status",count:{$sum:1}}
+      }
+    ])
+    console.log(attendance,'the attendence')
+    if(attendance && attendance.length>0){
+      res.status(200).json(attendance)
+    }else{
+      res.json({msg:"not Marked attendance found"})
+    }
+  }catch(error){
+    console.log(error)
+    res.status(500).json({msg:error.message})
+  }
+}
  
 module.exports = {
   // studentRegister,
   studentLogin,
   // sendNewMail,
   otpVerification,
+
   getStudentsAttandence,
-  getStudentsAttandence,
+  GetMonthlyAttendance,
+
   GetReviews,
   GetComplaints,
   GetExams,

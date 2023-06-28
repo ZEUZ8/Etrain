@@ -13,6 +13,9 @@ const {
   getStudents,
 
   markStudentAttadence,
+  GetMonthlyAttendance,
+  GetAnnualAttendance,
+
   makeComplaint,
   GetComplaints,
   UpdateComplaints,
@@ -64,6 +67,10 @@ router.put("/students", verifyTokenTeacher, checkingTeacher, addNewStudent);
 router.get("/students", verifyTokenTeacher, checkingTeacher, getStudents);
 
 router.post("/attandence", verifyTokenTeacher, markStudentAttadence);
+
+router.get("/monthlyAttendance",verifyTokenTeacher,GetMonthlyAttendance)
+
+router.get("/annualAttendance",verifyTokenTeacher,GetAnnualAttendance)
 
 router.post("/complaint", verifyTokenTeacher, makeComplaint);
 

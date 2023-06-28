@@ -147,7 +147,6 @@ export const CreateStudentLeave = async(token,values)=>{
 }
 
 
-        
 //function for getting all the leave forms that teacher created 
 export const GetStudentLeaves = async(token)=>{
     console.log("entered in the leaveforms finding function")
@@ -299,7 +298,7 @@ export const GetStudentMessages = async(token,id)=>{
 
 
 
-/* service function for getting chat persons  for principal
+/* service function for getting chat persons  for students
 */
 export const StudentChatMember = async(token,id)=>{
     console.log("entered in conversation finding function")
@@ -318,6 +317,28 @@ export const StudentChatMember = async(token,id)=>{
         return(error.response.data)
     }
 }
+
+
+/* service function for getting the students monthly attendence for graphical representation for students 
+*/
+export const GetMonthlyAttendance = async(token,id)=>{
+    console.log("entered in monthlyAttendance finding function")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosStudentInstance.get(`/monthlyAttendance`,config)
+        return(response.data)
+    }catch(error){
+        console.log(error)
+        return(error.response.data)
+    }
+}
+
 
 
 
