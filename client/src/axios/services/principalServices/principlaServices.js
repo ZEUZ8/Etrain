@@ -19,6 +19,19 @@ export const principalLoginService = async(value)=>{
     }
 }
 
+
+//principal service function for login the teacher withe the google
+export const PrincipalGoogleLogin = async(email)=>{
+    try{
+        const respons = await axiosPrincipalInstance.post("/googleLogin",{email})
+        return respons.data
+    }catch(error){
+        console.log(error)
+        console.log("error at the Principal login services At fronEnd")
+        return(error)
+    }
+}
+
 //principal services function for creating a new calss
 export const classCreation = async (token,value) =>{
     // console.log(value,"enterd the class createiion services ")
@@ -283,8 +296,33 @@ export const GetLeaves = async(token)=>{
 
 
 
+
 /* service function for creating converstation for principal
 */
+export const CreatePrincipalConversation = async(token,id,userId)=>{
+    console.log(id,'the tpincpal did')
+    console.log("entered in conversation creating function")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    const requestBody = {senderId:id,receiverId:userId}
+    try{
+        const response = await axiosPrincipalInstance.post(`/conversation`,requestBody,config)
+        return(response.data)
+    }catch(error){
+        console.log(error)
+        return(error.response.data)
+    }
+}
+
+
+
+/* service function for creating converstation for principal
+*/  
 export const GetPrincipalConversation = async(token,id)=>{
     console.log("entered in conversation finding function")
     const config = {
@@ -299,6 +337,28 @@ export const GetPrincipalConversation = async(token,id)=>{
         return(response.data)
     }catch(error){
         console.log(error)
+        return(error.response.data)
+    }
+}
+
+
+/* service function for creating messages for principal
+*/
+export const CreatePrincipalMessages = async(token,value)=>{
+    console.log("entered in messages  creating function")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosPrincipalInstance.post(`/messages`,value,config)
+        console.log(response,'   consoling in the service function')
+        return(response.data)
+    }catch(error){
+        console.log(error,'consolin the error int he services')
         return(error.response.data)
     }
 }
@@ -364,5 +424,26 @@ export const PrincipalAllAttendance = async(token,date)=>{
         return(error.response.data)
     }
 }
+
+/* service function for getting students in the class  for principal
+*/
+export const GetStudents = async(token,id)=>{
+    console.log("entered in conversation finding function")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosPrincipalInstance.get(`/students/${id}`,config)
+        return(response.data)
+    }catch(error){
+        console.log(error)
+        return(error.response.data)
+    }
+}
+
 
 

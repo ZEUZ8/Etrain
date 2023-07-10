@@ -32,6 +32,8 @@ const DataShowcase = ({ page }) => {
   const [complaints, setComplaints] = useState([]);
   const [exams, setExams] = useState([]);
 
+  const errMsgs = ["Access Denied","jwt malformed","jwt expired"]
+
   const datPerPage = 4;
 
   useEffect(() => {
@@ -42,43 +44,42 @@ const DataShowcase = ({ page }) => {
         if (page === "complaints") {
           const response = await GetComplaints(token);
           if (
-            response.msg === "Access Denied" ||
-            response.msg === "jwt malformed" ||
-            response.msg?.msg === "jwt expired"
+            response?.msg === "Access Denied" ||
+            response?.msg === "jwt malformed" ||
+            response?.msg?.msg === "jwt expired"
           ) {
             navigate("/login");
-          } else if (response.msg === "succesfull") {
-            setComplaints(response.complaints);
+          } else if (response?.msg === "succesfull") {
+            setComplaints(response?.complaints);
           } else {
-            toast.error(response.error);
+            toast?.error(response?.error);
           }
         } else if (page === "reviews") {
           const response = await GetReviews(token);
           if (
-            response.msg === "Access Denied" ||
-            response.msg === "jwt malformed" ||
-            response.msg?.msg === "jwt expired"
+            response?.msg === "Access Denied" ||
+            response?.msg === "jwt malformed" ||
+            response?.msg?.msg === "jwt expired"
           ) {
             navigate("/login");
-          } else if (response.msg === "succesfull") {
-            setReviews(response.reviews);
+          } else if (response?.msg === "succesfull") {
+            setReviews(response?.reviews);
           } else {
-            toast.error(response.msg);
+            toast?.error(response?.msg);
           }
         } else if (page === "exams") {
-          const response = await GetExams(token, studentData.id);
-          console.log(response);
+          const response = await GetExams(token, studentData?.id);
           if (
-            response.msg === "Access Denied" ||
-            response.msg === "jwt malformed" ||
-            response.msg?.msg === "jwt expired"
+            response?.msg === "Access Denied" ||
+            response?.msg === "jwt malformed" ||
+            response?.msg?.msg === "jwt expired"
           ) {
             navigate("/login");
-          } else if (response.msg === "succesfull") {
-            setExams(response.exams);
+          } else if (response?.msg === "succesfull") {
+            setExams(response?.exams);
           } else {
-            console.log("enterd the inthe laskdf");
-            toast.error(response.msg);
+            console?.log("enterd the inthe laskdf");
+            toast?.error(response?.msg);
           }
         }
       } catch (error) {
@@ -89,7 +90,6 @@ const DataShowcase = ({ page }) => {
     fetchComplaint();
   }, [page]);
 
-  console.log(exams, complaints, reviews);
   let paginationPage;
   let paginationState;
 
@@ -104,13 +104,13 @@ const DataShowcase = ({ page }) => {
     paginationState = exams;
   }
 
-  const dataToDisplay = paginationState.slice(
+  const dataToDisplay = paginationState?.slice(
     currentPage * datPerPage,
     (currentPage + 1) * datPerPage
   );
 
   const handlePageChange = (selectedPage) => {
-    setCurrentPage(selectedPage.selected);
+    setCurrentPage(selectedPage?.selected);
   };
 
   const handleModalClick = (data) => {
@@ -165,14 +165,14 @@ const DataShowcase = ({ page }) => {
                       <input
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         id="studentName"
+                        readOnly
                         type="text"
                         placeholder={
                           currentData?.examName
-                            ? currentData.examName
-                            : currentData.studentId.name
+                            ? currentData?.examName
+                            : currentData?.studentId?.name
                         }
                         name="name"
-                        readonly
                       />
                     </div>
                     <div className="flex">
@@ -188,9 +188,9 @@ const DataShowcase = ({ page }) => {
                           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                           id="studentClass"
                           type="number"
-                          placeholder={currentData.studentId.name}
+                          placeholder={currentData?.studentId?.studentClass}
                           name="studentClass"
-                          readonly
+                          readOnly
                         />
                       </div>
 
@@ -206,9 +206,9 @@ const DataShowcase = ({ page }) => {
                           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                           id="studnetDivision"
                           type="text"
-                          placeholder={currentData.studentId.division}
+                          placeholder={currentData?.studentId?.division}
                           name="studentDivision"
-                          readonly
+                          readOnly
                         />
                       </div>
                     </div>
@@ -226,9 +226,9 @@ const DataShowcase = ({ page }) => {
                           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                           id="TeacherName"
                           type="text"
-                          placeholder={currentData.teacherId.class}
+                          placeholder={currentData?.teacherId?.name}
                           name="teacherName"
-                          readonly
+                          readOnly
                         />
                       </div>
 
@@ -244,9 +244,9 @@ const DataShowcase = ({ page }) => {
                           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                           id="TeacherSubject"
                           type="text"
-                          placeholder={currentData.teacherId.division}
+                          placeholder={currentData?.teacherId?.subject}
                           name="TecherSubject"
-                          readonly
+                          readOnly
                         />
                       </div>
                     </div>
@@ -265,11 +265,11 @@ const DataShowcase = ({ page }) => {
                         readOnly
                         name="complaint"
                         placeholder={
-                          currentData.examDiscription
-                            ? currentData.examDiscription
-                            : currentData.review
-                            ? currentData.review
-                            : currentData.complaint
+                          currentData?.examDiscription
+                            ? currentData?.examDiscription
+                            : currentData?.review
+                            ? currentData?.review
+                            : currentData?.complaint
                         }
                       ></textarea>
                     </div>
@@ -313,7 +313,7 @@ const DataShowcase = ({ page }) => {
             </p>
             <div class="mb-3 mx-10">
               <input
-                readonly
+                readOnly
                 type="search"
                 class="relative m-0 block w-full min-w-0 flex-auto rounded-md bg-gray-100 shadow-2xl bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-600 dark:text-gray-700 dark:placeholder:text-gray-700 dark:focus:border-primary"
                 id="exampleSearch"
@@ -321,7 +321,7 @@ const DataShowcase = ({ page }) => {
               />
             </div>
             {loading && <Loader />}
-            {dataToDisplay.length > 0 ? (
+            {dataToDisplay?.length > 0 ? (
               <div className="grid grid-cols-2">
                 {dataToDisplay?.map((data, index) => {
                   if (page === "complaints") {
@@ -334,12 +334,11 @@ const DataShowcase = ({ page }) => {
                         <div class=" text-gray-500">
                           <RiNewspaperFill className="w-10 h-10" />
                           <p class="mt-4 text-sm font-bold text-gray-900  sm:text-sm w-full underline underline-offset-8">
-                            {data.studentId.name}
+                            {data?.studentId?.name}
                           </p>
-                          a
                           <p class="mt-2 hidden text-sm sm:block truncate max-w-sm">
-                            by : {data.teacherId.name}
-                            {`(${data.teacherId.subject})`}
+                            by : {data?.teacherId?.name}
+                            {`(${data?.teacherId?.subject})`}
                           </p>
                         </div>
                       </a>
@@ -354,11 +353,11 @@ const DataShowcase = ({ page }) => {
                         <div class=" text-gray-500">
                           <RiNewspaperFill className="w-10 h-10" />
                           <p class="mt-4 text-sm font-bold text-gray-900  sm:text-sm w-full underline underline-offset-8">
-                            {data.studentId.name}
+                            {data?.studentId?.name}
                           </p>
                           <p class="mt-2 hidden text-sm sm:block truncate max-w-sm">
-                            by : {data.teacherId.name}
-                            {`(${data.teacherId.subject})`}
+                            by : {data?.teacherId?.name}
+                            {`(${data?.teacherId?.subject})`}
                           </p>
                         </div>
                       </a>
@@ -373,10 +372,10 @@ const DataShowcase = ({ page }) => {
                         <div class=" text-gray-500">
                           <RiNewspaperFill className="w-10 h-10" />
                           <p class="mt-4 text-sm font-bold text-gray-900  sm:text-sm w-full underline underline-offset-8">
-                            Exam : {data.examName}
+                            Exam : {data?.examName}
                           </p>
                           <p class="mt-4 text-sm font-bold text-gray-900  sm:text-sm w-full underline underline-offset-8">
-                            Class : {data.examClass}
+                            Class : {data?.examClass}
                           </p>
                           <p class="mt-2 hidden text-sm sm:block truncate max-w-sm">
                             {/* from : {data.startDate} to : {data.endDate} */}

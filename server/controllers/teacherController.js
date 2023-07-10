@@ -87,6 +87,44 @@ const teacherLogin = async (req, res) => {
   }
 };
 
+
+const teacherGoogleLogin = async (req, res) => {
+  try {
+    const {email} = req.body;
+    const existingTeacher = await Teacher.findOne({ email: email });
+    if (!existingTeacher) {
+      res.json({ msg: "Teacher don't exists" });
+    } else {
+      const token = jwt.sign(
+        {
+          name: existingTeacher.name,
+          email: existingTeacher.email,
+          id: existingTeacher._id,
+          role: "teacher",
+        },
+        process.env.teacherToken,
+        { expiresIn: "2d" }
+      );
+      res.status(200).json({
+        token: token,
+        msg: "login succesfull",
+        user: "teacher",
+        id: existingTeacher._id,
+        email: existingTeacher.email,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ msg: `error at teacher login` });
+    console.log(
+      `error at the teacher login,controller,backend --> ${error.message}`
+    );
+  }
+};
+
+
+
+
+
 const otpVerification = async (req, res) => {
   const id = req.params.id;
   const data = req.body;
@@ -206,7 +244,6 @@ by this controller teacher can create student and also he/she can add the studen
 const addNewStudent = async (req, res) => {
   const { studentClass, studentDivision, studentName, studentEmail } = req.body;
   const teacherId = req.user.id;
-  console.log(studentClass,studentDivision,studentEmail,teacherId,   '    the deatisle for creating a new student in the ')
   const options = {
     upsert: true, // Create a new document if it doesn't exist
     new: true, // Return the updated document
@@ -784,6 +821,7 @@ const GetChatMember = async( req,res)=>{
 const GetMonthlyAttendance = async( req,res)=>{
   const date = new Date();
   const currentMonth = date.toLocaleString("default", { month: "long" }).slice(0,3);
+  console.log(currentMonth,'the current month of the request')
   const {id} = req?.user
   try{
     const teacher = await Teacher.findOne({_id:id}).populate("assignedClass","_id")
@@ -806,6 +844,7 @@ const GetMonthlyAttendance = async( req,res)=>{
             }
           }
         ])
+        console.log(attendance,'the result of the aggregation')
         if(attendance && attendance.length > 0){
           res.status(200).json({attendance,count})
         }else{
@@ -868,6 +907,8 @@ const GetAnnualAttendance = async( req,res)=>{
 module.exports = {
   // teacherRegister,
   teacherLogin,
+  teacherGoogleLogin,
+
   otpVerification,
   createWeeklyTask,
   getWeeklyTask,

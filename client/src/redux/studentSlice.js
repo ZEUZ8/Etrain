@@ -9,16 +9,14 @@ const studentSlice = createSlice({
     },
     reducers:{
         userLogin:(state,action)=>{
-            state.token = action.payload.token
-            state.user = action.payload.user
-            state.id = action.payload.id
+            state.token = action.payload.token;
+            state.user = action.payload.user;
+            state.id = action.payload.id;
         },
         userLogOut:(state)=>{
-            state.student = {
-                token:"",
-                user:null,
-                id:null,
-            }
+            state.token = "";
+            state.user = null;
+            state.id = null;
         }
     }
 })

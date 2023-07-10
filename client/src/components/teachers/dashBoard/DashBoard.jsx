@@ -73,6 +73,7 @@ const DashBoard = () => {
       setLoading(true)
       try{
         const response = await GetMonthlyAttendance(token)
+        console.log(response,'the response for the month')
         if(errMsgs.some((msg)=> msg === response.msg || response.message)){
           navigate('/login')
         }else if(response && response?.attendance.length>0){

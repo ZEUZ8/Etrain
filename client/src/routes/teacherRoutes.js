@@ -16,7 +16,6 @@ function TeacherRoutes(){
     return (
         <div>
             <Routes>
-                {console.log("insn")}
                 <Route path="/" element={< DashBoard user="teacher" />}></Route>
                 {/* <Route path="/register" element={< TeacherSignUpPage />}></Route> */}
                 <Route path="/login" element={< Login userType="teacher"/>}></Route>

@@ -22,6 +22,8 @@ const PrincipalRoutes = () => {
             <Route path="/leave" element={< PrincipalLeavepage />}></Route>
             <Route path="/chat" element={< ChatPage user="principal" />}></Route>
             <Route path="/editClass" element={< PrincipalEditClassPage />}></Route>
+            <Route path="/chat" element={< ChatPage user="principal" />}></Route>
+            <Route path="/*" element={< ChatPage user="principal" />}></Route>
         </Routes>
     </div>
   )

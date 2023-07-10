@@ -8,6 +8,7 @@ import { principalLoginService } from '../../../axios/services/principalServices
 import {userLogin} from "../../../redux/studentSlice";
 import {teacherLogin} from "../../../redux/teacher";
 import { principalLogin } from '../../../redux/principal';
+import { toast } from 'react-toastify';
 
 const StudentLogin = ({userType}) => {
 
@@ -22,7 +23,6 @@ const StudentLogin = ({userType}) => {
     }else{
       var response = await studentLogin(value)
     }
-
     if(response.msg === "login succesfull"){
       const action = {
         user:response.user,

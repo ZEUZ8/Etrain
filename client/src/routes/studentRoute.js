@@ -2,22 +2,28 @@ import React from "react"
 import {Routes,Route} from "react-router-dom"
 
 import Home from "../components/landing/home/home"
-import SignUp from "../components/students/signUp/SignUp";
 import Attendence from "../components/students/attendence/Attendence"
 
-import OTPverification from "../pages/common/otpVerification/OTPverification";
+
 import StudentProfile from "../pages/students/profile/StudentProfile";
 import Login from "../pages/students/login/studentLoginPage"
 import StudentTimeTable from "../pages/students/timeTable/StudentTimeTable";
 import DataShowcasePage from "../pages/students/DataShowcase/DataShowcasePage";
 import LeaveFormPage from "../pages/common/leaveForm/LeaveFormPage";
 import ChatPage from "../pages/common/Chat/ChatPage";
+import Teachers from "../pages/students/teachers/Teachers";
+import { useSelector } from "react-redux";
 
 function StudentRoutes(){
+
+    const studentData = useSelector(state => state.studentReducer)
+    const token = studentData?.token
+    const id = studentData?.id
     return (
         <div>
             <Routes>
                 <Route path="/" element={< Home />}></Route>
+                {/* {token ? <Route path="/" element={<Home />} /> : <Route path="/login" element={<Login userType="student" />} />} */}
                 <Route path="/login" element={< Login userType="student" />}></Route>
                 <Route path="/profile" element={< StudentProfile user="student" />}></Route>
                 <Route path="/attendence" element={< Attendence />}></Route>
@@ -27,6 +33,7 @@ function StudentRoutes(){
                 <Route path="/reviews" element={< DataShowcasePage page="reviews"/>}></Route>
                 <Route path="/leave" element={<LeaveFormPage user="student"/>}></Route>
                 <Route path="/chat" element={<ChatPage user="student"/>}></Route>
+                <Route path="/teachers" element={<Teachers user="student"/>}></Route>
             </Routes>
         </div>
     )

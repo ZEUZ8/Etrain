@@ -26,10 +26,22 @@ export const studentLogin = async (value)=>{
     try{
         const response = await axiosStudentInstance.post("/login",value,config)
         return(response.data)
-
     }catch(error){
-        console.log(error,"er")
-        console.log("error at the student login services")
+        // console.log("error at the student login services",error)
+        return(error.response.data)
+    }
+}
+
+//student service function for login the teacher withe the google
+export const StudentGoogleLogin = async(email)=>{
+    console.log(email,'the mail')
+    try{
+        const respons = await axiosStudentInstance.post("/googleLogin",{email})
+        return respons.data
+    }catch(error){
+        console.log(error)
+        console.log("error at the student login services At fronEnd")
+        return(error)
     }
 }
 
@@ -211,10 +223,12 @@ export const UpdateStudent = async(token,id,values)=>{
     }
 }
 
-/* service function for creating converstation for teacher
-*/
-export const CreateStudentConversation = async(token,id,values)=>{
-    console.log("entered in conversation creating function")
+
+
+
+//teacher service function for getting all the existing Teachers
+export const GetTeachers = async(token)=>{
+    console.log("entred in the teachers finding funcion")
     const config = {
         headers:{
             Accept:"application/json",
@@ -223,13 +237,41 @@ export const CreateStudentConversation = async(token,id,values)=>{
         },
     };
     try{
-        const response = await axiosStudentInstance.put(`/conversation/${id}`,values,config)
+        const response = await axiosStudentInstance.get("/teachers",config)
+        return response.data
+    }catch(error){
+        console.log(error)
+        return(error.response.data)
+    }
+}
+
+
+
+
+/* service function for creating converstation for teacher
+*/
+export const CreateStudentConversation = async(token,id,userId)=>{
+    console.log("entered in conversation creating function")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    const requestBody = {senderId:id,receiverId:userId}
+    try{
+        const response = await axiosStudentInstance.post(`/conversation`,requestBody,config)
         return(response.data)
     }catch(error){
         console.log(error)
         return(error.response.data)
     }
 }
+
+
+
+
 
 
 /* service function for creating converstation for teacher

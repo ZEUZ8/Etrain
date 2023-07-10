@@ -23,7 +23,10 @@ const  {
 
     CreateMessages,
     GetMessages,
-    GetChatMember
+    GetChatMember,
+
+    GetTeachers,
+    StudentGoogleLogin
 } = require("../controllers/studentsController");
 
 
@@ -31,15 +34,24 @@ const {
     verifyStudent
 }= require("../middlewares/auth")
 
+const mid = async(req,res,next)=>{
+    console.log(' inthe min fucntinon of the')
+    next()
+}
+
 // router.post("/register", studentRegister)
 
 router.post("/login",studentLogin)
+
+router.post("/googleLogin",mid,StudentGoogleLogin)
 
 router.post("/verify/:id",otpVerification)
 
 router.get("/attandence",verifyStudent,getStudentsAttandence)
 
 router.get('/monthlyAttendance',verifyStudent,GetMonthlyAttendance)
+
+router.get("/teachers",verifyStudent,GetTeachers)
 
 router.get('/reviews',verifyStudent,GetReviews)
 

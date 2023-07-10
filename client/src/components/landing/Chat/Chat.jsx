@@ -6,18 +6,22 @@ import {
   CreateTeacherMessages,
   GetTeacherConversation,
   GetTeacherMessages,
+  GetTeacher,
 } from "../../../axios/services/TeacherSrevices/teacherServices";
 import {
   GetPrincipalConversation,
   GetPrincipalMessages,
+  GetPrincipal,
 } from "../../../axios/services/principalServices/principlaServices";
 import {
   CreateStudentMessages,
   GetStudentConversation,
   GetStudentMessages,
+  GetStudent,
 } from "../../../axios/services/studentServices/studentServices";
 import Conversation from "./Conversation";
 import Message from "./Message";
+import { useNavigate } from "react-router-dom";
 
 const Chat = ({ user }) => {
   const pricnipalData = useSelector((state) => state.principalReducer);
@@ -37,9 +41,13 @@ const Chat = ({ user }) => {
   const [messages, setMessages] = useState([]);
   const [newMessages, setNewMessages] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState(null);
-  
+  const [member, setMember] = useState("");
+
+  const errMsgs = ["jwt expired", "Acces Denied", "jwt malformed"];
+
   const scrollRef = useRef();
   const socket = useRef();
+  const navigate = useNavigate();
 
   const currentUser =
     user === "student"
@@ -47,6 +55,38 @@ const Chat = ({ user }) => {
       : user === "teacher"
       ? teacherData
       : pricnipalData;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (user === "student") {
+          const response = await GetStudent(studentToken, studentId);
+          if (errMsgs.some((msg) => msg === response.msg || response.message)) {
+            navigate("/login");
+          } else if (response.msg === "succesfull") {
+            setMember(response.student);
+          }
+        } else if (user === "teacher") {
+          const response = await GetTeacher(teacherToken, teacherId);
+          if (errMsgs.some((msg) => msg === response.msg || response.message)) {
+            navigate("/login");
+          } else if (response.msg === "succesfull") {
+            setMember(response.teacher);
+          }
+        } else if (user === "principal") {
+          const response = await GetPrincipal(principalToken, principalId);
+          if (errMsgs.some((msg) => msg === response.msg || response.message)) {
+            navigate("/login");
+          } else if (response.msg === "succesfull") {
+            setMember(response.principal);
+          }
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchData();
+  }, [user]);
 
   useEffect(() => {
     arrivalMessage &&
@@ -117,7 +157,6 @@ const Chat = ({ user }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const message = {
       sender: currentUser.id,
       text: newMessages,
@@ -177,8 +216,10 @@ const Chat = ({ user }) => {
               src="/img/girl.jpg"
               alt="Profile"
             ></img>
-            <div className="px-3"></div>
+
+            <div className="px-3">{member?.name}</div>
           </div>
+
           <div class="flex flex-row justify-between bg-white">
             <div class="flex flex-col w-2/5 border-r-2 overflow-y-auto">
               <div class="border-b-2 py-4 px-2">
@@ -189,13 +230,17 @@ const Chat = ({ user }) => {
                 />
               </div>
               {conversations?.map((c) => (
-                <div onClick={() => setCurrentChat(c)}>
+                <div key={c?._id} onClick={() => setCurrentChat(c)}>
                   <Conversation conversation={c} currentUser={currentUser} />
                 </div>
               ))}
             </div>
 
-            <div class={`w-full px-5 flex flex-col justify-between ${currentChat && "overflow-y-auto h-[39rem]"  }`}>
+            <div
+              class={`w-full px-5 flex flex-col justify-between ${
+                currentChat && "overflow-y-auto h-[39rem]"
+              }`}
+            >
               {currentChat ? (
                 <>
                   <div class="flex flex-col mt-5">
@@ -215,6 +260,7 @@ const Chat = ({ user }) => {
                       class="w-full bg-gray-300 py-5 px-3 rounded-xl"
                       type="text"
                       placeholder="type your message here..."
+                      required
                       ref={scrollRef}
                       value={newMessages}
                       onChange={(e) => setNewMessages(e.target.value)}
@@ -222,6 +268,7 @@ const Chat = ({ user }) => {
                     <button
                       className="m-2 bg-red-300 rounded-lg"
                       onClick={handleSubmit}
+                      disabled={!newMessages}
                     >
                       send
                     </button>

@@ -1,13 +1,44 @@
-import React from "react";
-import { useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import Loader from "../../landing/loader/Loader";
+import { useSelector } from "react-redux";
 import { FiEdit } from "react-icons/fi";
 import { AiFillDelete } from "react-icons/ai";
 
+import { GetStudents } from "../../../axios/services/principalServices/principlaServices";
+
 const EditClass = () => {
+
+  const pricnipalData = useSelector((state) => state.principalReducer);
+  const token = pricnipalData?.token;
+  const principalId = pricnipalData?.id;
+
   const location = useLocation();
   const currentClass = location.state.data;
-  console.log(currentClass);
+
+  const navigate = useNavigate()
+
+  const [students,setStudents] = useState([])
+
+  const errorMsgs = ["Access Decied", "jwt malformed", "jwt expired"]
+
+  useEffect(()=>{
+    const fetchData = async()=>{
+      try{
+        const response = await GetStudents(token,currentClass?._id)
+        console.log(response,'the response in the clg')
+        if(errorMsgs.some(msg => msg === response.msg || response.message)){
+          navigate("/principal/login")
+        }else{
+          setStudents(response)
+        }
+      }catch(err){
+        console.log(err)
+      }
+    }
+    fetchData()
+  },[])
+
   return (
     <>
       <div className="md:ml-64 p-4">
@@ -70,20 +101,24 @@ const EditClass = () => {
                   </p>
                   <div className="h-[35rem] overflow-y-scroll ">
                     <div className="grid grid-cols-1  sm:h-fit  ">
-                      <a class="relative items-start justify-between dark:bg-white m-5 rounded-xl border border-gray-100 p-1 shadow-xl sm:p-1 lg:p-3 h-fit">
-                        <div className="flex ps-5 justify-between">
-                          <div className="flex">
-                            <img
-                              src="/img/girl.jpg"
-                              alt="image"
-                              className="h-8 w-8 rounded-3xl"
-                            />
-                            <h3 className=" text-sm ps-5 mt-2 font-bold text-gray-900  sm:text-md w-full">
-                              asdfadsf
-                            </h3>
+                      {students?.map(data=>{
+                        return(
+                          <a class="relative items-start justify-between dark:bg-white m-5 rounded-xl border border-gray-100 p-1 shadow-xl sm:p-1 lg:p-3 h-fit">
+                          <div className="flex ps-5 justify-between">
+                            <div className="flex">
+                              <img
+                                src="/img/girl.jpg"
+                                alt="image"
+                                className="h-8 w-8 rounded-3xl"
+                              />
+                              <h3 className=" text-sm ps-5 mt-2 font-bold text-gray-900  sm:text-md w-full">
+                                {data?.name}
+                              </h3>
+                            </div>
                           </div>
-                        </div>
-                      </a>
+                        </a>
+                        )
+                      })}
                     </div>
                   </div>
                 </div>

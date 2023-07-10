@@ -25,7 +25,10 @@ const {
     GetCurrentPrincipal,
     UpdateCurrentPrincipal,
 
-    GetChatMember
+    GetChatMember,
+
+    GetStudents,
+    PrincipalGoogleLogin,
 
 }= require("../controllers/principalControllers")
 
@@ -40,6 +43,8 @@ const {
 const {verifyTokenAdmin} = require("../middlewares/auth")
 
 router.post("/login",principalLogin)
+
+router.post("/googleLogin",PrincipalGoogleLogin)
 
 router.post("/createClass",verifyTokenAdmin,classCreation)
 
@@ -81,5 +86,7 @@ router.get("/messages/:conversationId",verifyTokenAdmin,GetMessages)
 router.get("/availableTeacher",verifyTokenAdmin,GetAvailableTeacher)
 
 router.get(`/attendance/:date`,verifyTokenAdmin,GetAllAttendance)
+
+router.get(`/students/:id`,verifyTokenAdmin,GetStudents)
 
 module.exports= router

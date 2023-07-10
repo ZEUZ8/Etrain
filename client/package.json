@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@react-oauth/google": "^0.11.0",
     "@reduxjs/toolkit": "^1.9.5",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -15,6 +16,7 @@
     "formik": "^2.2.9",
     "http": "^0.0.1-security",
     "http-errors": "^2.0.0",
+    "jwt-decode": "^3.1.2",
     "morgan": "^1.10.0",
     "path": "^0.12.7",
     "react": "^18.2.0",

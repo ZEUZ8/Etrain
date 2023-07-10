@@ -13,7 +13,7 @@ const Review = require("../models/Review");
 const Exam = require("../models/exam");
 const Leave = require("../models/leave");
 const Conversation = require("../models/Conversation");
-const Message = require('../models/Message');
+const Message = require("../models/Message");
 const Teacher = require("../models/teacher");
 const Admin = require("../models/admin");
 
@@ -86,8 +86,7 @@ const studentLogin = async (req, res) => {
       res.json({ msg: "student don't exists" });
     } else {
       if (existStudent.verification === false) {
-        sendNewMail(existStudent);
-        res.status(200).json({ msg: "mail not verified" });
+        res.status(500).json({ msg: "User Not Added" });
       } else {
         const checkedPassword = await bcrypt.compare(
           password,
@@ -124,6 +123,42 @@ const studentLogin = async (req, res) => {
     );
   }
 };
+
+
+
+const StudentGoogleLogin = async (req, res) => {
+  try {
+    const {email} = req.body;
+    const existStudent = await Student.findOne({ email: email });
+    if (!existStudent) {
+      res.json({ msg: "student don't exists" });
+    } else {
+      const token = jwt.sign(
+        {
+          name: existStudent.name,
+          email: existStudent.email,
+          id: existStudent._id,
+          role: "student",
+        },
+        "StudentTokenSecret",
+        { expiresIn: "2d" }
+      );
+      res.status(200).json({
+        token: token,
+        msg: "login succesfull",
+        user: "student",
+        id: existStudent._id,
+        email: existStudent.email,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ msg: `error at student login` });
+    console.log(
+      `error at the student login,controller,backend --> ${error.message}`
+    );
+  }
+};
+
 
 // const sendNewMail = async (result) => {
 //   console.log("entered to the mail sending function");
@@ -222,7 +257,7 @@ const getStudentsAttandence = async (req, res) => {
     const checkDate = new Date(formattedDate);
     const CheckMonth = checkDate.getMonth() + 1;
 
-    const response = await Attandence.findOne({studentId:userId})
+    const response = await Attandence.findOne({ studentId: userId });
     if (response) {
       res.status(200).json({ msg: "succesfull", presents: response });
     } else {
@@ -273,10 +308,10 @@ const GetComplaints = async (req, res) => {
 
 //student controller for finding all the existing reviews
 const GetExams = async (req, res) => {
-  const {id} = req.user
+  const { id } = req.user;
   try {
-    const student = await Student.findOne({_id:id})
-    const response = await Exam.find({examClass:student.studentClass});
+    const student = await Student.findOne({ _id: id });
+    const response = await Exam.find({ examClass: student.studentClass });
     if (response) {
       res.status(200).json({ msg: "succesfull", exams: response });
     } else {
@@ -287,9 +322,6 @@ const GetExams = async (req, res) => {
     res.status(500).json({ msg: error.message });
   }
 };
-
-
-
 
 /*                      Leave forms                               */
 /*controller function for creating a new leave form for the teacher,
@@ -311,10 +343,10 @@ const CreateLeave = async (req, res) => {
         { reason: leaveReason, user: role },
         options
       );
-      if(response){
-        res.status(200).json({msg:"succesfull",leaves:response})
-      }else{
-        res.json({msg:"Leave not Created"})
+      if (response) {
+        res.status(200).json({ msg: "succesfull", leaves: response });
+      } else {
+        res.json({ msg: "Leave not Created" });
       }
     } else {
       res.json({ msg: "Student not found" });
@@ -325,19 +357,20 @@ const CreateLeave = async (req, res) => {
   }
 };
 
-
 /*controller function for finding all the existing leaves that 
 student created and returing int he response
 */
 const GetLeaves = async (req, res) => {
-  console.log("entered in the student Leaves findinfg  function for the teracher");
-  const {id} = req.user
+  console.log(
+    "entered in the student Leaves findinfg  function for the teracher"
+  );
+  const { id } = req.user;
   try {
-    const existingLeaves = await Leave.find({studentId:id})
-    if(existingLeaves){
-      res.status(200).json({msg:"succesfull",leaves:existingLeaves})
-    }else{
-      res.json({msg:"Leave not found"})
+    const existingLeaves = await Leave.find({ studentId: id });
+    if (existingLeaves) {
+      res.status(200).json({ msg: "succesfull", leaves: existingLeaves });
+    } else {
+      res.json({ msg: "Leave not found" });
     }
   } catch (error) {
     console.log(error);
@@ -349,162 +382,194 @@ const GetLeaves = async (req, res) => {
 profile component, the id for the searching is sended from the front End
 as the parms
 */
-const GetCurrentStudent = async( req,res)=>{
-  console.log('entered in the current student finding function')
-  const {id} = req.params
-  try{
-    const student = await Student.findOne({_id:id}).select("-password")
-    if(student){
-      res.status(200).json({msg:"succesfull",student:student})
-    }else{
-      res.json({msg:"Student not found"})
+const GetCurrentStudent = async (req, res) => {
+  console.log("entered in the current student finding function");
+  const { id } = req.params;
+  try {
+    const student = await Student.findOne({ _id: id }).select("-password");
+    if (student) {
+      res.status(200).json({ msg: "succesfull", student: student });
+    } else {
+      res.json({ msg: "Student not found" });
     }
-  }catch(error){
-    console.log(error)
-    res.status(500).json({msg:error.message})
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: error.message });
   }
-}
+};
 
 /* controller function for updating the teacher info  for the profile component*/
-const UpdateCurrentStudent = async( req,res)=>{
-  const {id} = req.params
-  const {name,email,phone,password} = req.body
-  try{
-    if(password){
-      const hashedPassword = bcrypt.hash(password)
-      var student = await Student.findOneAndUpdate({_id:id},{name,email,phone,password:hashedPassword},{new:true})
-    }else{
-      var student = await Student.findOneAndUpdate({_id:id},{name,email,phone},{new:true})
+const UpdateCurrentStudent = async (req, res) => {
+  const { id } = req.params;
+  const { name, email, phone, password } = req.body;
+  try {
+    if (password) {
+      const hashedPassword = bcrypt.hash(password);
+      var student = await Student.findOneAndUpdate(
+        { _id: id },
+        { name, email, phone, password: hashedPassword },
+        { new: true }
+      );
+    } else {
+      var student = await Student.findOneAndUpdate(
+        { _id: id },
+        { name, email, phone },
+        { new: true }
+      );
     }
-    if(student){
-      res.status(200).json({msg:"succesfull",student:student})
-    }else{
-      res.json({msg:"Student not Found"})
+    if (student) {
+      res.status(200).json({ msg: "succesfull", student: student });
+    } else {
+      res.json({ msg: "Student not Found" });
     }
-  }catch(error){
-    console.log(error)
-    res.status(500).json({msg:error.message})
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: error.message });
   }
-}
-
-
+};
 
 /* controller function for updating the teacher info  for the profile component*/
-const  CreateConversation = async( req,res)=>{
-  const newConversation = new Conversation({
-    members :[req.body.senderId,req.body.receiverId]
-  })
-  try{
-    const savedConversation = await newConversation.save()
-    res.status(200).json({msg:"ConvCreated",savedConversation})
-  }catch(error){
-    console.log(error)
-    res.status(500).json({msg:error.message})
+const CreateConversation = async (req, res) => {
+  try {
+    const existingConversation = await Conversation.findOne({
+      $or: [
+        { members: [req.body.senderId, req.body.receiverId] },
+        { members: [req.body.receiverId, req.body.senderId] }
+      ]
+    });
+    if (existingConversation) {
+      console.log("enterd inthe same funciton");
+      res.status(200).json({ msg: "ConvFinded" });
+    } else {
+      const newConversation = new Conversation({
+        members: [req.body.senderId, req.body.receiverId],
+      });
+      const savedConversation = await newConversation.save();
+      res.status(200).json({ msg: "ConvCreated", savedConversation });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: error.message });
   }
-}
-
+};
 
 /* controller function for updating the teacher info  for the profile component*/
-const  GetConversation = async( req,res)=>{
-  console.log(req.params.userId,' the data')
-  try{
+const GetConversation = async (req, res) => {
+  console.log(req.params.userId, " the data");
+  try {
     const conversation = await Conversation.find({
-      members:{$in:[req.params.userId]}
-    })
-    res.status(200).json(conversation)
-  }catch(error){
-    console.log(error)
-    res.status(500).json({msg:error.message})
+      members: { $in: [req.params.userId] },
+    });
+    res.status(200).json(conversation);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: error.message });
   }
-}
+};
 
 /* controller function for updating the teacher info  for the profile component*/
-const  CreateMessages = async( req,res)=>{
-  console.log(req.body,'enterefd inthe message creating function')
-  const newMessages =  new Message(req.body)
-  try{
+const CreateMessages = async (req, res) => {
+  console.log(req.body, "enterefd inthe message creating function");
+  const newMessages = new Message(req.body);
+  try {
     const savedMessages = await newMessages.save();
-    res.status(200).json(savedMessages)
-  }catch(error){
-    console.log(error)
-    res.status(500).json({msg:error.message})
+    res.status(200).json(savedMessages);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: error.message });
   }
-}
+};
 
 /* controller function  for getting messages*/
-const  GetMessages = async( req,res)=>{
-  try{
+const GetMessages = async (req, res) => {
+  try {
     const messages = await Message.find({
-      conversationId : req.params.conversationId 
-    })
-    res.status(200).json(messages)
-  }catch(error){
-    console.log(error)
-    res.status(500).json({msg:error.message})
+      conversationId: req.params.conversationId,
+    });
+    res.status(200).json(messages);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: error.message });
   }
-}
-
+};
 
 /* for get the all the chat members*/
-const GetChatMember = async( req,res)=>{
-  const {id} = req.params
-  try{
-    const teacher = await Teacher.findOne({_id:id})
-    const principal = await Admin.findOne({_id:id})
-    if(teacher){
-      res.status(200).json({msg:"succesfull",user:teacher})
-      if(principal){
-        res.status(200).json({msg:"succesfull",user:principal})
+const GetChatMember = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const teacher = await Teacher.findOne({ _id: id });
+    const principal = await Admin.findOne({ _id: id });
+    if (teacher) {
+      res.status(200).json({ msg: "succesfull", user: teacher });
+      if (principal) {
+        res.status(200).json({ msg: "succesfull", user: principal });
       }
-    }else{
-      res.json({msg:"user not Found"})
+    } else {
+      res.json({ msg: "user not Found" });
     }
-  }catch(error){
-    console.log(error)
-    res.status(500).json({msg:error.message})
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: error.message });
   }
-}
-
+};
 
 /* for get the all the chat members*/
-const GetMonthlyAttendance = async( req,res)=>{
+const GetMonthlyAttendance = async (req, res) => {
   const date = new Date();
   const currentYeart = date.getFullYear();
-  const currentYear = currentYeart.toString()
+  const currentYear = currentYeart.toString();
   console.log(currentYear);
-  const {id} = req?.user
-  try{
+  const { id } = req?.user;
+  try {
     const attendance = await Attandence.aggregate([
       {
-        $match:{
+        $match: {
           studentId: new mongoose.Types.ObjectId(id),
           "attandence.day": {
-            $regex: currentYear
-          }
-        }
+            $regex: currentYear,
+          },
+        },
       },
       {
-        $unwind:"$attandence"
+        $unwind: "$attandence",
       },
       {
-        $group:{_id:"$attandence.status",count:{$sum:1}}
-      }
-    ])
-    console.log(attendance,'the attendence')
-    if(attendance && attendance.length>0){
-      res.status(200).json(attendance)
-    }else{
-      res.json({msg:"not Marked attendance found"})
+        $group: { _id: "$attandence.status", count: { $sum: 1 } },
+      },
+    ]);
+    console.log(attendance, "the attendence");
+    if (attendance && attendance.length > 0) {
+      res.status(200).json(attendance);
+    } else {
+      res.json({ msg: "not Marked attendance found" });
     }
-  }catch(error){
-    console.log(error)
-    res.status(500).json({msg:error.message})
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: error.message });
   }
-}
- 
+};
+
+//coroller function for finding all the teachers
+const GetTeachers = async (req, res) => {
+  const studentId = req.user.id;
+  try {
+    const teachers = await Teacher.find({}).select("-password");
+    if (teachers) {
+      res.status(200).json(teachers);
+    } else {
+      res.status(500).json({ msg: "Teachers not foundd" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: "Teachers not found" });
+  }
+};
+
 module.exports = {
   // studentRegister,
   studentLogin,
+  StudentGoogleLogin,
+
   // sendNewMail,
   otpVerification,
 
@@ -526,5 +591,7 @@ module.exports = {
 
   CreateMessages,
   GetMessages,
-  GetChatMember
+  GetChatMember,
+
+  GetTeachers,
 };

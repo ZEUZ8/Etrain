@@ -5,6 +5,8 @@ const router = Router();
 const {
   // teacherRegister,
   teacherLogin,
+  teacherGoogleLogin,
+
   otpVerification,
   createWeeklyTask,
   getWeeklyTask,
@@ -50,6 +52,8 @@ const { verifyTokenTeacher, checkingTeacher } = require("../middlewares/auth");
 // router.post("/register",teacherRegister)
 
 router.post("/login", teacherLogin);
+
+router.post("/googleLogin",teacherGoogleLogin);
 
 router.post("/verify/:id", otpVerification);
 
@@ -98,11 +102,11 @@ router.get("/teacher/:id", verifyTokenTeacher, GetCurrentTeacher);
 
 router.put("/teacher/:id", verifyTokenTeacher, UpdateTeacher);
 
-router.post("/conversation", verifyTokenTeacher, CreateConversation);
-
 router.get('/chatMember/:id',verifyTokenTeacher,GetChatMember)
 
 //new conversation
+router.post("/conversation", verifyTokenTeacher, CreateConversation);
+
 router.get("/conversation/:userId", verifyTokenTeacher, GetConversation);
 
 //add mesages

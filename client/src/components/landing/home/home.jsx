@@ -6,29 +6,15 @@ import './home.css'
 const Home = () => {
 
   const studentData = useSelector(state => state.studentReducer)
-  const teacherData = useSelector(state => state.teacherReducer)
-  const principalData = useSelector(state => state.principalReducer)
-  console.log(teacherData,'the teacher data')
-  console.log(principalData,'princiapal data')
-  console.log(studentData,'student data')
+  const token = studentData?.token
 
-  const currentUser = studentData ? studentData : teacherData ? teacherData : principalData
-  console.log(currentUser,'current user in the page')
   const navigate = useNavigate()
-
-
+  
   const profileClick = ()=>{
-    if(currentUser){
-      if(currentUser?.user === 'teacher'){
-        navigate("/teacher")
-
-      }else if(currentUser?.user === "student"){
-
-        navigate("/profile")
-      }else if(currentUser?.user === "principal"){
-
-        navigate("/principal")
-      }
+    if(token){
+      navigate("/profile")
+    }else{
+      navigate("/login")
     }
   }
 
@@ -58,11 +44,11 @@ const Home = () => {
                   md:border-0 md:hover:text-blue-700 md:p-0  md:dark:hover:text-blue-500 dark:hover:bg-gray-700
                    dark:hover:text-white md:dark:hover:bg-transparent">Services</a>
                 </li>
-                <li>
+                {/* <li>
                   <a href="#" class="block py-2 pl-3 pr-4 text-gray-900  hover:bg-gray-100 md:hover:bg-transparent
                    md:border-0 md:hover:text-blue-700 md:p-0  md:dark:hover:text-blue-500 dark:hover:bg-gray-700
                     dark:hover:text-white md:dark:hover:bg-transparent">Pricing</a>
-                </li>
+                </li> */}
                 <li>
                   <a href="#" class="block py-2 pl-3 pr-4 text-gray-900  hover:bg-gray-100 md:hover:bg-transparent
                    md:border-0 md:hover:text-blue-700 md:p-0  md:dark:hover:text-blue-500 dark:hover:bg-gray-700

@@ -37,6 +37,18 @@ export const teacherLoginService = async(value)=>{
     }
 }
 
+//teacher service function for login the teacher withe the google
+export const TeacherGoogleLogin = async(email)=>{
+    try{
+        const respons = await axiosTeacherInstance.post("/googleLogin",{email})
+        return respons.data
+    }catch(error){
+        console.log(error)
+        console.log("error at the teacher login services At fronEnd")
+        return(error)
+    }
+}
+
 //teacher services for the otp verification in the teacher section
 export const teacherOtpVerification = async (value,user,id)=>{
     console.log(value,"consoling the serivces")
@@ -413,6 +425,29 @@ export const UpdateTeacher = async(token,id,values)=>{
         return(error.response.data)
     }
 }
+
+
+/* service function for creating converstation for teacher
+*/
+export const CreateTeacherConversation = async(token,id,userId)=>{
+    console.log("entered in conversation creating function")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    const requestBody = {senderId:id,receiverId:userId}
+    try{
+        const response = await axiosTeacherInstance.post(`/conversation`,requestBody,config)
+        return(response.data)
+    }catch(error){
+        console.log(error)
+        return(error.response.data)
+    }
+}
+
 
 
 

@@ -12,6 +12,7 @@ export function MonthlyGraph({ monthlyAttendance,holliday }) {
     for (let i = 0; i < monthlyAttendance?.length; i++) {
         labels.push(monthlyAttendance[i]._id);
         if(monthlyAttendance[i]._id === "holliday"){
+            console.log(monthlyAttendance[i],'the loop ')
             DonutData.push(monthlyAttendance[i].count/holliday)
         }else{
             DonutData.push(monthlyAttendance[i].count);
