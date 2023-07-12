@@ -404,6 +404,26 @@ export const GetProgress = async(token)=>{
 }
 
 
+/* service function for getting the class timeTable for the student  */
+export const GetTimeTable = async(token)=>{
+    console.log("entered in class timeTable finding function for the student")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosStudentInstance.get("/timeTable",config)
+        return(response.data)
+    }catch(error){
+        console.log(error)
+        return(error.response.data)
+    }
+}
+
+
 
 
 

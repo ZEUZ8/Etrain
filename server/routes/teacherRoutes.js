@@ -38,7 +38,8 @@ const {
   UpdateTeacher,
   GetChatMember,
 
-  GetClassTimeTable
+  UploadTimeTable,
+  GetClassTimeTable,
 } = require("../controllers/teacherController");
 
 const {
@@ -118,5 +119,7 @@ router.post("/messages", verifyTokenTeacher, CreateMessages);
 router.get("/messages/:conversationId", verifyTokenTeacher, GetMessages);
 
 router.get("/timeTable",verifyTokenTeacher,GetClassTimeTable)
+
+router.post("/timeTable",verifyTokenTeacher,UploadTimeTable)
 
 module.exports = router;

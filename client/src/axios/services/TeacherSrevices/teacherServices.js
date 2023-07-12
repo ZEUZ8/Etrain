@@ -594,6 +594,27 @@ export const GetTimeTable = async(token)=>{
     }
 }
 
+/* service function for updating the timeTable for the class  */
+export const updateTimeTable = async(token,image)=>{
+    console.log(image ,' the imagesss')
+    console.log("entered in class timeTable uploading function in the teacher")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosTeacherInstance.post(`/timeTable`,{image},config)
+        return(response.data)
+    }catch(error){
+        console.log(error)
+        return(error.response.data)
+    }
+}
+
+
 
 
 

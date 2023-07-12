@@ -18,6 +18,7 @@ const SideBar = () => {
   const [complaints,setComplaints] = useState(false)
   const [exams,setExams] = useState(false)
   socket.current = io("http://localhost:4000");
+  console.log(socket,'the socket')
 
   const handleLogOut = () => {
     dispatch(userLogOut());
@@ -25,7 +26,12 @@ const SideBar = () => {
   };
 
   useEffect(()=>{
-
+    const fetchData = async()=>{
+      console.log("enterd in the function")
+      // const response = await GetNotification()
+      // console.log(response,'the response')
+    }
+    fetchData()
   })
 
   return (

@@ -28,7 +28,8 @@ const  {
     GetTeachers,
     StudentGoogleLogin,
 
-    GetProgress
+    GetProgress,
+    GetTimeTable,
 } = require("../controllers/studentsController");
 
 
@@ -84,5 +85,7 @@ router.post('/messages',verifyStudent,CreateMessages)
 router.get("/messages/:conversationId",verifyStudent,GetMessages)
 
 router.get("/progress",verifyStudent,GetProgress)
+
+router.get("/timeTable",verifyStudent,GetTimeTable)
 
 module.exports = router 

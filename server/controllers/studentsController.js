@@ -17,6 +17,7 @@ const Message = require("../models/Message");
 const Teacher = require("../models/teacher");
 const Admin = require("../models/admin");
 const Mark = require("../models/marks");
+const Class = require("../models/Class")
 
 // let config = {
 //   service: "gmail",
@@ -584,6 +585,28 @@ const GetProgress = async (req, res) => {
   }
 };
 
+//coroller function for finding the class 
+const GetTimeTable = async (req, res) => {
+  const studentId = req.user.id;
+  try {
+    console.log(studentId,' id of the student')
+    const results = await Student.findOne({_id:studentId}).select("-password");
+    if (results) {
+      const timeTable  = await Class.findOne({className:results?.studentClass,division:results?.division}).select("timeTable")
+      if(timeTable){
+        res.status(200).json(timeTable);
+      }else{
+        res.status(500).json({msg:"Class Not Found"})
+      }
+    } else {
+      res.status(500).json({ msg: "Marks not foundd" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: "Marks not found" });
+  }
+};
+
 module.exports = {
   // studentRegister,
   studentLogin,
@@ -614,5 +637,6 @@ module.exports = {
 
   GetTeachers,
 
-  GetProgress
+  GetProgress,
+  GetTimeTable,
 };

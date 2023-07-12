@@ -14,11 +14,9 @@ const principalSlice = createSlice({
             state.id = action.payload.id
         },
         principalLogout:(state)=>{
-            state.principal = {
-                token:null,
-                user:null,
-                id:null
-            }
+            state.token = null;
+            state.user = null;
+            state.id = null;
         }
     }
 })

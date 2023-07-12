@@ -14,13 +14,12 @@ const teacherSlice = createSlice({
             state.id = action.payload.id
         },
         teacherLogout:(state)=>{
-            state.teacher={
-                token:null,
-                user:null,
-                id:null
-            }
+            state.token = null;
+            state.user = null;
+            state.id = null;
         }
     }
+
 })
 
 export const {teacherLogin,teacherLogout} = teacherSlice.actions
