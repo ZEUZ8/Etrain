@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import { io } from "socket.io-client";
+import {BsFillSendFill} from "react-icons/bs"
 
 import {
   CreateTeacherMessages,
@@ -42,6 +43,7 @@ const Chat = ({ user }) => {
   const [newMessages, setNewMessages] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [member, setMember] = useState("");
+  const [loading,setLoading] = useState(false)
 
   const errMsgs = ["jwt expired", "Acces Denied", "jwt malformed"];
 
@@ -59,6 +61,7 @@ const Chat = ({ user }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true)
         if (user === "student") {
           const response = await GetStudent(studentToken, studentId);
           if (errMsgs.some((msg) => msg === response.msg || response.message)) {
@@ -84,6 +87,7 @@ const Chat = ({ user }) => {
       } catch (err) {
         console.log(err);
       }
+      setLoading(false)
     };
     fetchData();
   }, [user]);
@@ -98,10 +102,10 @@ const Chat = ({ user }) => {
 
   useEffect(() => {
     socket.current.emit("addUser", currentUser.id);
+    socket.current.on("getNotify",(res)=>{
+    })
     socket.current.on("getUsers", (users) => {
-      // console.log(users,'the users')
     });
-    console.log(currentUser, currentUser.id, " all the users in the console");
   }, [currentUser]);
 
   useEffect(() => {
@@ -114,11 +118,11 @@ const Chat = ({ user }) => {
         });
       }
     });
-    console.log(arrivalMessage, "the messages");
   });
 
   useEffect(() => {
     const GetConversations = async () => {
+      setLoading(true)
       try {
         if (user === "student") {
           var response = await GetStudentConversation(studentToken, studentId);
@@ -134,6 +138,7 @@ const Chat = ({ user }) => {
       } catch (error) {
         console.log(error);
       }
+      setLoading(false)
     };
     GetConversations();
   }, [user]);
@@ -213,7 +218,7 @@ const Chat = ({ user }) => {
             </div> */}
             <img
               class="w-10 h-10 shadow-2xl rounded-full"
-              src="/img/girl.jpg"
+              src={member?.profile ? member?.profile : `/img/user.png`}
               alt="Profile"
             ></img>
 
@@ -231,7 +236,7 @@ const Chat = ({ user }) => {
               </div>
               {conversations?.map((c) => (
                 <div key={c?._id} onClick={() => setCurrentChat(c)}>
-                  <Conversation conversation={c} currentUser={currentUser} />
+                  <Conversation conversation={c} currentUser={currentUser} loading={loading}/>
                 </div>
               ))}
             </div>
@@ -266,11 +271,11 @@ const Chat = ({ user }) => {
                       onChange={(e) => setNewMessages(e.target.value)}
                     />
                     <button
-                      className="m-2 bg-red-300 rounded-lg"
+                      className="m-2 rounded-lg"
                       onClick={handleSubmit}
                       disabled={!newMessages}
                     >
-                      send
+                      <BsFillSendFill className="w-8 h-8 text-red-400"/>
                     </button>
                   </div>
                 </>

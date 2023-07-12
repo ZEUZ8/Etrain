@@ -48,9 +48,6 @@ const cloudinary = require("cloudinary").v2;
 
 //controller for handling the teacher login function
 const teacherLogin = async (req, res) => {
-  console.log(
-    "entered at the teacher login controllers in the backend /controllers"
-  );
   try {
     const { email, password } = req.body;
     const existingTeacher = await Teacher.findOne({ email: email });
@@ -84,7 +81,7 @@ const teacherLogin = async (req, res) => {
       }
     }
   } catch (error) {
-    console.log(error, "  error at the teacher controllers login");
+    console.log(error);
     res.status(500).json({ msg: "error at teacher login" });
   }
 };
@@ -360,7 +357,6 @@ const markStudentAttadence = async (req, res) => {
       const classId = existingClass._id;
       const date = new Date(Date.now());
       const formattedDate = date.toDateString();
-      console.log(formattedDate, "formated date");
       var response = await Attandence.findOneAndUpdate(
         {
           classId: classId,

@@ -105,7 +105,7 @@ const studentLogin = async (req, res) => {
               id: existStudent._id,
               role: "student",
             },
-            "StudentTokenSecret",
+            process.env.STUDENTTOKEN,
             { expiresIn: "2d" }
           );
           res.status(200).json({
@@ -142,7 +142,7 @@ const StudentGoogleLogin = async (req, res) => {
           id: existStudent._id,
           role: "student",
         },
-        "StudentTokenSecret",
+        process.env.STUDENTTOKEN,
         { expiresIn: "2d" }
       );
       res.status(200).json({
@@ -230,7 +230,7 @@ const otpVerification = async (req, res) => {
             id: change._id,
             role: "student",
           },
-          "StudentTokenSecret",
+          process.env.STUDENTTOKEN,
           { expiresIn: "2d" }
         );
         res.status(200).json({

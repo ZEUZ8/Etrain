@@ -5,7 +5,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { io } from "socket.io-client";
 
 import { GrFormCalendar } from "react-icons/gr";
-import { IoNotificationsCircleOutline } from "react-icons/io5";
+import { AiOutlineMessage } from "react-icons/ai";
 import {GiProgression} from "react-icons/gi"
 import { GrSchedules } from "react-icons/gr"
 
@@ -13,26 +13,33 @@ const SideBar = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const socket = useRef()
   const [reviews,setReviews] = useState(false)
   const [complaints,setComplaints] = useState(false)
   const [exams,setExams] = useState(false)
-  socket.current = io("http://localhost:4000");
-  console.log(socket,'the socket')
+  const [notification,setNotification] = useState('')
+  const socket = io("http://localhost:4000");
 
   const handleLogOut = () => {
     dispatch(userLogOut());
     navigate("/");
   };
 
+  const [msg,setMsg] = useState('')
+  const [notify,setNotify] = useState(false)
+
   useEffect(()=>{
-    const fetchData = async()=>{
-      console.log("enterd in the function")
-      // const response = await GetNotification()
-      // console.log(response,'the response')
-    }
-    fetchData()
-  })
+    socket.emit("addUser",(res)=>{
+      console.log(res,'class')
+    })
+    socket.on("getNotify",(res)=>{
+      setNotify(res.read)
+      setMsg(res?.text)
+    })
+  },[msg])
+
+  useEffect(()=>{
+    setNotify(true)
+  },[])
 
   return (
     <>
@@ -156,7 +163,7 @@ const SideBar = () => {
                     New
                   </span> */}
                   <span>
-                    <IoNotificationsCircleOutline/>
+                    {/* <IoNotificationsCircleOutline/> */}
                   </span>
                 </a>
               </li>
@@ -180,7 +187,7 @@ const SideBar = () => {
                     3
                   </span> */}
                   <span>
-                    <IoNotificationsCircleOutline/>
+                    {/* <IoNotificationsCircleOutline/> */}
                   </span>
                 </a>
               </li>
@@ -204,7 +211,7 @@ const SideBar = () => {
                     3
                   </span> */}
                   <span>
-                    <IoNotificationsCircleOutline/>
+                    {/* <IoNotificationsCircleOutline/> */}
                   </span>
                 </a>
               </li>
@@ -226,6 +233,9 @@ const SideBar = () => {
                     ></path>
                   </svg>
                   <span class="flex-1 ml-3 whitespace-nowrap">Chat</span>
+                  <span>
+                   {!notify && <AiOutlineMessage className="text-green-600"/>}
+                  </span>
                 </a>
               </li>
             </Link>

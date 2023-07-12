@@ -47,6 +47,7 @@ function socketConnection(server){
             // })
             console.log('send messge')
             socket.to(123).emit("getMessage",{senderId,receiverId,text})
+            socket.to(123).emit("getNotify",{receiverId,read:false,text})
         })
 
         //when disconnect
