@@ -64,7 +64,8 @@ const TeacherUpdateExam = ({setIsOn,loading,currentExam,currentStudent,token}) =
         science:editingExam ? editingExam?.science : '',
         malayalam:editingExam? editingExam?.malayalam : '',
         grade:editingExam? editingExam?.grade : "",
-        totalMark: editingExam? editingExam?.totalMark:""
+        totalMark: editingExam? editingExam?.totalMark:"",
+        note:editingExam? editingExam?.note : ""
       },
       validationSchema: MarksValidation,
       onSubmit,
@@ -150,7 +151,7 @@ const TeacherUpdateExam = ({setIsOn,loading,currentExam,currentStudent,token}) =
                   type="text"
                   name="studentName"
                   readOnly
-                  value={values.studentName}
+                  value={values?.studentName}
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
@@ -202,7 +203,7 @@ const TeacherUpdateExam = ({setIsOn,loading,currentExam,currentStudent,token}) =
                   type="number"
                   name="mathematics"
                   placeholder={editingExam? editingExam?.mathematics:"Subject Mark"}
-                  value={values.mathematics}
+                  value={values?.mathematics}
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
@@ -227,7 +228,7 @@ const TeacherUpdateExam = ({setIsOn,loading,currentExam,currentStudent,token}) =
                   type="number"
                   name="malayalam"
                   placeholder={editingExam? editingExam?.malayalam:"Subject Mark"}
-                  value={values.malayalam}
+                  value={values?.malayalam}
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
@@ -250,7 +251,7 @@ const TeacherUpdateExam = ({setIsOn,loading,currentExam,currentStudent,token}) =
                   type="number"
                   name="science"
                   placeholder={editingExam? editingExam?.science:"Subject Mark"}
-                  value={values.science}
+                  value={values?.science}
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
@@ -275,7 +276,7 @@ const TeacherUpdateExam = ({setIsOn,loading,currentExam,currentStudent,token}) =
                   type="number"
                   name="totalMark"
                   placeholder={editingExam? editingExam?.totalMark:"Total Mark"}
-                  value={values.totalMark}
+                  value={values?.totalMark}
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
@@ -298,7 +299,7 @@ const TeacherUpdateExam = ({setIsOn,loading,currentExam,currentStudent,token}) =
                   type="string"
                   name="grade"
                   placeholder={editingExam? editingExam?.grade:"Grade"}
-                  value={values.grade}
+                  value={values?.grade}
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
@@ -307,6 +308,29 @@ const TeacherUpdateExam = ({setIsOn,loading,currentExam,currentStudent,token}) =
                 )}
               </div>
             </div>
+
+            <div className="mb-5 ">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor="endDate"
+                >
+                  Note
+                </label>
+
+                <textarea
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  id="grade"
+                  type="string"
+                  name="note"
+                  placeholder={editingExam?.note ? editingExam?.note:"Note"}
+                  value={values?.note}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+                {errors.note && touched.note && (
+                  <p className="text-red-600">{errors.note}</p>
+                )}
+              </div>
 
             <div className="flex items-center justify-center">
               {loading ? (

@@ -9,6 +9,7 @@ import PrincipalExamPage from "../pages/principal/exam/PrincipalExamPage";
 import PrincipalLeavepage from "../pages/principal/LeaveForm/PrincipalLeavepage";
 import ChatPage from "../pages/common/Chat/ChatPage";
 import PrincipalEditClassPage from "../pages/principal/Class/PrincipalEditClassPage";
+import ErrorPage from "../pages/common/Error/ErrorPage";
 
 const PrincipalRoutes = () => {
   return (
@@ -23,7 +24,7 @@ const PrincipalRoutes = () => {
             <Route path="/chat" element={< ChatPage user="principal" />}></Route>
             <Route path="/editClass" element={< PrincipalEditClassPage />}></Route>
             <Route path="/chat" element={< ChatPage user="principal" />}></Route>
-            <Route path="/*" element={< ChatPage user="principal" />}></Route>
+            <Route path="/*" element={< ErrorPage user="principal" />}></Route>
         </Routes>
     </div>
   )

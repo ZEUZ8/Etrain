@@ -35,8 +35,11 @@ const marksShcema = mongoose.Schema({
     },
     science:{
         type:String
+    },
+    note:{
+        type:String
     }
-});
+},{timestamps:true});
 
 const Mark = mongoose.model("mark", marksShcema);
 

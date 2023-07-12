@@ -11,6 +11,8 @@ import TeacherStudentsPage from "../pages/teachers/students/TeacherStudentsPage"
 import TeacherExamPage from "../pages/teachers/exams/TeacherExamPage";
 import LeaveFormPage from "../pages/common/leaveForm/LeaveFormPage";
 import ChatPage from "../pages/common/Chat/ChatPage";
+import ErrorPage from "../pages/common/Error/ErrorPage";
+import TimeTablePage from "../pages/teachers/timeTable/TimeTablePage";
 
 function TeacherRoutes(){
     return (
@@ -27,6 +29,8 @@ function TeacherRoutes(){
                 <Route path="/exams" element={< TeacherExamPage />}></Route>
                 <Route path="/leave" element={< LeaveFormPage user="teacher" />}></Route>
                 <Route path="/chat" element={< ChatPage user="teacher" />}></Route>
+                <Route path="/timeTable" element={< TimeTablePage user="principal" />}></Route>
+                <Route path="/*" element={< ErrorPage user="principal" />}></Route>
             </Routes>
         </div>
     )

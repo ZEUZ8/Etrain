@@ -6,6 +6,7 @@ import { teacherLogout } from "../../../redux/teacher";
 import { BsClipboardDataFill } from "react-icons/bs";
 import { TbReport } from "react-icons/tb";
 import { GrFormCalendar } from "react-icons/gr";
+import { GrSchedules } from "react-icons/gr"
 
 const TeacherSideBar = () => {
   const dispatch = useDispatch();
@@ -78,10 +79,10 @@ const TeacherSideBar = () => {
               </li>
             </Link>
 
-            {/* <Link to="/teacher/timetable">
+            <Link to="/teacher/timetable">
               <li>
                 <a class="flex items-center p-2 text-gray-900 rounded-lg dark:text-gray hover:bg-gray-100 dark:hover:bg-gray-300">
-                  <svg
+                  {/* <svg
                     aria-hidden="true"
                     class="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-900 group-hover:text-gray-900 dark:group-hover:text-white"
                     fill="currentColor"
@@ -90,16 +91,16 @@ const TeacherSideBar = () => {
                   >
                     <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path>
                     <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>
-                  </svg>
+                  </svg> */}
+                  < GrSchedules  />
                   <span class="ml-3">Time Table</span>
                 </a>
               </li>
-            </Link> */}
+            </Link>
 
             <Link to="/teacher/students">
               <li>
                 <a
-                  href="timetable"
                   class="flex items-center p-2 text-gray-900 rounded-lg dark:text-gray hover:bg-gray-100 dark:hover:bg-gray-300"
                 >
                   <svg

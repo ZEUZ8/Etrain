@@ -134,12 +134,14 @@ const classCreation = async (req, res) => {
   }
 };
 
+
+//controller function for the principal to find all the classes that have been created
 const getClasses = async (req, res) => {
   console.log(
     "entered at the class getting funcion AT backen,principla controllers "
   );
   try {
-    const existingClass = await Class.find({});
+    const existingClass = await Class.find({}).populate("classTeacher",'-password').populate("students",'-password');
     if (existingClass) {
       res.status(200).json({ msg: "success", classes: existingClass });
     } else {
@@ -150,6 +152,7 @@ const getClasses = async (req, res) => {
     res.status(500).json({ msg: "Error at the Class finding" });
   }
 };
+
 
 //controller function for getting all the existing teacher
 const getTeachers = async (req, res) => {
@@ -493,7 +496,6 @@ const GetStudents = async (req, res) => {
     // const students = await Student.findOne({classId: id }); this code will be reaplaced when the data storing in the db change 
     const existingClass = await Class.findOne({_id:id})
     const students = await Student.find({studentClass:existingClass?.className,division:existingClass?.division})
-    console.log(students,'the students')
     if (students){
       res.status(200).json(students);
     } else {

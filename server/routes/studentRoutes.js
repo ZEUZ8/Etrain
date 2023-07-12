@@ -26,7 +26,9 @@ const  {
     GetChatMember,
 
     GetTeachers,
-    StudentGoogleLogin
+    StudentGoogleLogin,
+
+    GetProgress
 } = require("../controllers/studentsController");
 
 
@@ -80,5 +82,7 @@ router.post('/messages',verifyStudent,CreateMessages)
 
 //get messages
 router.get("/messages/:conversationId",verifyStudent,GetMessages)
+
+router.get("/progress",verifyStudent,GetProgress)
 
 module.exports = router 

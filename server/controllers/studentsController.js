@@ -16,6 +16,7 @@ const Conversation = require("../models/Conversation");
 const Message = require("../models/Message");
 const Teacher = require("../models/teacher");
 const Admin = require("../models/admin");
+const Mark = require("../models/marks");
 
 // let config = {
 //   service: "gmail",
@@ -565,6 +566,24 @@ const GetTeachers = async (req, res) => {
   }
 };
 
+
+
+//coroller function for finding all the marks for the progress 
+const GetProgress = async (req, res) => {
+  const studentId = req.user.id;
+  try {
+    const results = await Mark.find({studentId}).populate("examId","examName").populate("studentId","name").select("-password").sort({createdAt:-1});
+    if (results) {
+      res.status(200).json(results);
+    } else {
+      res.status(500).json({ msg: "Marks not foundd" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: "Marks not found" });
+  }
+};
+
 module.exports = {
   // studentRegister,
   studentLogin,
@@ -594,4 +613,6 @@ module.exports = {
   GetChatMember,
 
   GetTeachers,
+
+  GetProgress
 };

@@ -383,6 +383,27 @@ export const GetMonthlyAttendance = async(token,id)=>{
 
 
 
+/* service function for getting the students exam marks innnorder to display in the progress card
+*/
+export const GetProgress = async(token)=>{
+    console.log("entered in progress finding function")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosStudentInstance.get(`/progress`,config)
+        return(response.data)
+    }catch(error){
+        console.log(error)
+        return(error.response.data)
+    }
+}
+
+
 
 
 

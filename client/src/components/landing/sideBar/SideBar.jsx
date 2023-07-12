@@ -1,17 +1,32 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { userLogOut } from "../../../redux/studentSlice";
 import { useNavigate, Link } from "react-router-dom";
+import { io } from "socket.io-client";
+
 import { GrFormCalendar } from "react-icons/gr";
+import { IoNotificationsCircleOutline } from "react-icons/io5";
+import {GiProgression} from "react-icons/gi"
+import { GrSchedules } from "react-icons/gr"
 
 const SideBar = () => {
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const socket = useRef()
+  const [reviews,setReviews] = useState(false)
+  const [complaints,setComplaints] = useState(false)
+  const [exams,setExams] = useState(false)
+  socket.current = io("http://localhost:4000");
 
   const handleLogOut = () => {
     dispatch(userLogOut());
     navigate("/");
   };
+
+  useEffect(()=>{
+
+  })
 
   return (
     <>
@@ -77,22 +92,9 @@ const SideBar = () => {
             <Link to="/timetable">
               <li>
                 <a
-                  href="timetable"
                   class="flex items-center p-2 text-gray-900 rounded-lg dark:text-gray hover:bg-gray-100 dark:hover:bg-gray-300"
                 >
-                  <svg
-                    aria-hidden="true"
-                    class="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-900 group-hover:text-gray-900 dark:group-hover:text-white"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                      clip-rule="evenodd"
-                    ></path>
-                  </svg>
+                  < GrSchedules  />
                   <span class="flex-1 ml-3 whitespace-nowrap">Time Table</span>
                 </a>
               </li>
@@ -119,6 +121,15 @@ const SideBar = () => {
               </li>
             </Link>
 
+            <Link to="/progress">
+              <li>
+                <a class="flex items-center p-2 text-gray-900 rounded-lg dark:text-gray hover:bg-gray-100 dark:hover:bg-gray-300">
+                  < GiProgression />
+                  <span class="flex-1 ml-3 whitespace-nowrap">Progress</span>
+                </a>
+              </li>
+            </Link>
+
             <Link to="/exams">
               <li>
                 <a class="flex items-center p-2 text-gray-900 rounded-lg dark:text-gray hover:bg-gray-100 dark:hover:bg-gray-300">
@@ -135,8 +146,11 @@ const SideBar = () => {
                   {/* <span class="inline-flex items-center justify-center px-2 ml-3 text-sm font-medium text-gray-800 bg-gray-200 rounded-full dark:bg-gray-700 dark:text-gray-300">
                     Pro
                   </span> */}
-                  <span class="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
-                    3
+                  {/* <span class="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
+                    New
+                  </span> */}
+                  <span>
+                    <IoNotificationsCircleOutline/>
                   </span>
                 </a>
               </li>
@@ -156,8 +170,11 @@ const SideBar = () => {
                     <path d="M3 5a2 2 0 012-2h1a1 1 0 010 2H5v7h2l1 2h4l1-2h2V5h-1a1 1 0 110-2h1a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5z"></path>
                   </svg>
                   <span class="flex-1 ml-3 whitespace-nowrap">Reviews</span>
-                  <span class="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
+                  {/* <span class="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
                     3
+                  </span> */}
+                  <span>
+                    <IoNotificationsCircleOutline/>
                   </span>
                 </a>
               </li>
@@ -177,8 +194,11 @@ const SideBar = () => {
                     <path d="M3 5a2 2 0 012-2h1a1 1 0 010 2H5v7h2l1 2h4l1-2h2V5h-1a1 1 0 110-2h1a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5z"></path>
                   </svg>
                   <span class="flex-1 ml-3 whitespace-nowrap">Complaints</span>
-                  <span class="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
+                  {/* <span class="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
                     3
+                  </span> */}
+                  <span>
+                    <IoNotificationsCircleOutline/>
                   </span>
                 </a>
               </li>
@@ -207,7 +227,6 @@ const SideBar = () => {
               <li>
                 <a class="flex items-center p-2 text-gray-900 rounded-lg dark:text-gray hover:bg-gray-100 dark:hover:bg-gray-300">
                   <GrFormCalendar className="w-6 h-6 " />
-
                   <span class="flex-1 ml-3 whitespace-nowrap">Leave Form</span>
                 </a>
               </li>

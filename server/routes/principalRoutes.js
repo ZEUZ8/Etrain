@@ -4,8 +4,10 @@ const router = Router()
 // controllers for the principal
 const {
     principalLogin,
+
     classCreation,
     getClasses,
+    GetClass,
     
     getTeachers,
     GetAvailableTeacher,

@@ -651,6 +651,7 @@ const CreateExamMarks = async (req, res) => {
             malayalam: value.malayalam,
             totalMark: value.totalMark,
             grade: value.grade,
+            note:value.note,
           },
           options
         );
@@ -902,6 +903,24 @@ const GetAnnualAttendance = async( req,res)=>{
   }
 }
 
+/* for get the class TimeTable for the tacher*/
+const GetClassTimeTable = async( req,res)=>{
+  const {id} = req.user
+  try{
+    const teacher = await Teacher.findOne({_id:id})
+    const timeTable = await Class.findOne({classId:teacher?.assignedClass})
+    if(timeTable){
+      res.status(200).json(timeTable)
+    }else{
+      res.json({msg:"timeTable not Found"})
+    }
+  }catch(error){
+    console.log(error)
+    res.status(500).json({msg:error.message})
+  }
+}
+
+
 
 
 module.exports = {
@@ -936,5 +955,7 @@ module.exports = {
 
   GetCurrentTeacher,
   UpdateTeacher,
-  GetChatMember
+  GetChatMember,
+
+  GetClassTimeTable
 };

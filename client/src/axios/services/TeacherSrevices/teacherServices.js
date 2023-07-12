@@ -575,6 +575,25 @@ export const GetAnnualAttendance = async(token)=>{
     }
 }
 
+/* service function for getting the timeTable for the class  */
+export const GetTimeTable = async(token)=>{
+    console.log("entered in class timeTable finding function in the teacher")
+    const config = {
+        headers:{
+            Accept:"application/json",
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json"
+        },
+    };
+    try{
+        const response = await axiosTeacherInstance.get("/timeTable",config)
+        return(response.data)
+    }catch(error){
+        console.log(error)
+        return(error.response.data)
+    }
+}
+
 
 
 

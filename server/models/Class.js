@@ -52,6 +52,9 @@ const ClassSchema = mongoose.Schema({
             }
         }
     ],
+    timeTable:{
+        type:String
+    }
     
 })
 

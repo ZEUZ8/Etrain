@@ -32,7 +32,6 @@ const PrincipalClass = () => {
         if(respons == "Access Denied" || respons.message === "jwt malformed"){
           navigate("/principal/login")
         }else {
-          console.log(respons.classes)
           setData(respons.classes)
         }
       }catch(error){
@@ -64,7 +63,6 @@ const PrincipalClass = () => {
   async function onSubmit() {
     setLoading(true)
     const response = await classCreation(token,values)
-    console.log(response)
     if(response.msg === "created"){
       toast.success("New Class Created")
       setData([...data,response.respons])
@@ -127,7 +125,7 @@ const PrincipalClass = () => {
                 <h2 class="mt-2 font-bold">Class: {item.className+" "+item.division}</h2>
 
                 <p class="hidden sm:mt-1 sm:block sm:text-sm sm:text-gray-600">
-                  Class Teacher :  {item.classTeacher?item.classTeacher:"Not Assigned"}
+                  Class Teacher :  {item.classTeacher?item.classTeacher?.name:"Not Assigned"}
                 </p>
               </div>
               )})}

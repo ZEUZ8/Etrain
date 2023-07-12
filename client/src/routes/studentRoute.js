@@ -12,7 +12,9 @@ import DataShowcasePage from "../pages/students/DataShowcase/DataShowcasePage";
 import LeaveFormPage from "../pages/common/leaveForm/LeaveFormPage";
 import ChatPage from "../pages/common/Chat/ChatPage";
 import Teachers from "../pages/students/teachers/Teachers";
+import ErrorPage from "../pages/common/Error/ErrorPage";
 import { useSelector } from "react-redux";
+import ProgressPage from "../pages/students/progress/ProgressPage";
 
 function StudentRoutes(){
 
@@ -34,6 +36,9 @@ function StudentRoutes(){
                 <Route path="/leave" element={<LeaveFormPage user="student"/>}></Route>
                 <Route path="/chat" element={<ChatPage user="student"/>}></Route>
                 <Route path="/teachers" element={<Teachers user="student"/>}></Route>
+                <Route path="/progress" element={<ProgressPage user="student"/>}></Route>
+                <Route path="/*" element={< ErrorPage user="principal" />}></Route>
+
             </Routes>
         </div>
     )
