@@ -810,10 +810,9 @@ const GetChatMember = async (req, res) => {
     const principal = await Admin.findOne({ _id: id });
     if (student) {
       res.status(200).json({ msg: "succesfull", user: student });
-      if (principal) {
-        res.status(200).json({ msg: "succesfull", user: principal });
-      }
-    } else {
+    }else if (principal) {
+      res.status(200).json({ msg: "succesfull", user: principal });
+    }else {
       res.json({ msg: "user not Found" });
     }
   } catch (error) {
@@ -828,7 +827,6 @@ const GetMonthlyAttendance = async (req, res) => {
   const currentMonth = date
     .toLocaleString("default", { month: "long" })
     .slice(0, 3);
-  console.log(currentMonth, "the current month of the request");
   const { id } = req?.user;
   try {
     const teacher = await Teacher.findOne({ _id: id }).populate(
@@ -859,7 +857,6 @@ const GetMonthlyAttendance = async (req, res) => {
           },
         },
       ]);
-      console.log(attendance, "the result of the aggregation");
       if (attendance && attendance.length > 0) {
         res.status(200).json({ attendance, count });
       } else {

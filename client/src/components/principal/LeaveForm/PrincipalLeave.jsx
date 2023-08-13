@@ -150,7 +150,7 @@ const PrincipalLeave = () => {
                 </div>
               ) : (
                 <div>
-                  <p>No Student Leaves Found</p>
+                  <p className="text-center">No Student Leaves Found</p>
                 </div>
               )}
             </div>
@@ -180,7 +180,6 @@ const PrincipalLeave = () => {
                                   className="h-8 w-8 rounded-3xl"
                                 />
                                 <h3 className=" text-sm ps-5 mt-2 font-bold text-gray-900  sm:text-md w-full">
-                                    {console.log(data)}
                                   {data.studentId.name}{` (${data?.studentId?.studentClass}${data?.studentId?.division})`}
                                 </h3>
                               </div>

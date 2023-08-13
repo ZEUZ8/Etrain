@@ -26,13 +26,14 @@ const DataShowcase = ({ page }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [currentData, setCurrentData] = useState("");
   const [data, setData] = useState([]);
-  const [isOn,setIsOn] = useState(false)
+  const [isOn, setIsOn] = useState(false);
+  const [change,setChange] = useState('')
 
   const [reviews, setReviews] = useState([]);
   const [complaints, setComplaints] = useState([]);
   const [exams, setExams] = useState([]);
 
-  const errMsgs = ["Access Denied","jwt malformed","jwt expired"]
+  const errMsgs = ["Access Denied", "jwt malformed", "jwt expired"];
 
   const datPerPage = 4;
 
@@ -78,7 +79,6 @@ const DataShowcase = ({ page }) => {
           } else if (response?.msg === "succesfull") {
             setExams(response?.exams);
           } else {
-            console?.log("enterd the inthe laskdf");
             toast?.error(response?.msg);
           }
         }
@@ -118,6 +118,7 @@ const DataShowcase = ({ page }) => {
   };
 
 
+
   return (
     <div>
       {/* {ison && (
@@ -135,22 +136,22 @@ const DataShowcase = ({ page }) => {
         {page === "complaints" && (
           <div className="flex justify-end mx-5">
             <div className="bg-fuchsia-300 rounded-2xl mb-5 hover:bg-fuchsia-400">
-              <p onClick={()=>setIsOn(true)} className="items-center p-3 ">
+              <p onClick={() => setIsOn(true)} className="items-center p-3 ">
                 Make Complaint
               </p>
             </div>
           </div>
         )}
         {isOn && (
-            <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
-              <StudentCreateComplaint setIsOn={setIsOn} />
-            </div>
+          <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+            <StudentCreateComplaint setIsOn={setIsOn} />
+          </div>
         )}
         <div className="flex justify-center flex-col md:flex-row">
           <div className="flex w-1/2 bg-left-gradient m-2 items-center justify-center   rounded-3xl shadow-xl">
             <div className="h-full w-">
               <p className="text-center text-xl  m-5 dark:text-white underline underline-offset-4">
-                Show Details
+                Show {page} Details
               </p>
               <div className="w-full">
                 {currentData ? (
@@ -160,7 +161,7 @@ const DataShowcase = ({ page }) => {
                         className="block text-gray-700 text-sm font-bold mb-2"
                         htmlFor="username"
                       >
-                        Student Name
+                        {currentData?.examName ? "Exam Name" : "Student Name"}
                       </label>
                       <input
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -181,14 +182,16 @@ const DataShowcase = ({ page }) => {
                           className="block text-gray-700 text-sm font-bold mb-2"
                           htmlFor="startDate"
                         >
-                          Student Class
+                          {currentData?.examName
+                            ? `Start Date`
+                            : `Student Class`}
                         </label>
 
                         <input
                           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                           id="studentClass"
                           type="number"
-                          placeholder={currentData?.studentId?.studentClass}
+                          placeholder={currentData?.examName ?  new Date(currentData?.startDate).toDateString() : currentData?.studentId?.studentClass}
                           name="studentClass"
                           readOnly
                         />
@@ -199,14 +202,16 @@ const DataShowcase = ({ page }) => {
                           className="block text-gray-700 text-sm font-bold mb-2"
                           htmlFor="endDate"
                         >
-                          Student Division
+                          {currentData?.examName
+                            ? `End Date`
+                            : `Student Division`}
                         </label>
 
                         <input
                           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                           id="studnetDivision"
                           type="text"
-                          placeholder={currentData?.studentId?.division}
+                          placeholder={currentData?.examName ? new Date(currentData?.endDate).toDateString() : currentData?.studentId?.division}
                           name="studentDivision"
                           readOnly
                         />
@@ -214,41 +219,45 @@ const DataShowcase = ({ page }) => {
                     </div>
 
                     <div className="flex">
-                      <div className="mb-5 flex-1">
-                        <label
-                          className="block text-gray-700 text-sm font-bold mb-2"
-                          htmlFor="startDate"
-                        >
-                          Teacher Name
-                        </label>
+                      {!currentData?.examName && (
+                        <div className="mb-5 flex-1">
+                          <label
+                            className="block text-gray-700 text-sm font-bold mb-2"
+                            htmlFor="startDate"
+                          >
+                            Teacher Name
+                          </label>
 
-                        <input
-                          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          id="TeacherName"
-                          type="text"
-                          placeholder={currentData?.teacherId?.name}
-                          name="teacherName"
-                          readOnly
-                        />
-                      </div>
+                          <input
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            id="TeacherName"
+                            type="text"
+                            placeholder={currentData?.teacherId?.name}
+                            name="teacherName"
+                            readOnly
+                          />
+                        </div>
+                      )}
 
-                      <div className="mb-5 flex-1 ml-3">
-                        <label
-                          className="block text-gray-700 text-sm font-bold mb-2"
-                          htmlFor="endDate"
-                        >
-                          Teacher Subject
-                        </label>
+                      {!currentData?.examName && (
+                        <div className="mb-5 flex-1 ml-3">
+                          <label
+                            className="block text-gray-700 text-sm font-bold mb-2"
+                            htmlFor="endDate"
+                          >
+                            Teacher Subject
+                          </label>
 
-                        <input
-                          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          id="TeacherSubject"
-                          type="text"
-                          placeholder={currentData?.teacherId?.subject}
-                          name="TecherSubject"
-                          readOnly
-                        />
-                      </div>
+                          <input
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            id="TeacherSubject"
+                            type="text"
+                            placeholder={currentData?.teacherId?.subject}
+                            name="TecherSubject"
+                            readOnly
+                          />
+                        </div>
+                      )}
                     </div>
 
                     <div className="mb-3">
@@ -256,7 +265,11 @@ const DataShowcase = ({ page }) => {
                         for="message"
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text"
                       >
-                        Complaint
+                        {currentData?.complaint
+                          ? `Complaint`
+                          : currentData?.review
+                          ? `Review`
+                          : `Exam Discription`}
                       </label>
                       <textarea
                         id="complaint"
@@ -312,13 +325,13 @@ const DataShowcase = ({ page }) => {
               {page}
             </p>
             <div class="mb-3 mx-10">
-              <input
-                readOnly
+              {/* <input
                 type="search"
                 class="relative m-0 block w-full min-w-0 flex-auto rounded-md bg-gray-100 shadow-2xl bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-600 dark:text-gray-700 dark:placeholder:text-gray-700 dark:focus:border-primary"
                 id="exampleSearch"
                 placeholder="Search"
-              />
+                onChange={(e)=>setChange(e.target.value)}
+              /> */}
             </div>
             {loading && <Loader />}
             {dataToDisplay?.length > 0 ? (

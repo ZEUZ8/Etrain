@@ -1,18 +1,46 @@
-import React from "react";
-import { useDispatch } from "react-redux";
+import React ,{useState,useEffect}from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { principalLogout } from "../../../redux/principal";
 import { Link, useNavigate } from "react-router-dom";
 import { GrFormCalendar } from "react-icons/gr";
-
+import {AiOutlineMessage} from "react-icons/ai"
+import {io} from "socket.io-client"
+ 
 const SideBar = () => {
+
+  const principalData = useSelector(state => state.principalReducer)
+  const id = principalData?.id
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  // const socket = io("https://etrain-z30o.onrender.com");
+
+  const socket = io("https://etrain-z30o.onrender.com");
+  // const socket = io("http://localhost:4000");
 
   const handleLogOut = () => {
     dispatch(principalLogout());
     navigate("/");
   };
 
+  const [msg, setMsg] = useState("");
+  const [notify, setNotify] = useState(false);
+
+  useEffect(() => {
+    socket.emit("addUser", (res) => {
+      console.log(res, "class");
+    });
+  },[]);
+  
+  socket.on("getNotify", (res) => {
+    setMsg(res?.text);
+    if (id === res?.receiverId) {
+      setNotify(res.read);
+    }
+  });
+  useEffect(() => {
+    setNotify(true);
+  }, []);
   return (
     <>
       <button
@@ -137,9 +165,9 @@ const SideBar = () => {
                   {/* <span class="inline-flex items-center justify-center px-2 ml-3 text-sm font-medium text-gray-800 bg-gray-200 rounded-full dark:bg-gray-700 dark:text-gray-300">
                     Pro
                   </span> */}
-                  <span class="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
+                  {/* <span class="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
                     3
-                  </span>
+                  </span> */}
                 </a>
               </li>
             </Link>
@@ -204,6 +232,9 @@ const SideBar = () => {
                     ></path>
                   </svg>
                   <span class="flex-1 ml-3 whitespace-nowrap">Chat</span>
+                  <span>
+                    {!notify && <AiOutlineMessage className="text-green-600" />}
+                  </span>
                 </a>
               </li>
             </Link>

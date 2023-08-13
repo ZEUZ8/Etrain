@@ -1,45 +1,52 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { userLogOut } from "../../../redux/studentSlice";
 import { useNavigate, Link } from "react-router-dom";
 import { io } from "socket.io-client";
 
 import { GrFormCalendar } from "react-icons/gr";
 import { AiOutlineMessage } from "react-icons/ai";
-import {GiProgression} from "react-icons/gi"
-import { GrSchedules } from "react-icons/gr"
+import { GiProgression } from "react-icons/gi";
+import { GrSchedules } from "react-icons/gr";
 
 const SideBar = () => {
+  // const socket = io("http://localhost:4000");
+
+  const studentData = useSelector((state) => state.studentReducer);
+  const { id } = studentData?.id;
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [reviews,setReviews] = useState(false)
-  const [complaints,setComplaints] = useState(false)
-  const [exams,setExams] = useState(false)
-  const [notification,setNotification] = useState('')
-  const socket = io("http://localhost:4000");
+  const [reviews, setReviews] = useState(false);
+  const [complaints, setComplaints] = useState(false);
+  const [exams, setExams] = useState(false);
+  const socket = io("https://etrain-z30o.onrender.com");
+
+  // const socket = io("https://etrain-z30o.onrender.com");
 
   const handleLogOut = () => {
     dispatch(userLogOut());
     navigate("/");
   };
 
-  const [msg,setMsg] = useState('')
-  const [notify,setNotify] = useState(false)
+  const [msg, setMsg] = useState("");
+  const [notify, setNotify] = useState(false);
 
-  useEffect(()=>{
-    socket.emit("addUser",(res)=>{
-      console.log(res,'class')
-    })
-    socket.on("getNotify",(res)=>{
-      setNotify(res.read)
-      setMsg(res?.text)
-    })
-  },[msg])
+  useEffect(() => {
+    setNotify(true);
+  }, []);
 
-  useEffect(()=>{
-    setNotify(true)
-  },[])
+  useEffect(() => {
+    socket.emit("addUser", id);
+  }, []);
+  
+  console.log(' 6666666')
+  socket.on("getNotify", (res) => {
+    console.log(res, "the msg");
+    setNotify(res.read);
+    setMsg(res?.text);
+  });
+
 
   return (
     <>
@@ -104,10 +111,8 @@ const SideBar = () => {
 
             <Link to="/timetable">
               <li>
-                <a
-                  class="flex items-center p-2 text-gray-900 rounded-lg dark:text-gray hover:bg-gray-100 dark:hover:bg-gray-300"
-                >
-                  < GrSchedules  />
+                <a class="flex items-center p-2 text-gray-900 rounded-lg dark:text-gray hover:bg-gray-100 dark:hover:bg-gray-300">
+                  <GrSchedules />
                   <span class="flex-1 ml-3 whitespace-nowrap">Time Table</span>
                 </a>
               </li>
@@ -137,7 +142,7 @@ const SideBar = () => {
             <Link to="/progress">
               <li>
                 <a class="flex items-center p-2 text-gray-900 rounded-lg dark:text-gray hover:bg-gray-100 dark:hover:bg-gray-300">
-                  < GiProgression />
+                  <GiProgression />
                   <span class="flex-1 ml-3 whitespace-nowrap">Progress</span>
                 </a>
               </li>
@@ -162,9 +167,7 @@ const SideBar = () => {
                   {/* <span class="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
                     New
                   </span> */}
-                  <span>
-                    {/* <IoNotificationsCircleOutline/> */}
-                  </span>
+                  <span>{/* <IoNotificationsCircleOutline/> */}</span>
                 </a>
               </li>
             </Link>
@@ -186,9 +189,7 @@ const SideBar = () => {
                   {/* <span class="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
                     3
                   </span> */}
-                  <span>
-                    {/* <IoNotificationsCircleOutline/> */}
-                  </span>
+                  <span>{/* <IoNotificationsCircleOutline/> */}</span>
                 </a>
               </li>
             </Link>
@@ -210,9 +211,7 @@ const SideBar = () => {
                   {/* <span class="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
                     3
                   </span> */}
-                  <span>
-                    {/* <IoNotificationsCircleOutline/> */}
-                  </span>
+                  <span>{/* <IoNotificationsCircleOutline/> */}</span>
                 </a>
               </li>
             </Link>
@@ -234,7 +233,7 @@ const SideBar = () => {
                   </svg>
                   <span class="flex-1 ml-3 whitespace-nowrap">Chat</span>
                   <span>
-                   {!notify && <AiOutlineMessage className="text-green-600"/>}
+                    {!notify && <AiOutlineMessage className="text-green-600" />}
                   </span>
                 </a>
               </li>

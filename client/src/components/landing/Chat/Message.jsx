@@ -2,6 +2,7 @@ import React from "react";
 import {format} from 'timeago.js'
 
 const Message = ({ message, owned }) => {
+  console.log(message,'88888')
   return (
     <>
       <div
@@ -25,7 +26,7 @@ const Message = ({ message, owned }) => {
             {message?.text}
           </div>
           <span className="text-xs tex-center text-gray-500 leading-none ">
-            <p className={`${owned ? `text-start ml-2 p-1` :  `text-end mr-2 p-1`}`}>{format(message.createdAt)}</p>
+            <p className={`${owned ? `text-start ml-2 p-1` :  `text-end mr-2 p-1`}`}>{format(message?.createdAt)}</p>
           </span>
         </div>
       </div>

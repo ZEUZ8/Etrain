@@ -4,13 +4,20 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {FiEdit} from "react-icons/fi"
 
 import {
   GetTeacher,
   UpdateTeacher,
 } from "../../../axios/services/TeacherSrevices/teacherServices";
-import { GetStudent,UpdateStudent } from "../../../axios/services/studentServices/studentServices";
-import { GetPrincipal,UpdatePrincipal } from "../../../axios/services/principalServices/principlaServices";
+import {
+  GetStudent,
+  UpdateStudent,
+} from "../../../axios/services/studentServices/studentServices";
+import {
+  GetPrincipal,
+  UpdatePrincipal,
+} from "../../../axios/services/principalServices/principlaServices";
 import ProfileEdit from "./ProfileEdit";
 import ProfileEditPrincipal from "./ProfileEidtPrincipal";
 import ProfileEditStudent from "./ProfileEditStudent";
@@ -24,9 +31,7 @@ const ProfileComponent = ({ user }) => {
   const studentToken = studentData?.token;
   const studentId = studentData?.id;
 
-  const principalData = useSelector(
-    (state) => state.principalReducer
-  );
+  const principalData = useSelector((state) => state.principalReducer);
   const principalToken = principalData?.token;
   const principalId = principalToken?.id;
 
@@ -42,25 +47,24 @@ const ProfileComponent = ({ user }) => {
     const fetchData = async () => {
       if (user === "teacher") {
         const response = await GetTeacher(teacherToken, teacherId);
-        if (errorMsgs.some((msg) => msg === response.msg || response.message)) {
+        if (errorMsgs.some((msg) => msg === response?.msg || response?.message)) {
           navigate("/teacher/login");
         } else if (response.msg === "succesfull") {
-          setTeacher(response.teacher);
+          setTeacher(response?.teacher);
         }
       } else if (user === "student") {
         const response = await GetStudent(studentToken, studentId);
         if (errorMsgs.some((msg) => msg === response.msg || response.message)) {
           navigate("/login");
         } else if (response.msg === "succesfull") {
-          setStudent(response.student);
+          setStudent(response?.student);
         }
       } else if (user === "principal") {
         const response = await GetPrincipal(principalToken, principalId);
         if (errorMsgs.some((msg) => msg === response.msg || response.message)) {
-          console.log(true);
           navigate("/principal/login");
-        } else if (response.msg === "succesfull") {
-          setPrincipal(response.principal);
+        } else if (response?.msg === "succesfull") {
+          setPrincipal(response?.principal);
         }
       }
     };
@@ -77,31 +81,35 @@ const ProfileComponent = ({ user }) => {
   const handleUpdation = async (value) => {
     try {
       if (user === "teacher") {
-        const response = await UpdateTeacher(teacherToken,teacherId,value);
+        const response = await UpdateTeacher(teacherToken, teacherId, value);
         if (errorMsgs.some((msg) => msg === response.msg)) {
           navigate("/teacher/login");
         } else if (response.msg === "succesfull") {
           setTeacher(response.teacher);
-          toast.success(response.msg)
-          setIsOn(false)
+          toast.success(response.msg);
+          setIsOn(false);
         }
-      }else if(user === "student"){
-        const response = await UpdateStudent(studentToken,studentId,value)
+      } else if (user === "student") {
+        const response = await UpdateStudent(studentToken, studentId, value);
         if (errorMsgs.some((msg) => msg === response.msg)) {
           navigate("/login");
         } else if (response.msg === "succesfull") {
           setStudent(response.student);
-          toast.success(response.msg)
-          setIsOn(false)
+          toast.success(response.msg);
+          setIsOn(false);
         }
-      }else if(user === "principal"){
-        const response = await UpdatePrincipal(principalToken,principalId,value)
+      } else if (user === "principal") {
+        const response = await UpdatePrincipal(
+          principalToken,
+          principalId,
+          value
+        );
         if (errorMsgs.some((msg) => msg === response.msg)) {
           navigate("/principal/login");
         } else if (response.msg === "succesfull") {
           setPrincipal(response.principal);
-          toast.success(response.msg)
-          setIsOn(false)
+          toast.success(response.msg);
+          setIsOn(false);
         }
       }
     } catch (error) {
@@ -111,7 +119,7 @@ const ProfileComponent = ({ user }) => {
 
   return (
     <div>
-      <ToastContainer/>
+      <ToastContainer />
       <div class="p-4 sm:ml-64 flex justify-center">
         {user === "student" ? (
           <div>
@@ -167,6 +175,7 @@ const ProfileComponent = ({ user }) => {
         >
           <div class="flex flex-wrap justify-start">
             <div class="w-6/12 sm:w-4/12 px-4">
+              {/* <FiEdit/> */}
               <img
                 src="img/girl.jpg"
                 alt="profile"
@@ -175,21 +184,17 @@ const ProfileComponent = ({ user }) => {
             </div>
             <p className=" flex items-center text-white">
               {user === "teacher"
-                ? teacher.name
+                ? teacher?.name
                 : user === "student"
-                ? student.name
-                : principal.name}
+                ? student?.name
+                : principal?.name}
             </p>
           </div>
 
           <div className="mr-10 flex justify-between w-max">
             <div className=" flex">
               <div className="mx-5 text-white sm:text-md md:text-2xl">
-                {user === "teacher"
-                  ? `${teacher?.class}${teacher?.division}`
-                  : user === "student"
-                  ? `${student?.studentClass}${student?.division}`??"kk"
-                  : ""}
+                {user === "teacher" ? `${teacher?.class}${teacher?.division}`: user === "student" ? `${student?.studentClass}${student?.division}`: ""}
               </div>
             </div>
             <div>

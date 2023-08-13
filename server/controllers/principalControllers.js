@@ -43,7 +43,7 @@ const principalLogin = async (req, res) => {
             id: principal.id,
             role: "principal",
           },
-          "PrincipalTokenSecret",
+          process.env.PRINCIPALTOKEN,
           { expiresIn: "2d" }
         );
         res
@@ -104,22 +104,21 @@ const PrincipalGoogleLogin = async (req, res) => {
 // cotroller for handling the class creation by the principal
 const classCreation = async (req, res) => {
   const { className, division, classTeacher, maxStudents } = req.body;
+  const options = {
+    upsert: true, // Create a new document if it doesn't exist
+    new: true, // Return the updated document
+  };
   try {
     const existingClass = await Class.findOne({
       className: className,
       division: division,
     });
-    // const existingTeahcer = await Teacher.findOne({name:classTeacher})
-    // if(!existingTeahcer){
-    //   res.status(500).json({msg:"teacher don't exist"})
-    // }
     if (existingClass) {
       res.json({ msg: "class Already Added" });
     } else {
       const respons = await Class.create({
         className,
         division,
-        // classTeacher,
         maxStudents,
       });
       if (respons) {
@@ -133,6 +132,28 @@ const classCreation = async (req, res) => {
     res.status(500).json({ msg: "calss not created" });
   }
 };
+// cotroller for handling the class Upation by the principal
+const UpdateClass = async (req, res) => {
+  const {id} = req.params;
+  const {className,division,maxStudents} = req.body
+  const options = {
+    upsert: true, // Create a new document if it doesn't exist
+    new: true, // Return the updated document
+  };
+  try {
+    const response = await Class.findOneAndUpdate({_id:id},{className,division,maxStudents},{new:true})
+    if(response){
+      res.status(200).json(response)
+    }else{
+      res.status(500).json({msg:"Not Updated"})
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: "calss not created" });
+  }
+};
+
+
 
 
 //controller function for the principal to find all the classes that have been created
@@ -547,6 +568,7 @@ module.exports = {
   PrincipalGoogleLogin,
 
   classCreation,
+  UpdateClass,
   getClasses,
 
   getTeachers,

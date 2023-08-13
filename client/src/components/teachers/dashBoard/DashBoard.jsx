@@ -95,7 +95,7 @@ const DashBoard = () => {
       try{
         const response = await GetAnnualAttendance(token)
         if(errMsgs.some((msg)=> msg === response.msg || response.message)){
-          navigate('/login')
+          navigate('/teacher/login')
         }else if(response && response?.attendance.length>0){
           setHolliday(response?.count)
           setAnnualAttendance(response?.attendance)

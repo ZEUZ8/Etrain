@@ -430,7 +430,7 @@ const UpdateCurrentStudent = async (req, res) => {
   }
 };
 
-/* controller function for updating the teacher info  for the profile component*/
+/* */
 const CreateConversation = async (req, res) => {
   try {
     const existingConversation = await Conversation.findOne({
@@ -440,7 +440,6 @@ const CreateConversation = async (req, res) => {
       ]
     });
     if (existingConversation) {
-      console.log("enterd inthe same funciton");
       res.status(200).json({ msg: "ConvFinded" });
     } else {
       const newConversation = new Conversation({

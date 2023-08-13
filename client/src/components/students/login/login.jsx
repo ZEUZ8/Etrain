@@ -24,7 +24,6 @@ const Login = ({ handlingSubmit, userType }) => {
   async function onSubmit() {
     setLoading(true);
     const result = await handlingSubmit(values);
-    console.log(result, "the rsult taht come inthe way");
     if (result.msg === "Login Successfull") {
       toast.success("Login Succesull");
       if (result.user === "principal" || result.user === "teacher") {
@@ -53,7 +52,6 @@ const Login = ({ handlingSubmit, userType }) => {
       }else if(userType === "principal"){
         var response = await PrincipalGoogleLogin(email)
       }
-      console.log(response,'the response')
       const action = {
         user:response.user,
         token:response.token,
@@ -271,7 +269,6 @@ const Login = ({ handlingSubmit, userType }) => {
                   <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLECLIENTID}>
                     <GoogleLogin
                       onSuccess={(credentialResponse) => {
-                        console.log(credentialResponse);
                         const Details = jwt_decode(credentialResponse.credential)
                         handleLogin(Details.email)
                       }}

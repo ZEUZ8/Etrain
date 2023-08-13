@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { GetProgress } from "../../../axios/services/studentServices/studentServices";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { BsFiletypePdf } from "react-icons/bs";
+import html2pdf from "html2pdf.js";
 
 const Progress = () => {
   const studentData = useSelector((state) => state.studentReducer);
@@ -25,31 +27,59 @@ const Progress = () => {
     };
     fetchData();
   }, []);
+
+  const downloadAsPDF = () => {
+    const element = document.getElementById("card"); // Replace 'divId' with the actual id of your div
+    const options = {
+      filename: "download.pdf",
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+    };
+
+    html2pdf().set(options).from(element).save();
+  };
+
   return (
     <div>
       <div>
         <div>
-          <div className="p-4 sm:ml-64">
+          <div className="p-4 sm:ml-64 flex items-center align-middle ">
             <div className="text-3xl underline underline-offset-8 ">
-              Student Porgress
+              Student Progress
             </div>
+            <div className="ml-2"></div>
           </div>
 
-          
           <div class="p-4 sm:ml-64">
-            <div class="p-4 border-2 border-gray-100  rounded-lg dark:border-gray-700">
-            <div class="flex px-6 items-center justify-between mb-4 rounded ">
-              <div>
-                <img src="/img/logo.png" alt="logo" />
+            <div
+              id="card"
+              class="p-4 border-2 border-gray-100  rounded-lg dark:border-gray-700"
+            >
+              <div class="flex px-6 items-center justify-between mb-4 rounded ">
+                <div>
+                  <img src="/img/logo.png" alt="logo" />
+                </div>
+                <div className="flex items-center ">
+                  <p class="text-2xl italic underline underline-offset-4">
+                    Progress Card
+                  </p>
+                  <BsFiletypePdf
+                    onClick={downloadAsPDF}
+                    className="cursor-pointer ml-5"
+                  />
+                </div>
               </div>
-              <p class="text-2xl italic underline underline-offset-4">Progress Card</p>
-            </div>
               <div class="grid grid-cols-3 gap-4 mb-4">
                 <div class="flex items-center justify-center rounded border border-gray-800 bg-orange-50">
-                  <p class="text-md p-4 ">Name : {results[0]?.studentId?.name}</p>
+                  <p class="text-md p-4 ">
+                    Name : {results[0]?.studentId?.name}
+                  </p>
                 </div>
                 <div class="flex items-center justify-center rounded border border-gray-800 bg-orange-50">
-                  <p class="text-md p-4 ">Grading Period : {results[0]?.examId?.examName} </p>
+                  <p class="text-md p-4 ">
+                    Grading Period : {results[0]?.examId?.examName}{" "}
+                  </p>
                 </div>
                 <div class="flex items-center justify-center rounded border border-gray-800 bg-orange-50">
                   <p class="text-md p-4 ">School Year : {currentYear}</p>
@@ -62,7 +92,7 @@ const Progress = () => {
                     <thead class="text-xs text-white uppercase bg-sky-400 ">
                       <tr>
                         <th scope="col" class="px-6 py-3 ">
-                          Semesters
+                          Exams
                         </th>
                         <th scope="col" class="px-6 py-3">
                           English
@@ -80,19 +110,26 @@ const Progress = () => {
                     </thead>
                     <tbody>
                       {results?.map((data) => {
-                        console.log(data, "the result");
                         return (
                           <tr class="border-b  dark:border-gray-700">
                             <th
                               scope="row"
                               class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
                             >
-                              Semester 1
+                              {data?.examId?.examName}
                             </th>
-                            <td class="px-6 py-4 text-gray-800">{data?.english}</td>
-                            <td class="px-6 py-4 text-gray-800">{data?.science}</td>
-                            <td class="px-6 py-4 text-gray-800">{data?.mathematics}</td>
-                            <td class="px-6 py-4 text-gray-800">{data?.malayalam}</td>
+                            <td class="px-6 py-4 text-gray-800">
+                              {data?.english}
+                            </td>
+                            <td class="px-6 py-4 text-gray-800">
+                              {data?.science}
+                            </td>
+                            <td class="px-6 py-4 text-gray-800">
+                              {data?.mathematics}
+                            </td>
+                            <td class="px-6 py-4 text-gray-800">
+                              {data?.malayalam}
+                            </td>
                           </tr>
                         );
                       })}
@@ -145,19 +182,27 @@ const Progress = () => {
               <div class="grid grid-cols-2 gap-4 mb-4">
                 <div class=" rounded bg-sky-200 h-fit ">
                   <p class="text-md  font-bold p-5 ">Note : </p>
-                  <p className="text-sm font-bold px-6 pb-4">{results[0]?.note}</p>
+                  <p className="text-sm font-bold px-6 pb-4">
+                    {results[0]?.note}
+                  </p>
                 </div>
                 <div class="rounded bg-sky-200  h-fit">
                   <p class="text-2xl text-gray-500 font-light py-2 pt-5 px-10 ">
                     OVERALL GRADE
                   </p>
-                  <p class="text-3xl font-bold  px-10 pb-4">{results[0]?.grade}</p>
-                { results[1]?.grade &&  <div className="flex pb-5 px-10  py-2 ">
-                    <p class="text-2xl font-thin text-gray-500 ">
-                      Last Year GRADE :
-                    </p>
-                    <p class="text-2xl font-bold text-gray-900 ">{results[1]?.grade}</p>
-                  </div>}
+                  <p class="text-3xl font-bold  px-10 pb-4">
+                    {results[0]?.grade}
+                  </p>
+                  {results[1]?.grade && (
+                    <div className="flex pb-5 px-10  py-2 ">
+                      <p class="text-2xl font-thin text-gray-500 ">
+                        Last Year GRADE :
+                      </p>
+                      <p class="text-2xl font-bold text-gray-900 ">
+                        {results[1]?.grade}
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

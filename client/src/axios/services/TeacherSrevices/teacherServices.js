@@ -538,7 +538,6 @@ export const TeacherChatMember = async(token,id)=>{
 /* service function for getting the students monthly attendence for graphical representation for teacher 
 */
 export const GetMonthlyAttendance = async(token)=>{
-    console.log("entered in monthlyAttendance finding function")
     const config = {
         headers:{
             Accept:"application/json",
@@ -558,7 +557,6 @@ export const GetMonthlyAttendance = async(token)=>{
 /* service function for getting the students monthly attendence for graphical representation for teacher 
 */
 export const GetAnnualAttendance = async(token)=>{
-    console.log("entered in AnnualAttendance finding function in the teacher")
     const config = {
         headers:{
             Accept:"application/json",

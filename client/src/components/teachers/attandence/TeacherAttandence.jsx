@@ -91,9 +91,9 @@ const TeacherAttandence = () => {
                 Mark Attandence
               </p>
             <div className="flex ">
-              <Link >
+              {/* <Link >
                 <div  className="bg-emerald-400 w-full flex justify-center shadow-2xl h-max rounded-2xl p-2  text-white">Previouse</div>
-              </Link>
+              </Link> */}
               <div onClick={handleSubmit} className="bg-emerald-400 w-full flex justify-center shadow-2xl h-max ml-3 rounded-2xl p-2 text-white">Submit</div>
             </div>
           </div>

@@ -256,9 +256,9 @@ const PrincipalTeachers = () => {
                       ? item.class + " " + item.division
                       : "Not Assigned"}
                   </p>
-                  <p class="hidden sm:mt-1 sm:block sm:text-sm sm:text-gray-600">
+                  {/* <p class="hidden sm:mt-1 sm:block sm:text-sm sm:text-gray-600">
                     Status : {item.approved ? "Approved" : "Not Approved"}
-                  </p>
+                  </p> */}
                 </a>
               ))}
               {/* ))} */}

@@ -1,21 +1,49 @@
-import React from "react";
-import { useDispatch } from "react-redux";
+import React, {useState,useEffect} from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { principalLogout } from "../../../redux/principal";
 import { Link, useNavigate } from "react-router-dom";
 import { teacherLogout } from "../../../redux/teacher";
 import { BsClipboardDataFill } from "react-icons/bs";
 import { TbReport } from "react-icons/tb";
 import { GrFormCalendar } from "react-icons/gr";
-import { GrSchedules } from "react-icons/gr"
+import { GrSchedules } from "react-icons/gr";
+import {AiOutlineMessage} from "react-icons/ai"
+import { io } from "socket.io-client";
 
 const TeacherSideBar = () => {
+
+  const teacherData = useSelector((state)=>state.teacherReducer)
+  const id = teacherData?.id
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  // const socket = io("https://etrain-z30o.onrender.com");
+
+  const socket = io("https://etrain-z30o.onrender.com");
+  // const socket = io("http://localhost:4000");
 
   const handleLogOut = () => {
     dispatch(teacherLogout());
     navigate("/");
   };
+
+
+  const [msg,setMsg] = useState('')
+  const [notify,setNotify] = useState(false)
+
+  useEffect(()=>{
+    socket.emit("addUser",id)
+  },[msg])
+  
+  socket.on("getNotify",(res)=>{
+    setMsg(res?.text)
+    if(id === res?.receiverId){
+      setNotify(res.read)
+    }
+  })
+  useEffect(()=>{
+    setNotify(true)
+  },[])
 
   return (
     <>
@@ -60,7 +88,6 @@ const TeacherSideBar = () => {
             {/* <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-red-500">Etrain</span> */}
           </a>
           <ul class="space-y-2 font-medium mt-10">
-
             <Link to="/teacher">
               <li>
                 <a class="flex items-center p-2 text-gray-900 rounded-lg dark:text-gray hover:bg-gray-100 dark:hover:bg-gray-300">
@@ -92,7 +119,7 @@ const TeacherSideBar = () => {
                     <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path>
                     <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>
                   </svg> */}
-                  < GrSchedules  />
+                  <GrSchedules />
                   <span class="ml-3">Time Table</span>
                 </a>
               </li>
@@ -100,9 +127,7 @@ const TeacherSideBar = () => {
 
             <Link to="/teacher/students">
               <li>
-                <a
-                  class="flex items-center p-2 text-gray-900 rounded-lg dark:text-gray hover:bg-gray-100 dark:hover:bg-gray-300"
-                >
+                <a class="flex items-center p-2 text-gray-900 rounded-lg dark:text-gray hover:bg-gray-100 dark:hover:bg-gray-300">
                   <svg
                     aria-hidden="true"
                     class="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-900 group-hover:text-gray-900 dark:group-hover:text-white"
@@ -150,9 +175,7 @@ const TeacherSideBar = () => {
                   {/* <span class="inline-flex items-center justify-center px-2 ml-3 text-sm font-medium text-gray-800 bg-gray-200 rounded-full dark:bg-gray-700 dark:text-gray-300">
                   Pro
                 </span> */}
-                  <span class="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
-                    3
-                  </span>
+               
                 </a>
               </li>
             </Link>
@@ -178,9 +201,9 @@ const TeacherSideBar = () => {
                   {/* <span class="inline-flex items-center justify-center px-2 ml-3 text-sm font-medium text-gray-800 bg-gray-200 rounded-full dark:bg-gray-700 dark:text-gray-300">
                     Pro
                   </span> */}
-                  <span class="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
+                  {/* <span class="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
                     3
-                  </span>
+                  </span> */}
                 </a>
               </li>
             </Link>
@@ -211,9 +234,7 @@ const TeacherSideBar = () => {
 
             <Link to="/teacher/chat">
               <li>
-                <a
-                  class="flex items-center p-2 text-gray-900 rounded-lg dark:text-gray hover:bg-gray-100 dark:hover:bg-gray-300"
-                >
+                <a class="flex items-center p-2 text-gray-900 rounded-lg dark:text-gray hover:bg-gray-100 dark:hover:bg-gray-300">
                   <svg
                     aria-hidden="true"
                     class="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-900 group-hover:text-gray-900 dark:group-hover:text-white"
@@ -237,6 +258,9 @@ const TeacherSideBar = () => {
                 <a class="flex items-center p-2 text-gray-900 rounded-lg dark:text-gray hover:bg-gray-100 dark:hover:bg-gray-300">
                   <GrFormCalendar className="w-6 h-6 " />
                   <span class="flex-1 ml-3 whitespace-nowrap">Leave Form</span>
+                  <span>
+                    {!notify && <AiOutlineMessage className="text-green-600" />}
+                  </span>
                 </a>
               </li>
             </Link>

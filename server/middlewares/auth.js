@@ -3,17 +3,18 @@ const console = require("console");
 const Teacher = require("../models/teacher");
 
 const verifyTokenAdmin = async (req, res, next) => {
-  console.log("middleWare")
+  console.log("middleWare",req.headers,req.path,req.method)
     try {
-      let token = req.headers["authorization"];
+      let token = req?.headers["authorization"];
       if (!token) {
+        console.log('teh token is not foundedd')
         return res.status(403).send("Access Denied");
       }
   
       if (token.startsWith("Bearer ")) {
         token = token.slice(7, token.length).trimLeft();
       }
-      const verified = jwt.verify(token, "PrincipalTokenSecret");
+      const verified = jwt.verify(token, process.env.PRINCIPALTOKEN);
       req.user = verified;
       if (verified.role === "principal") {
         console.log("admin with token");
@@ -29,7 +30,7 @@ const verifyTokenAdmin = async (req, res, next) => {
 const verifyTokenTeacher = async (req, res, next) => {
   console.log('teacher middleware')
     try {
-      let token = req.headers["authorization"];
+      let token = req?.headers["authorization"];
       if (!token) {
         return res.status(403).send("Access Denied");
       }
@@ -37,7 +38,7 @@ const verifyTokenTeacher = async (req, res, next) => {
       if (token.startsWith("Bearer ")) {
         token = token.slice(7, token.length).trimLeft();
       }
-      const verified = jwt.verify(token, "TeacherTokenSecret");
+      const verified = jwt.verify(token, process.env.TEACHERTOKEN);
       req.user = verified;
       if (verified.role === "teacher") {
         console.log("teacher with token");
@@ -56,7 +57,7 @@ const verifyTokenTeacher = async (req, res, next) => {
 const verifyStudent = async (req, res, next) => {
   console.log("student middleWare")
     try {
-      let token = req.headers["authorization"];
+      let token = req?.headers["authorization"];
       if (!token) {
         return res.status(403).send("Access Denied");
       }
@@ -64,7 +65,7 @@ const verifyStudent = async (req, res, next) => {
       if (token.startsWith("Bearer ")) {
         token = token.slice(7, token.length).trimLeft();
       }
-      const verified = jwt.verify(token, "StudentTokenSecret");
+      const verified = jwt.verify(token, process.env.STUDENTTOKEN);
       req.user = verified;
       if (verified.role === "student") {
         console.log("student with token");

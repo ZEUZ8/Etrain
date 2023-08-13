@@ -36,18 +36,9 @@ const StudentSchema = mongoose.Schema({
         type:Boolean,
         default:false
     },
-    // gardian:{
-    //     type:Object,
-    //     gardianName:{
-    //         type:String
-    //     },
-    //     gardianPhone:{
-    //         type:Number
-    //     },
-    //     gardianEmail:{
-    //         type:String
-    //     }
-    // }
+    profile:{
+        type:'string'
+    }
 })
 const Student = mongoose.model("student",StudentSchema)
 

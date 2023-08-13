@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 import { GetTimeTable } from "../../../axios/services/studentServices/studentServices";
 import Loader from "../../landing/loader/Loader";
 

@@ -15,6 +15,7 @@ import Teachers from "../pages/students/teachers/Teachers";
 import ErrorPage from "../pages/common/Error/ErrorPage";
 import { useSelector } from "react-redux";
 import ProgressPage from "../pages/students/progress/ProgressPage";
+import ContactPage from "../pages/common/contact/ContactPage";
 
 function StudentRoutes(){
 
@@ -25,6 +26,7 @@ function StudentRoutes(){
         <div>
             <Routes>
                 <Route path="/" element={< Home />}></Route>
+                <Route path="/contact" element={< ContactPage />}></Route>
                 {/* {token ? <Route path="/" element={<Home />} /> : <Route path="/login" element={<Login userType="student" />} />} */}
                 <Route path="/login" element={< Login userType="student" />}></Route>
                 <Route path="/profile" element={< StudentProfile user="student" />}></Route>

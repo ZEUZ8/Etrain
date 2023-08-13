@@ -20,7 +20,7 @@ const Profile = () => {
   const studentData = useSelector((state) => state.studentReducer);
   const token = studentData?.token;
   const id = studentData?.id
-
+ 
   const errMsgs = ["jwt expired","Access Denied","jwt malformed"]
 
   const [studentPresents, setStudentPresents] = useState([]);

@@ -33,27 +33,7 @@ const Home = () => {
             </button>
             <div class="hidden w-full md:block md:w-auto" id="navbar-default">
               <ul class="items-center font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100   md:flex-row md:space-x-8 md:mt-0 md:border-0  text-gray-900 dark:border-gray-700">
-                <li>
-                  {/* <a href="#" class="block py-2 pl-3 pr-4 text-gray-900  md:bg-transparent md:text-blue-700 md:p-0  md:dark:text-blue-500" aria-current="page">Home</a> */}
-                  <a  class="block py-2 pl-3 pr-4 text-gray-900  hover:bg-gray-100 md:hover:bg-transparent
-                   md:border-0 md:hover:text-blue-700 md:p-0  md:dark:hover:text-blue-500 dark:hover:bg-gray-700
-                    dark:hover:text-white md:dark:hover:bg-transparent">About</a>
-                </li>
-                <li>
-                  <a href="#" class="block py-2 pl-3 pr-4 text-gray-900  hover:bg-gray-100 md:hover:bg-transparent 
-                  md:border-0 md:hover:text-blue-700 md:p-0  md:dark:hover:text-blue-500 dark:hover:bg-gray-700
-                   dark:hover:text-white md:dark:hover:bg-transparent">Services</a>
-                </li>
-                {/* <li>
-                  <a href="#" class="block py-2 pl-3 pr-4 text-gray-900  hover:bg-gray-100 md:hover:bg-transparent
-                   md:border-0 md:hover:text-blue-700 md:p-0  md:dark:hover:text-blue-500 dark:hover:bg-gray-700
-                    dark:hover:text-white md:dark:hover:bg-transparent">Pricing</a>
-                </li> */}
-                <li>
-                  <a href="#" class="block py-2 pl-3 pr-4 text-gray-900  hover:bg-gray-100 md:hover:bg-transparent
-                   md:border-0 md:hover:text-blue-700 md:p-0  md:dark:hover:text-blue-500 dark:hover:bg-gray-700
-                    dark:hover:text-white md:dark:hover:bg-transparent">Contact</a>
-                </li>
+               
                 <li>
                   <div  className='profile bg-[#FF663B] w-[8rem] rounded-full h-[3rem] flex items-center justify-center '>
                       <a  class=" py-2 pl-3 pr-4 text-white-900  text-white 
@@ -78,11 +58,11 @@ const Home = () => {
                         md:border-0  md:p-0 
                         flex justify-center" onClick={profileClick}>Get Started</a>
                   </div>
-                  <div className='profile border-2 border-[black] w-[8rem] rounded-full h-[3rem] flex items-center justify-center ml-4'>
+                  {/* <div className='profile border-2 border-[black] w-[8rem] rounded-full h-[3rem] flex items-center justify-center ml-4'>
                       <a  class=" py-2 pl-3 pr-4 text-white-900  text-[black]
                       md:border-0  md:p-0 
                       flex justify-center">View More</a>
-                  </div>
+                  </div> */}
                 </div>
             </div>
           </div>

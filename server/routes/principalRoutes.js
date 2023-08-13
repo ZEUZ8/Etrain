@@ -6,6 +6,7 @@ const {
     principalLogin,
 
     classCreation,
+    UpdateClass,
     getClasses,
     GetClass,
     
@@ -48,7 +49,9 @@ router.post("/login",principalLogin)
 
 router.post("/googleLogin",PrincipalGoogleLogin)
 
-router.post("/createClass",verifyTokenAdmin,classCreation)
+router.post("/Class",verifyTokenAdmin,classCreation)
+
+router.put("/Class/:id",verifyTokenAdmin,UpdateClass)
 
 router.get("/classes",verifyTokenAdmin,getClasses)
 

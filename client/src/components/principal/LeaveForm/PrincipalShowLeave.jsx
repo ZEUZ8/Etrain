@@ -56,16 +56,14 @@ const PrincipalShowLeave = ({ currentLeave, loading, setIsOn }) => {
                             {'\u00A0'}{new Date(currentLeave?.startDate).toDateString()}
                           </p>
                         </div>
-                        <div className="flex pt-5">
-                            <p>End Date : </p>
-                            <p>{'\u00A0'}{new Date(currentLeave?.endDate).toDateString()}</p>
+                        <div className=" pt-5">
+                            <p>{`End Date :  ${'\u00A0'}${new Date(currentLeave?.endDate).toDateString()}`}</p>
                         </div>
-                        <div className="flex pt-5">
-                            <p>Phone :  </p>
-                            <p>{'\u00A0'}{currentLeave?.studentId?.phone}</p>
+                        <div className=" pt-5">
+                            <p>{`Phone : ${'\u00A0'}${currentLeave?.teacherId?.phone ? currentLeave?.teacherId?.phone : currentLeave?.studentId?.phone}`}</p>
                         </div>
-                        <div className="flex pt-5 ">
-                            <p>Reason : </p> <p className="max-w-fit">{'\u00A0'}{currentLeave?.reason}</p>
+                        <div className=" pt-5 ">
+                            <p style={{maxWidth:"3/4"}} className="break-words">{`Reason : ${'\u00A0'}${currentLeave?.reason}`}</p>
                         </div>
 
                       </div>
